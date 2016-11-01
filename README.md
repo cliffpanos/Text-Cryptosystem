@@ -1,0 +1,2 @@
+# Text-Cryptosystem
+This java code will encrypt text using a password using multiple one-character-to-one-character substitution keys, which greatly reduces the possibility of letter-frequency analysis. Because the text is re-encrypted recursively a variable number of times, if a third party attempts to decrypt the cipher text using a passwords similar to the password with which the text was encrypted, the third party will fail.
