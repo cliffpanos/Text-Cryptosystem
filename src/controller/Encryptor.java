@@ -1,3 +1,5 @@
+package controller;
+
 //
 //  Encryptor
 //  Encryptor.java
@@ -17,6 +19,8 @@
 //
 //  Additionally, the text is encrypted and then re-encrypted recursively.
 
+import resources.Resources;
+import runner.Runner;
 
 import java.util.Scanner;
 import java.io.File;

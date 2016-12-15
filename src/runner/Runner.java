@@ -1,4 +1,6 @@
-/*import javafx.scene.layout.StackPane;
+package runner;
+
+import javafx.scene.layout.StackPane;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -8,7 +10,9 @@ import javafx.scene.control.TextInputDialog;
 import java.util.Optional;
 import javafx.scene.control.Alert;
 import javafx.stage.Screen;
-import javafx.geometry.Rectangle2D; */
+import javafx.geometry.Rectangle2D;
+
+import controller.Encryptor;
 
 import java.util.Scanner;
 

@@ -1,3 +1,5 @@
+package controller;
+
 public class KeySet {
 
     //in the Encryptor class, make an array of each of the keys from this KeySet
