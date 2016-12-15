@@ -29,8 +29,8 @@ public class KeySet {
     public KeySet(int iterationNumber) {
 
         this.iterationNumber = iterationNumber;
-        numKeys = Encryptor.getNumKeys() +
-            IndexCurve.curve(iterationNumber, 0, 2);
+        numKeys = Encryptor.getNumKeys()
+            + IndexCurve.curve(iterationNumber, 0, 2);
         passwordHashAlpha = Encryptor.getPasswordHashAlpha();
         passwordHashBeta = Encryptor.getPasswordHashBeta();
 

@@ -14,21 +14,14 @@ import javafx.geometry.Rectangle2D;
 
 import controller.Encryptor;
 
-import java.util.Scanner;
 
-public class Runner /*extends Application*/ {
+public class Runner extends Application {
 
+    private static Stage stage;
 
     public static void main(String[] args) {
-        //launch(args);
-
-        do {
-            Encryptor.startEncryptor();
-         } while (true); //Ends the do-while loop
+        launch(args);
     }
-
-    /*
-    private static Stage stage;
 
     public void start(Stage primaryStage) {
 
@@ -49,6 +42,22 @@ public class Runner /*extends Application*/ {
         stage.setResizable(false);
         stage.show();
 
-    } */
+        //do {
+        Encryptor.startEncryptor();
+        //} while (true); //Ends the do-while loop
+
+    }
+
+    public static Stage getStage() {
+        return stage;
+    }
+
+    public static double getStageWidth() {
+        return stage.getWidth();
+    }
+
+    public static double getStageHeight() {
+        return stage.getHeight();
+    }
 
 }

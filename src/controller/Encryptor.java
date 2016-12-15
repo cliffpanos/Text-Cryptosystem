@@ -24,7 +24,10 @@ import runner.Runner;
 
 import java.util.Scanner;
 import java.io.File;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 
+import javafx.stage.DirectoryChooser;
 
 public class Encryptor {
 
@@ -43,8 +46,6 @@ public class Encryptor {
     private static String passwordHashAlpha;
     private static String passwordHashBeta;
     private static int numKeys = 0;
-    private static boolean START = true;
-
 
 
     public static void startEncryptor() {
@@ -100,8 +101,8 @@ public class Encryptor {
             acceptablePwCharactersFound = 0;
             for (int i = 0; i < password.length(); i++) {
                 for (int j = 0; j < acceptablePwCharacters.length(); j++) {
-                    if (password.charAt(i) ==
-                        acceptablePwCharacters.charAt(j)) {
+                    if (password.charAt(i)
+                        == acceptablePwCharacters.charAt(j)) {
                         acceptablePwCharactersFound += 1;
                     }
                 }
@@ -177,21 +178,22 @@ public class Encryptor {
         String finalDecryptedCipherText = "";
         String finalEncryptedCipherText = "";
 
-        if (keyword == "encrypt") {
+        if (keyword.equals("encrypt")) {
             String invalidCharacterList = "";
                 //will hold all user-entered characters that are invalid
 
             String textNoSpaces = "";
             for (char c : text.toCharArray()) {
-                textNoSpaces += (c == ' ' ? "~" :
-                    (allCharactersWithSpace.indexOf(c) == -1 ? "?" : c));
+                textNoSpaces += (c == ' ' ? "~"
+                    : (allCharactersWithSpace.indexOf(c) == -1 ? "?" : c));
                 //If a character is a space, make it a ~ so that it will work
                     //in Recursion's encrypt function
                 //If the character is not in allCharactersWithSpace, then change
                     // it to be a ? so that it will work in Recursion's encrypt
                 invalidCharacterList +=
-                    (allCharactersWithSpace.indexOf(c) == -1 ?
-                        (invalidCharacterList.indexOf(c) == -1 ? c : "") : "");
+                    (allCharactersWithSpace.indexOf(c) == -1
+                        ? (invalidCharacterList.indexOf(c) == -1 ? c : "")
+                        : "");
                 //If the character IS invalid AND it is not already in
                     //invalidCharacterList, then add it to invalidCharacterList
             }
@@ -230,16 +232,17 @@ public class Encryptor {
         //Create the file to which the encrypted text will be written.
         try {
         // Using "Encrypted Text.txt" is just for testing
-	      File fileToWrite = new File("Encrypted Text.txt");
+	        File fileToWrite = new File("Encrypted Text.txt");
 
-	      if (file.createNewFile()){
-	        System.out.println("File is created!");
-	      }else{
-	        System.out.println("File already exists.");
-	      }
+	        if (file.createNewFile()){
+	            System.out.println("File is created!");
+	        } else {
+	            System.out.println("File already exists.");
+	        }
         // In javafx we should implement this so that
     	} catch (IOException e) {
 	      e.printStackTrace();
+        }
 */
 
 
@@ -259,9 +262,9 @@ public class Encryptor {
 
 
 
-    public static String hashThePassword(String password) {
+    public static String hashThePassword(String pwToHash) {
 
-        long longHash = password.hashCode();
+        long longHash = pwToHash.hashCode();
         if (longHash < 0) {
             longHash = longHash * -1;
         }
@@ -291,4 +294,19 @@ public class Encryptor {
         return numKeys;
     }
 
+    public static File getFileFromDirectory() {
+
+        DirectoryChooser chooser = new DirectoryChooser();
+        chooser.setTitle("JavaFX Projects");
+        File selectedDirectory = chooser.showDialog(Runner.getStage());
+        return selectedDirectory;
+    }
+
+    public static void copyToClipboard(String toCopy) {
+        Clipboard clipboard = Clipboard.getSystemClipboard();
+        clipboard.clear();
+        ClipboardContent content = new ClipboardContent();
+        content.putString(toCopy);
+        clipboard.setContent(content);
+    }
 }
