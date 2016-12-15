@@ -3,3 +3,6 @@ Hello, my name is Cliff!
 Hello, my name is Anthony!
 
 Encryptor has successfully run. :D
+
+To compile: "javac -cp src/ src/controller/*.java src/resources/*.java src/runner/*.java"
+To run: "java -cp src runner.Runner"

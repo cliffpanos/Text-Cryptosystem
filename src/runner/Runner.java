@@ -1,5 +1,8 @@
 package runner;
 
+import controller.Encryptor;
+import view.MainScreen;
+
 import javafx.scene.layout.StackPane;
 
 import javafx.application.Application;
@@ -11,8 +14,6 @@ import java.util.Optional;
 import javafx.scene.control.Alert;
 import javafx.stage.Screen;
 import javafx.geometry.Rectangle2D;
-
-import controller.Encryptor;
 
 
 public class Runner extends Application {
@@ -26,17 +27,17 @@ public class Runner extends Application {
     public void start(Stage primaryStage) {
 
         stage = primaryStage;
-        Scene startScene = new Scene(new StackPane());
-        stage.setTitle("Encryptor");
+        Scene startScene = new Scene(new MainScreen());
+        stage.setTitle("Cryptosystem");
         stage.setScene(startScene);
 
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
 
         //set Stage boundaries to visible bounds of the main screen
-        stage.setX(primaryScreenBounds.getMinX());
-        stage.setY(primaryScreenBounds.getMinY());
-        stage.setWidth(primaryScreenBounds.getWidth());
-        stage.setHeight(primaryScreenBounds.getHeight());
+        //stage.setX(primaryScreenBounds.getMinX());
+        //stage.setY(primaryScreenBounds.getMinY());
+        stage.setWidth((double) primaryScreenBounds.getWidth() * 2.0 / 3.0);
+        stage.setHeight((double) primaryScreenBounds.getHeight() * 2.0 / 3.0);
 
         stage.toFront();
         stage.setResizable(false);
