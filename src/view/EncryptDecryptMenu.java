@@ -6,8 +6,9 @@ public class EncryptDecryptMenu {
 
     private static VBox menu = new VBox(10);
 
-    
 
-
+    public static VBox getRoodNode() {
+        return menu;
+    }
 
 }
