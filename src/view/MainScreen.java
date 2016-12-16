@@ -4,12 +4,15 @@ import javafx.scene.layout.BorderPane;
 
 public class MainScreen extends BorderPane {
 
-/*
-    public MainScreen() {
+    private static BorderPane innerBorderPane = new BorderPane();
+    private static EncryptDecryptMenu edmenu = new EncryptDecryptMenu();
 
+    public MainScreen() {
+        this.getStylesheets().add(this.getClass()
+        .getResource("mainScreenStyle.css").toExternalForm());
     }
-*/
-    public static void ditch() {
+
+    public static void switchMenu() {
 
     }
 

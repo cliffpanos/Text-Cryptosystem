@@ -7,6 +7,7 @@ import javafx.scene.layout.StackPane;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.control.TextInputDialog;
@@ -28,8 +29,9 @@ public class Runner extends Application {
 
         stage = primaryStage;
         Scene startScene = new Scene(new MainScreen());
-        stage.setTitle("Cryptosystem");
+        stage.setTitle("Encryptor");
         stage.setScene(startScene);
+        stage.initStyle(StageStyle.UNIFIED);
 
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
 
