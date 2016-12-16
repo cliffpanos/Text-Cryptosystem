@@ -42,12 +42,10 @@ public class Runner extends Application {
         stage.setHeight((double) primaryScreenBounds.getHeight() * 2.0 / 3.0);
 
         stage.toFront();
-        //stage.setResizable(false);
+        stage.setResizable(true);
         stage.show();
 
-        //do {
         //Encryptor.startEncryptor();
-        //} while (true); //Ends the do-while loop
 
     }
 
