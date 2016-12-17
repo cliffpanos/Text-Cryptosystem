@@ -20,6 +20,8 @@ import javafx.geometry.Rectangle2D;
 public class Runner extends Application {
 
     private static Stage stage;
+    private static Rectangle2D primaryScreenBounds =
+        Screen.getPrimary().getVisualBounds();
 
     public static void main(String[] args) {
         launch(args);
@@ -32,8 +34,6 @@ public class Runner extends Application {
         stage.setTitle("Encryptor");
         stage.setScene(startScene);
         stage.initStyle(StageStyle.UNIFIED);
-
-        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
 
         //set Stage boundaries to visible bounds of the main screen
         //stage.setX(primaryScreenBounds.getMinX());
@@ -54,11 +54,11 @@ public class Runner extends Application {
     }
 
     public static double getStageWidth() {
-        return stage.getWidth();
+        return ((double) primaryScreenBounds.getWidth() * 2.0 / 3.0);
     }
 
     public static double getStageHeight() {
-        return stage.getHeight();
+        return ((double) primaryScreenBounds.getHeight() * 2.0 / 3.0);
     }
 
 }

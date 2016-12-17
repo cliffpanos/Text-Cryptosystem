@@ -31,7 +31,6 @@ import javafx.stage.DirectoryChooser;
 
 public class Encryptor {
 
-
     // Class-wide variables
     private static String allCharactersWithSpace =
         " &*()-_+=|ABCDEFGHIJK',.?<>LMNOPQRS"
@@ -40,13 +39,25 @@ public class Encryptor {
            prevent user input error */
     private static Scanner scan = new Scanner(System.in);
 
-    private static String keyword;
-    private static String password;
-    private static String text;
+    private static String keyword = null;
+    private static String password = null;
+    private static String text = null;
     private static String passwordHashAlpha;
     private static String passwordHashBeta;
     private static int numKeys = 0;
 
+
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
 
     public static void startEncryptor() {
 
@@ -245,19 +256,6 @@ public class Encryptor {
         }
 */
 
-
-        System.out.println("\n");
-
-        //Reset class-wide variables
-        password = "";
-        text = "";
-        keyword = "";
-        passwordHashAlpha = "";
-        passwordHashBeta = "";
-        numKeys = 0;
-
-        //return START;
-
     }
 
 
@@ -309,4 +307,5 @@ public class Encryptor {
         content.putString(toCopy);
         clipboard.setContent(content);
     }
+
 }
