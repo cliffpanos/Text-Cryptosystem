@@ -7,8 +7,7 @@ public class UIAlert {
     public static void show(String title, String primaryText,
         Alert.AlertType alertType) {
 
-        Alert newAlert = new Alert(Alert.AlertType.CONFIRMATION);
-        //.ERROR
+        Alert newAlert = new Alert(alertType);
         newAlert.setTitle(title);
         newAlert.setHeaderText(primaryText);
 

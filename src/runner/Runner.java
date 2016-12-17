@@ -4,6 +4,8 @@ import controller.Encryptor;
 import view.MainScreen;
 
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+
 
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -30,22 +32,20 @@ public class Runner extends Application {
     public void start(Stage primaryStage) {
 
         stage = primaryStage;
-        Scene startScene = new Scene(new MainScreen());
+        stage.initStyle(StageStyle.TRANSPARENT);
         stage.setTitle("Encryptor");
+
+        Scene startScene = new Scene(new MainScreen());
+        startScene.setFill(Color.TRANSPARENT);
         stage.setScene(startScene);
-        stage.initStyle(StageStyle.UNIFIED);
 
         //set Stage boundaries to visible bounds of the main screen
-        //stage.setX(primaryScreenBounds.getMinX());
-        //stage.setY(primaryScreenBounds.getMinY());
-        stage.setWidth((double) primaryScreenBounds.getWidth() * 2.0 / 3.0);
-        stage.setHeight((double) primaryScreenBounds.getHeight() * 2.0 / 3.0);
+        stage.setWidth((double) primaryScreenBounds.getWidth() * 7.0 / 9.0);
+        stage.setHeight((double) primaryScreenBounds.getHeight() * 7.0 / 9.0);
 
         stage.toFront();
         stage.setResizable(true);
         stage.show();
-
-        //Encryptor.startEncryptor();
 
     }
 

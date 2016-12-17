@@ -27,7 +27,6 @@ public abstract class InputMenu {
 
 
         menu.getChildren().addAll(inputField, outputField);
-
     }
 
     public VBox getRootNode() {

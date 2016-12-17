@@ -19,8 +19,9 @@ package controller;
 //
 //  Additionally, the text is encrypted and then re-encrypted recursively.
 
-import resources.Resources;
 import runner.Runner;
+import view.UIAlert;
+import view.EncryptDecryptMenu;
 
 import java.util.Scanner;
 import java.io.File;
@@ -47,106 +48,80 @@ public class Encryptor {
     private static int numKeys = 0;
 
 
-    public void setKeyword(String keyword) {
-        this.keyword = keyword;
+    public static void setKeyword(String aKeyword) {
+        keyword = aKeyword;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public static void setPassword(String aPassword) {
+        password = aPassword;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public static void setText(String aText) {
+        text = aText;
     }
 
-    public static void startEncryptor() {
+    public static String run() {
 
         System.out.println("Welcome to Encryptor.");
 
-// The following do statement could be better implemented in JavaFX with
-// a short listview and selection model or a couple of buttons
         // GET THE KEYWORD FROM THE USER
-        boolean didTheUserChooseEncryptOrDecrypt;
-        do {
+        if (keyword == null) {
+            UIAlert.show("Choose to Encrypt or Decrypt",
+                "You did not choose to encrypt or decrypt.\n"
+                + "Please choose from the leftmost pane.",
+                javafx.scene.control.Alert.AlertType.ERROR);
+            return null;
+        }
 
-            System.out.println("Would you like to encrypt or decrypt?");
-            keyword = scan.next();
-            keyword = keyword.trim();
-
-
-            //Ensure that the keyword is either encrypt or decrypt
-            if (keyword.equalsIgnoreCase("encrypt")
-                || keyword.equalsIgnoreCase("enc")
-                || keyword.equalsIgnoreCase("e")) {
-                didTheUserChooseEncryptOrDecrypt = true;
-                keyword = "encrypt";
-            } else if (keyword.equalsIgnoreCase("decrypt")
-                || keyword.equalsIgnoreCase("dec")
-                || keyword.equalsIgnoreCase("d")) {
-                didTheUserChooseEncryptOrDecrypt = true;
-                keyword = "decrypt";
-            } else {
-                didTheUserChooseEncryptOrDecrypt = false;
-                System.out.println("\nYou did not choose to either encrypt"
-                    + " or decrypt. Please choose again.\n");
-            }
-
-        } while (!didTheUserChooseEncryptOrDecrypt);
-
-
-        System.out.println();
 
 // Getting the password could be nicely implemented with a TextInputDialog
         // GET THE PASSWORD FROM THE USER
+        password = EncryptDecryptMenu.getPasswordFieldText();
+        if (password == null || password.equals("")) {
+
+            UIAlert.show("Enter a password",
+                "You did not enter a password with\n"
+                + "which to " + keyword + " the text. Please\n"
+                + "enter a password in the leftmost pane.",
+                javafx.scene.control.Alert.AlertType.ERROR);
+            return null;
+        }
+        //ELSE:
         int acceptablePwCharactersFound;
         String acceptablePwCharacters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWX"
             + "YZabcdefghijklmnopqrstuvwxyz?!@#$%^&*(){}[]<>:;/._-=+";
-        do {
 
-            System.out.println("Enter the password with which the text will"
-                + " be " + keyword + "ed:");
-            password = scan.next();
-            password = password.trim();
-
-            //Ensure that the pw contains only acceptablePwCharacters
-            acceptablePwCharactersFound = 0;
-            for (int i = 0; i < password.length(); i++) {
-                for (int j = 0; j < acceptablePwCharacters.length(); j++) {
-                    if (password.charAt(i)
-                        == acceptablePwCharacters.charAt(j)) {
-                        acceptablePwCharactersFound += 1;
-                    }
-                }
+        //Ensure that the pw contains only acceptablePwCharacters
+        acceptablePwCharactersFound = 0;
+        for (int i = 0; i < password.length(); i++) {
+            if (acceptablePwCharacters.indexOf(password.charAt(i)) != -1) {
+                acceptablePwCharactersFound += 1;
             }
+        }
 
-            if (acceptablePwCharactersFound < password.length()) {
-                System.out.println("Acceptable characters for a password ar"
-                    + "e:\nA-Z, a-z, 0-9, and ?!@#$%^&*(){}[]<>:;/,._-=+");
-                System.out.println("Please start again using a different "
-                    + "password.\n");
-            }
-
-        } while (acceptablePwCharactersFound < password.length());
-
-
-        System.out.println();
+        if (acceptablePwCharactersFound < password.length()) {
+            UIAlert.show("Password Unacceptable",
+                "You entered a password with invalid characters.\n"
+                + "Acceptable characters for a password are:\n"
+                + "A-Z, a-z, 0-9, and ?!@#$%^&*(){}[]<>:;/,._-=+\n"
+                + "Please enter an acceptable password & try again.",
+                javafx.scene.control.Alert.AlertType.ERROR);
+            return null;
+        }
 
 
         // GET THE TEXT TO BE ENCRYPTED/DECRYPTED FROM THE USER
-        do {
+        if (text == null || text.equals("")) {
 
-            System.out.println("Enter the file name that you would like to "
-                + keyword + ":");
-            text = scan.nextLine();
-            //text = text.trim();
+            UIAlert.show("Enter text to be " + keyword + "ed",
+                "You did not input any text to be " + keyword + "ed.\n"
+                + "Please type or copy text into the box.",
+                javafx.scene.control.Alert.AlertType.ERROR);
+            return null;
+        }
 
-            System.out.println("Text is: '" + text + "'");
+        System.out.println("Text is: '" + text + "'");
 
-            if (text.length() == 0) {
-                System.out.println("\nYou did not enter any text.\n");
-            }
-
-        } while (text.length() == 0);
 
 
         //At this point, the static variables keyword, password, and text have
@@ -186,9 +161,6 @@ public class Encryptor {
         System.out.println("i Key: " + initialKey);
         System.out.println();
 
-        String finalDecryptedCipherText = "";
-        String finalEncryptedCipherText = "";
-
         if (keyword.equals("encrypt")) {
             String invalidCharacterList = "";
                 //will hold all user-entered characters that are invalid
@@ -210,7 +182,7 @@ public class Encryptor {
             }
             text = textNoSpaces;
 
-            finalEncryptedCipherText = Recursion.encrypt(text, numKeys);
+            String finalEncryptedCipherText = Recursion.encrypt(text, numKeys);
 
             if (invalidCharacterList.length() > 0) {
                 System.out.println("Invalid characters are: ");
@@ -221,20 +193,24 @@ public class Encryptor {
             }
             System.out.println("\n\nEncrypted text is: "
                 + finalEncryptedCipherText);
+            return finalEncryptedCipherText;
         }
 
-        finalDecryptedCipherText =
-            Recursion.decrypt(finalEncryptedCipherText, 1);
+        if (keyword == "decrypt") {
+            String finalDecryptedCipherText =
+                Recursion.decrypt(text, numKeys);
 
-        String decryptedNoSpaces = "";
-        for (char c : finalDecryptedCipherText.toCharArray()) {
-            decryptedNoSpaces += (c == '~' ? " " : c);
-            //Spaces were made into ~ characters before being encrypted, so
-                //now they must be transformed back into spaces.
+            String decryptedNoSpaces = "";
+            for (char c : finalDecryptedCipherText.toCharArray()) {
+                decryptedNoSpaces += (c == '~' ? " " : c);
+                //Spaces were made into ~ characters before being encrypted, so
+                    //now they must be transformed back into spaces.
+            }
+            finalDecryptedCipherText = decryptedNoSpaces;
+            System.out.println("\n\nDecrypted text is: "
+                + finalDecryptedCipherText);
+            return finalDecryptedCipherText;
         }
-        finalDecryptedCipherText = decryptedNoSpaces;
-        System.out.println("\n\nDecrypted text is: "
-            + finalDecryptedCipherText);
 
         //-------------------------------------------------------------------//
 
@@ -254,8 +230,7 @@ public class Encryptor {
     	} catch (IOException e) {
 	      e.printStackTrace();
         }
-*/
-
+*/      return null;
     }
 
 
