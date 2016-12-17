@@ -23,6 +23,8 @@ public class InputOnEncryptMenu extends InputMenu {
             });
     }
 
-
+    public static String getInputFieldText() {
+        return inputField.getText();
+    }
 
 }

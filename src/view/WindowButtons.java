@@ -14,7 +14,6 @@ public class WindowButtons extends HBox {
 
     private Stage stage;
 
-    private HBox hBox;
     private ImageView exit;
     private ImageView minimize;
     private ImageView fullScreen;
@@ -25,22 +24,32 @@ public class WindowButtons extends HBox {
         stage = Runner.getStage();
 
         exit = new ImageView(Resources.getImage("exit.png"));
-        exit.setFitWidth(14);
-        exit.setPreserveRatio(true);
-        exit.setSmooth(true);
         minimize = new ImageView(Resources.getImage("minimize.png"));
         fullScreen = new ImageView(Resources.getImage("fullScreen.png"));
+        ImageView[] buttons = {exit, minimize, fullScreen};
+        for (ImageView button : buttons) {
+            button.setFitWidth(14);
+            button.setPreserveRatio(true);
+            button.setSmooth(true);
+            button.setCache(true);
+        }
+        exit.setOnMouseClicked(e -> {
+                System.exit(0);
+            });
+        minimize.setOnMouseClicked(e -> {
+                stage.setIconified(true);
+            });
+        fullScreen.setOnMouseClicked(e -> {
+                System.out.println("fullscreening");
+                stage.setFullScreen(!stage.isFullScreen());
+            });
 
-        this.setSpacing(7);
+        this.setSpacing(5);
         this.setPadding(new Insets(10));
         this.setAlignment(Pos.CENTER_LEFT);
         this.setPrefWidth(75);
         this.setPrefHeight(25);
         this.getChildren().addAll(exit, minimize, fullScreen);
-
-        //stage.setIconified(true);
-        //stage.setFullScreen(true);
-
 
 
     }

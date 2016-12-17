@@ -32,7 +32,7 @@ public class EncryptDecryptMenu extends StackPane {
 
         this.setBackground(null);
 
-        double width = (double) MainScreen.getStageWidth() * 0.2;
+        double width = (double) MainScreen.getStageWidth() * 0.22;
         double height = (double) MainScreen.getStageHeight();
 
         VBox backgroundBlur = new VBox();
@@ -43,16 +43,14 @@ public class EncryptDecryptMenu extends StackPane {
             new Insets(0))));
         //backgroundBlur.setEffect(new GaussianBlur());
 
-        //Rectangle background = new Rectangle(width, height,
-        //    Color.web("#2E4053", 0.5));
         menu.setAlignment(Pos.CENTER);
         menu.setBackground(null);
         menu.setPrefWidth(width);
         menu.setPrefHeight((height));
 
         // Encrpyt/Decrypt Buttons
-        UIButton encryptButton = new UIButton((width - 50), 50, "Encrypt");
-        UIButton decryptButton = new UIButton((width - 50), 50, "Decrypt");
+        UIButton encryptButton = new UIButton((width - 50), 30, "Encrypt");
+        UIButton decryptButton = new UIButton((width - 50), 30, "Decrypt");
         encryptButton.setOnMouseClicked(e -> {
                 Encryptor.setKeyword("encrypt");
 
@@ -70,13 +68,14 @@ public class EncryptDecryptMenu extends StackPane {
                 encryptButton.setBackgroundColor(Color.web("#F7F7F7", 0.9));
             });
 
-        // Password Field
-        passwordField.setOnMouseClicked(e -> {
+        // Password Field TextField
+        passwordField.setOnAction(e -> {
                 Encryptor.setPassword(passwordField.getText());
             });
         passwordField.setPromptText("Enter password");
         passwordField.setMaxWidth(width - 50);
 
+        //Used to hold the window buttons and Encrypt / Decrypt menu
         VBox outerVBox = new VBox();
         outerVBox.setAlignment(Pos.TOP_LEFT);
         outerVBox.getChildren().addAll(new WindowButtons(), menu);

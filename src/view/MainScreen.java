@@ -16,14 +16,15 @@ public class MainScreen extends BorderPane {
     private static BorderPane innerBorderPane = new BorderPane();
     private static EncryptDecryptMenu edMenu = new EncryptDecryptMenu();
     private static InputMenu inputOEMenu = new InputOnEncryptMenu();
+    private static OptionsMenu optionsMenu = new OptionsMenu();
 
     public MainScreen() {
 
         this.setBackground(null);
         this.setLeft(edMenu);
         this.setCenter(innerBorderPane);
-        
-        //innerBorderPane.setLeft(new GetContentMenu());
+
+        innerBorderPane.setLeft(optionsMenu);
         innerBorderPane.setCenter(inputOEMenu.getRootNode());
         innerBorderPane.setBackground(new Background(new BackgroundFill(Color
             .web("#F2F3F4", 1.0), new CornerRadii(0.0, 5.0, 5.0, 0.0, false),

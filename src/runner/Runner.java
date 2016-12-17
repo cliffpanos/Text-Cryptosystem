@@ -45,6 +45,9 @@ public class Runner extends Application {
 
         stage.toFront();
         stage.setResizable(true);
+        /*stage.onResize(e -> {
+                System.out.println("resizing");
+            });*/
         stage.show();
 
     }
@@ -54,11 +57,11 @@ public class Runner extends Application {
     }
 
     public static double getStageWidth() {
-        return ((double) primaryScreenBounds.getWidth() * 2.0 / 3.0);
+        return ((double) primaryScreenBounds.getWidth() * 7.0 / 9.0);
     }
 
     public static double getStageHeight() {
-        return ((double) primaryScreenBounds.getHeight() * 2.0 / 3.0);
+        return ((double) primaryScreenBounds.getHeight() * 7.0 / 9.0);
     }
 
 }

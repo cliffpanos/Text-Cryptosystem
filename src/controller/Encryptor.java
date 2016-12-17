@@ -22,6 +22,7 @@ package controller;
 import runner.Runner;
 import view.UIAlert;
 import view.EncryptDecryptMenu;
+import view.InputOnEncryptMenu;
 
 import java.util.Scanner;
 import java.io.File;
@@ -111,6 +112,7 @@ public class Encryptor {
 
 
         // GET THE TEXT TO BE ENCRYPTED/DECRYPTED FROM THE USER
+        text = InputOnEncryptMenu.getInputFieldText();
         if (text == null || text.equals("")) {
 
             UIAlert.show("Enter text to be " + keyword + "ed",
@@ -181,8 +183,10 @@ public class Encryptor {
                     //invalidCharacterList, then add it to invalidCharacterList
             }
             text = textNoSpaces;
+            System.out.println("New text is: " + text);
 
             String finalEncryptedCipherText = Recursion.encrypt(text, numKeys);
+            //encrypt() works from numKeys down to 1 by decrementing
 
             if (invalidCharacterList.length() > 0) {
                 System.out.println("Invalid characters are: ");
@@ -198,16 +202,18 @@ public class Encryptor {
 
         if (keyword == "decrypt") {
             String finalDecryptedCipherText =
-                Recursion.decrypt(text, numKeys);
-
-            String decryptedNoSpaces = "";
+                Recursion.decrypt(text, 1);
+                //The second argument of decrypt() MUST be 1 because the
+                //encrypt function works from 1 to numKeys
+                //this is because it must undo the encrypt function oppositely
+            String decryptedNoTildes = "";
             for (char c : finalDecryptedCipherText.toCharArray()) {
-                decryptedNoSpaces += (c == '~' ? " " : c);
+                decryptedNoTildes += (c == '~' ? " " : c);
                 //Spaces were made into ~ characters before being encrypted, so
                     //now they must be transformed back into spaces.
             }
-            finalDecryptedCipherText = decryptedNoSpaces;
-            System.out.println("\n\nDecrypted text is: "
+            finalDecryptedCipherText = decryptedNoTildes;
+            System.out.println("\nDecrypted text is: "
                 + finalDecryptedCipherText);
             return finalDecryptedCipherText;
         }
