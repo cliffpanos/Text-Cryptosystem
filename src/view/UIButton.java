@@ -11,6 +11,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 import javafx.geometry.Pos;
 
 public class UIButton extends StackPane {
@@ -32,9 +33,11 @@ public class UIButton extends StackPane {
         background = new Rectangle(width, height, Color.web("#F7F7F7", 0.9));
         background.setArcWidth((double) height / 4.0);
         background.setArcHeight((double) height / 4.0);
+        background.setStroke(Color.web("#3498DB"));
 
         buttonText = new Label(text);
         buttonText.setFont(new Font(height / 2.5));
+        buttonText.setTextAlignment(TextAlignment.CENTER);
 
         //This buttonHolder is the HBox to hold the icon (if present) and Label
         buttonHolder = new HBox(5);
@@ -65,6 +68,18 @@ public class UIButton extends StackPane {
         background.setFill(color);
         //this.getChildren().clear();
         //this.getChildren().addAll(background, buttonHolder);
+    }
+
+    public void setTextColor(Paint color) {
+        buttonText.setTextFill(color);
+    }
+
+    public Label getLabel() {
+        return this.buttonText;
+    }
+
+    public HBox getClickable() {
+        return this.buttonHolder;
     }
 
 }

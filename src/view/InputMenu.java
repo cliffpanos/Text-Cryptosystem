@@ -1,6 +1,6 @@
 package view;
 
-import javafx.scene.control.TextField;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -9,8 +9,9 @@ import javafx.geometry.Pos;
 public abstract class InputMenu {
 
     protected VBox menu;
-    protected static TextField inputField = new TextField();
-    protected static TextField outputField = new TextField();
+    protected static TextArea inputField = new TextArea();
+    protected static TextArea outputField = new TextArea();
+    protected static UIButton runButton = new UIButton(60, 25, "setInSubclass");
 
     public InputMenu() {
 
@@ -20,14 +21,11 @@ public abstract class InputMenu {
         menu.setAlignment(Pos.CENTER);
 
         inputField.setPrefWidth(menu.getWidth() - 20);
-        inputField.setAlignment(Pos.TOP_LEFT);
-        //inputField.getText().setWrappingWidth(inputField.getWidth() - 10);
-        //TODO
-
         outputField.setPrefWidth(menu.getWidth() - 20);
-        outputField.setAlignment(Pos.TOP_LEFT);
+        inputField.setWrapText(true);
+        outputField.setWrapText(true);
 
-        menu.getChildren().addAll(inputField, outputField);
+        menu.getChildren().addAll(inputField, runButton, outputField);
     }
 
     public VBox getRootNode() {

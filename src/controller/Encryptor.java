@@ -206,18 +206,26 @@ public class Encryptor {
             return finalEncryptedCipherText;
         }
 
-        if (keyword == "decrypt") {
+        if (keyword.equals("decrypt")) {
 
             //Test to make sure that decrypting the first nine characters
             // returns '$Enc$'
             //If it does not, decryption will halt.
-            if (!(Recursion.decrypt(text.substring(0, 5), 1)).equals(pwCheck)) {
+            if (text.length() < 5) {
+                UIAlert.show("Inputted Text Incorrect",
+                    "The text that you entered to decrypt is incorrect.\n"
+                    + "All correctly inputted text is greater than length 5.",
+                    javafx.scene.control.Alert.AlertType.ERROR);
+                return null;
+            }
+
+            if(!(Recursion.decrypt(text.substring(0, 5), 1)).equals(pwCheck)) {
                 UIAlert.show("Incorrect Password",
-                "The decryption password that you entered is incorrect.\n"
-                + "Attempting to decrypt the text with an incorrect\n"
-                + "password would render a disarray of useless data.\n\n"
-                + "Try to decrypt again using a different password.",
-                javafx.scene.control.Alert.AlertType.ERROR);
+                    "The decryption password that you entered is incorrect.\n"
+                    + "Attempting to decrypt the text with an incorrect\n"
+                    + "password would render a disarray of useless data.\n\n"
+                    + "Try to decrypt again using a different password.",
+                    javafx.scene.control.Alert.AlertType.ERROR);
                 return null;
             }
             String finalDecryptedCipherText =
@@ -241,7 +249,7 @@ public class Encryptor {
         //-------------------------------------------------------------------//
 
 
-/*
+        /*
         //Create the file to which the encrypted text will be written.
         try {
         // Using "Encrypted Text.txt" is just for testing
@@ -255,8 +263,8 @@ public class Encryptor {
         // In javafx we should implement this so that
     	} catch (IOException e) {
 	      e.printStackTrace();
-        }
-*/      return null;
+      }*/
+        return null;
     }
 
 

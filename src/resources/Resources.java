@@ -3,6 +3,7 @@ package resources;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.Media;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 
 public class Resources {
@@ -11,22 +12,39 @@ public class Resources {
     private static MediaPlayer nowPlaying = null;
 
     private Resources() {
-
+        //private constructor so that only one Resources instance can be made
     }
 
     public static Image getImage(String fileName) {
 
-        //fill filePath
+        //full filePath
         String filePath = "images/" + fileName;
 
         return new Image(instance.getClass().getResource(
             filePath).toExternalForm());
     }
 
+
+    public static ImageView getImageView(String fileName, double dimension) {
+
+        Image image = getImage(fileName);
+        ImageView imageView = new ImageView(image);
+
+        //Resize and resample every ImageView's icon image
+        imageView.setFitWidth(dimension);
+        imageView.setPreserveRatio(true);
+        imageView.setSmooth(true);
+        imageView.setCache(true);
+
+        return imageView;
+    }
+
+
     public static void playSound(String soundName) {
 
         if (nowPlaying != null) {
-            nowPlaying.stop(); //Stop last sound from continuing to play
+            nowPlaying.stop();
+            //Stop last sound from continuing to play
         }
 
         //full filePath

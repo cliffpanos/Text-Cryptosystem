@@ -1,6 +1,5 @@
 package runner;
 
-import controller.Encryptor;
 import view.MainScreen;
 
 import javafx.scene.layout.StackPane;
@@ -48,6 +47,7 @@ public class Runner extends Application {
         //set Stage boundaries to visible bounds of the main screen
         stage.setWidth(stageWidth);
         stage.setHeight(stageHeight);
+        stage.centerOnScreen();
         isFullScreen = false;
 
         stage.toFront();
@@ -69,7 +69,7 @@ public class Runner extends Application {
             resizeWindow(screenBounds.getWidth(), screenBounds.getHeight());
             isFullScreen = true;
         }
-        //implement
+        //TODO
     }
 
     public static void resizeWindow(double length, double width) {
@@ -82,11 +82,11 @@ public class Runner extends Application {
     }
 
     public static double getStageWidth() {
-        return ((double) screenBounds.getWidth() * 7.0 / 9.0);
+        return stageWidth;
     }
 
     public static double getStageHeight() {
-        return ((double) screenBounds.getHeight() * 7.0 / 9.0);
+        return stageHeight;
     }
 
 }

@@ -13,6 +13,23 @@ import javafx.scene.text.TextAlignment;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 
+import javafx.animation.*;
+import javafx.application.*;
+import javafx.beans.property.*;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.geometry.Insets;
+import javafx.scene.*;
+import javafx.scene.control.Label;
+import javafx.scene.effect.*;
+import javafx.scene.Cursor;
+import javafx.scene.Node;
+import javafx.scene.image.*;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.util.Duration;
+
 public class WindowButtons extends HBox {
 
     private HBox outerHBox = new HBox();
@@ -33,6 +50,7 @@ public class WindowButtons extends HBox {
     //isInControlBounds is whether or not the mouse is within this class' HBox;
     // it is NOT whether or not the mouse is within this class' outerHBox
     private ImageView buttonPressed = null;
+    private Label instructionsLabel;
 
     public WindowButtons(double givenWidth) {
 
@@ -40,34 +58,20 @@ public class WindowButtons extends HBox {
         leftPaneWidth = givenWidth;
 
         //Create all of the buttons, which are ImageViews containing Images
-        exit = new ImageView(Resources.getImage("exit.png"));
-        minimize = new ImageView(Resources.getImage("minimize.png"));
-        fullScreen = new ImageView(Resources.getImage("fullScreen.png"));
-        exitOnHover = new ImageView(Resources.getImage("exitOnHover.png"));
-        minimizeOnHover =
-            new ImageView(Resources.getImage("minimizeOnHover.png"));
-        fullScreenOnHover =
-            new ImageView(Resources.getImage("fullScreenOnHover.png"));
-        exitOnPressed = new ImageView(Resources.getImage("exitOnPressed.png"));
-        minimizeOnPressed =
-            new ImageView(Resources.getImage("minimizeOnPressed.png"));
-        fullScreenOnPressed =
-            new ImageView(Resources.getImage("fullScreenOnPressed.png"));
-
-        //Resize and resample every ImageView's icon image
-        ImageView[] buttons = {exit, minimize, fullScreen, exitOnHover,
-            minimizeOnHover, fullScreenOnHover, exitOnPressed,
-            minimizeOnPressed, fullScreenOnPressed};
-        for (ImageView button : buttons) {
-            button.setFitWidth(11);
-            button.setPreserveRatio(true);
-            button.setSmooth(true);
-            button.setCache(true);
-        }
+        exit = Resources.getImageView("exit.png", 11);
+        minimize = Resources.getImageView("minimize.png", 11);
+        fullScreen = Resources.getImageView("fullScreen.png", 11);
+        exitOnHover = Resources.getImageView("exitOnHover.png", 11);
+        minimizeOnHover = Resources.getImageView("minimizeOnHover.png", 11);
+        fullScreenOnHover = Resources.getImageView("fullScreenOnHover.png", 11);
+        exitOnPressed = Resources.getImageView("exitOnPressed.png", 11);
+        minimizeOnPressed = Resources.getImageView("minimizeOnPressed.png", 11);
+        fullScreenOnPressed = Resources.getImageView("fullScreenOnPressed.png",
+            11);
 
 
         ImageView[] onHoverButtons = {exitOnHover, minimizeOnHover,
-                fullScreenOnHover};
+            fullScreenOnHover};
         for (ImageView onHoverButton : onHoverButtons) {
             onHoverButton.setOnMouseReleased(e -> {
                     if (isInControlBounds) {
@@ -110,18 +114,18 @@ public class WindowButtons extends HBox {
         this.setPrefHeight(30);
 
         this.setOnMouseEntered(e -> {
-            setWindowButtonsOnHover();
-            isInControlBounds = true;
-        });
+                setWindowButtonsOnHover();
+                isInControlBounds = true;
+            });
         this.setOnMouseExited(e -> {
-            setWindowButtons();
-            isInControlBounds = false;
-        });
+                setWindowButtons();
+                isInControlBounds = false;
+            });
 
-        setWindowButtons();
+        setWindowButtons(); //The screen defaults to showing the plain buttons
+
         outerHBox.getChildren().addAll(this, getTranslatorHBox());
         outerHBox.setMinWidth(leftPaneWidth);
-        System.out.println("ow: " + outerHBox.getWidth());
     }
 
     public void setWindowButtons() {
@@ -139,6 +143,7 @@ public class WindowButtons extends HBox {
         return this.outerHBox;
     }
 
+
     public HBox getTranslatorHBox() {
 
         HBox translator = new HBox();
@@ -147,26 +152,74 @@ public class WindowButtons extends HBox {
         translator.setAlignment(Pos.CENTER);
         translator.setMinWidth(leftPaneWidth - 60);
 
-        Label instructionsLabel = new Label("            ");
-        instructionsLabel.setText("            ");
-        instructionsLabel.setTextFill(Color.web("#F7F7F7", 0.7));
+        instructionsLabel = new Label();
+        instructionsLabel.setText("             ");
+        instructionsLabel.setTextFill(Color.web("#F7F7F7", 0.85));
         instructionsLabel.setTextAlignment(TextAlignment.CENTER);
         translator.getChildren().add(instructionsLabel);
 
-        translator.setOnMouseEntered(e -> {
-            instructionsLabel.setText("Drag to Move");
-            });
-        translator.setOnMouseExited(e -> {
-                instructionsLabel.setText("            ");
-            });
-        translator.setOnMousePressed(e -> {
-                instructionsLabel.setTextFill(Color.web("#B3B3B3", 0.8));
-            });
-        translator.setOnMouseReleased(e -> {
-                instructionsLabel.setTextFill(Color.web("#F7F7F7", 0.7));
-            });
+        makeDraggable(stage, translator);
 
         return translator;
+    }
+
+    // makes a stage draggable using a given node, in this case the translator
+    //from stackoverflow.com
+    public void makeDraggable(final Stage stage, final Node byNode) {
+        final Delta dragDelta = new Delta();
+        byNode.setOnMousePressed(mouseEvent -> {
+            instructionsLabel.setTextFill(Color.web("#B3B3B3", 0.8));
+            // record a delta distance for the drag and drop operation.
+            dragDelta.x = stage.getX() - mouseEvent.getScreenX();
+            dragDelta.y = stage.getY() - mouseEvent.getScreenY();
+            byNode.setCursor(Cursor.MOVE);
+        });
+        final BooleanProperty inDrag = new SimpleBooleanProperty(false);
+
+        byNode.setOnMouseReleased(mouseEvent -> {
+            instructionsLabel.setTextFill(Color.web("#F7F7F7", 0.7));
+            byNode.setCursor(Cursor.HAND);
+
+            /*if (inDrag.get()) {
+                stage.hide();
+
+                Timeline pause = new Timeline(new KeyFrame(Duration.millis(50),
+                    event -> {
+                    background.setImage(copyBackground(stage));
+                    layout.getChildren().set(
+                            0,
+                            background
+                    );
+                    stage.show();
+                }));
+                pause.play();
+            }*/
+
+            inDrag.set(false);
+        });
+        byNode.setOnMouseDragged(mouseEvent -> {
+            stage.setX(mouseEvent.getScreenX() + dragDelta.x + 1);
+            stage.setY(mouseEvent.getScreenY() + dragDelta.y + 1);
+
+            inDrag.set(true);
+        });
+        byNode.setOnMouseEntered(mouseEvent -> {
+            instructionsLabel.setText("Drag to Move ");
+            if (!mouseEvent.isPrimaryButtonDown()) {
+                byNode.setCursor(Cursor.HAND);
+            }
+        });
+        byNode.setOnMouseExited(mouseEvent -> {
+            instructionsLabel.setText("             ");
+            if (!mouseEvent.isPrimaryButtonDown()) {
+                byNode.setCursor(Cursor.DEFAULT);
+            }
+        });
+    }
+
+    /** records relative x and y co-ordinates. */
+    private static class Delta {
+        double x, y;
     }
 
 }

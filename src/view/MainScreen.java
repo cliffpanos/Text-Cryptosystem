@@ -24,6 +24,11 @@ public class MainScreen extends BorderPane {
         this.setLeft(edMenu);
         this.setCenter(innerBorderPane);
 
+        /*this.setStyle(
+                "-fx-effect: dropshadow(gaussian, black, " + 70 + ", 0, 0, 0);"
+        );*/
+        //This shadow adding is not working
+
         innerBorderPane.setLeft(optionsMenu);
         innerBorderPane.setCenter(inputOEMenu.getRootNode());
         innerBorderPane.setBackground(new Background(new BackgroundFill(Color
