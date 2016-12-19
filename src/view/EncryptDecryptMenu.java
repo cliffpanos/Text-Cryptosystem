@@ -116,8 +116,11 @@ public class EncryptDecryptMenu extends StackPane {
         passwordVBox.setAlignment(Pos.CENTER);
 
         //menu holds the three central components in the EncryptDecryptMenu
-        StackPane eStackPane = makeStackPane("encrypt.png", "Encrypt");
-        StackPane dStackPane = makeStackPane("decrypt.png", "Decrypt");
+        double dimension = MainScreen.getStageWidth() * 0.18;
+        StackPane eStackPane = new TransparentButton("encrypt.png", "Encrypt",
+            dimension);
+        StackPane dStackPane = new TransparentButton("decrypt.png", "Decrypt",
+            dimension);
         menu.getChildren().addAll(eStackPane, dStackPane, passwordVBox);
 
         //Used to hold the window buttons and Encrypt / Decrypt menu
@@ -133,42 +136,5 @@ public class EncryptDecryptMenu extends StackPane {
         return passwordFieldText;
     }
 
-    public StackPane makeStackPane(String imageURL, String text) {
-
-        StackPane sp = new StackPane();
-
-        double imageDecrement = (text.equals("Encrypt")) ? 7.5 : 0;
-        ImageView imageView = Resources.getImageView(imageURL,
-            (MainScreen.getStageWidth() * 0.05 - imageDecrement));
-
-        //Set background stroke
-        double dim = (MainScreen.getStageWidth() * 0.18) - 85;
-        Rectangle background = new Rectangle(dim, dim, Color.TRANSPARENT);
-        background.setArcWidth((double) dim / 4.0);
-        background.setArcHeight((double) dim / 4.0);
-        background.setStroke(Color.web("#F7F7F7"));
-        sp.setOnMouseEntered(e -> {
-                background.setStroke(Color.web("#3498DB", 0.9));
-            });
-        sp.setOnMouseExited(e -> {
-                background.setStroke(Color.web("#F7F7F7", 0.9));
-            });
-        String keyword = (text.equals("Encrypt")) ? "encrypt" : "decrypt";
-        sp.setOnMouseClicked(e -> {
-                background.setFill(Color.web("#212F3C"));
-                Encryptor.setKeyword(keyword);
-            });
-
-        Label button = new Label(text);
-        button.setTextAlignment(TextAlignment.CENTER);
-        button.setTextFill(Color.web("#F7F7F7"));
-
-        VBox vBox = new VBox(12, imageView, button);
-        vBox.setAlignment(Pos.CENTER);
-        sp.getChildren().addAll(background, vBox);
-        sp.setAlignment(Pos.CENTER);
-
-        return sp;
-    }
 
 }
