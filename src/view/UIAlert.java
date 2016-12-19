@@ -1,5 +1,7 @@
 package view;
 
+import resources.Resources;
+
 import javafx.scene.control.Alert;
 
 public class UIAlert {
@@ -11,7 +13,10 @@ public class UIAlert {
         newAlert.setTitle(title);
         newAlert.setHeaderText(primaryText);
 
-        //Resources.playSound("INSERT HERE for confirmation or error alert");
+        if (alertType == Alert.AlertType.ERROR) {
+            Resources.playSound("errorAlert.aiff");
+        }
+
         newAlert.showAndWait();
     }
 }

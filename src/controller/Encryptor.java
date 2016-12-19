@@ -80,7 +80,7 @@ public class Encryptor {
         password = EncryptDecryptMenu.getPasswordFieldText();
         if (password == null || password.equals("")) {
 
-            UIAlert.show("Enter a password",
+            UIAlert.show("Enter a Password",
                 "You did not enter a password with\n"
                 + "which to " + keyword + " the text. Please\n"
                 + "enter a password in the leftmost pane.",
@@ -101,7 +101,7 @@ public class Encryptor {
         }
 
         if (acceptablePwCharactersFound < password.length()) {
-            UIAlert.show("Password Unacceptable",
+            UIAlert.show("Unacceptable Password",
                 "You entered a password with invalid characters.\n"
                 + "Acceptable characters for a password are:\n"
                 + "A-Z, a-z, 0-9, and ?!@#$%^&*(){}[]<>:;/,._-=+\n"
@@ -115,7 +115,7 @@ public class Encryptor {
         text = InputOnEncryptMenu.getInputFieldText();
         if (text == null || text.equals("")) {
 
-            UIAlert.show("Enter text to be " + keyword + "ed",
+            UIAlert.show("Enter Text to be " + keyword + "ed",
                 "You did not input any text to be " + keyword + "ed.\n"
                 + "Please type or copy text into the box.",
                 javafx.scene.control.Alert.AlertType.ERROR);
@@ -163,6 +163,7 @@ public class Encryptor {
         System.out.println("i Key: " + initialKey);
         System.out.println();
 
+        String pwCheck = "$Enc$"; //See below for explanation if this String
         if (keyword.equals("encrypt")) {
             String invalidCharacterList = "";
                 //will hold all user-entered characters that are invalid
@@ -182,7 +183,12 @@ public class Encryptor {
                 //If the character IS invalid AND it is not already in
                     //invalidCharacterList, then add it to invalidCharacterList
             }
-            text = textNoSpaces;
+            text = pwCheck + textNoSpaces;
+            /*The word Encryptor is added so that it can be checked if it
+              decrypted properly when the user tries to decrypt. If on
+              decryption, the first 9 characters are not '$Enc$', then
+              the user entered an incorrect password, and the remaining text
+              will not be decrypted because doing so would harm the data.*/
             System.out.println("New text is: " + text);
 
             String finalEncryptedCipherText = Recursion.encrypt(text, numKeys);
@@ -201,6 +207,19 @@ public class Encryptor {
         }
 
         if (keyword == "decrypt") {
+
+            //Test to make sure that decrypting the first nine characters
+            // returns '$Enc$'
+            //If it does not, decryption will halt.
+            if (!(Recursion.decrypt(text.substring(0, 5), 1)).equals(pwCheck)) {
+                UIAlert.show("Incorrect Password",
+                "The decryption password that you entered is incorrect.\n"
+                + "Attempting to decrypt the text with an incorrect\n"
+                + "password would render a disarray of useless data.\n\n"
+                + "Try to decrypt again using a different password.",
+                javafx.scene.control.Alert.AlertType.ERROR);
+                return null;
+            }
             String finalDecryptedCipherText =
                 Recursion.decrypt(text, 1);
                 //The second argument of decrypt() MUST be 1 because the
@@ -212,7 +231,8 @@ public class Encryptor {
                 //Spaces were made into ~ characters before being encrypted, so
                     //now they must be transformed back into spaces.
             }
-            finalDecryptedCipherText = decryptedNoTildes;
+            finalDecryptedCipherText = decryptedNoTildes.substring(5);
+                //This goes from index 9 to the end to remove the "$Enc$"
             System.out.println("\nDecrypted text is: "
                 + finalDecryptedCipherText);
             return finalDecryptedCipherText;

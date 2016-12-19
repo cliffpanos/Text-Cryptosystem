@@ -8,6 +8,8 @@ import javafx.scene.effect.GaussianBlur;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.paint.Color;
 import javafx.geometry.Insets;
@@ -22,7 +24,7 @@ import javafx.scene.text.Font;
 
 public class EncryptDecryptMenu extends StackPane {
 
-    private VBox menu = new VBox(40);
+    private VBox menu = new VBox(50); //holds the two buttons & passwordField
     private static TextField passwordField = new TextField();
 
     public EncryptDecryptMenu() {
@@ -32,7 +34,7 @@ public class EncryptDecryptMenu extends StackPane {
 
         this.setBackground(null);
 
-        double width = (double) MainScreen.getStageWidth() * 0.22;
+        double width = (double) MainScreen.getStageWidth() * 0.18;
         double height = (double) MainScreen.getStageHeight();
 
         VBox backgroundBlur = new VBox();
@@ -74,11 +76,13 @@ public class EncryptDecryptMenu extends StackPane {
             });
         passwordField.setPromptText("Enter password");
         passwordField.setMaxWidth(width - 50);
+        passwordField.setAlignment(Pos.CENTER);
 
         //Used to hold the window buttons and Encrypt / Decrypt menu
         VBox outerVBox = new VBox();
+        WindowButtons windowButtons = new WindowButtons(width);
         outerVBox.setAlignment(Pos.TOP_LEFT);
-        outerVBox.getChildren().addAll(new WindowButtons(), menu);
+        outerVBox.getChildren().addAll(windowButtons.getRootNode(), menu);
         this.getChildren().addAll(backgroundBlur, outerVBox);
 
         menu.getChildren().addAll(encryptButton, decryptButton, passwordField);

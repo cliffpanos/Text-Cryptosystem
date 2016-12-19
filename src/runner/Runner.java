@@ -22,8 +22,14 @@ import javafx.geometry.Rectangle2D;
 public class Runner extends Application {
 
     private static Stage stage;
-    private static Rectangle2D primaryScreenBounds =
+    private static Rectangle2D screenBounds =
         Screen.getPrimary().getVisualBounds();
+    private static boolean isFullScreen;
+
+    private static double stageWidth = screenBounds.getWidth() * 7.0 / 9.0;
+    private static double stageHeight = screenBounds.getHeight() * 7.0 / 9.0;
+    private static double lastStageWidth = stageWidth;
+    private static double lastStageHeight = stageHeight;
 
     public static void main(String[] args) {
         launch(args);
@@ -40,8 +46,9 @@ public class Runner extends Application {
         stage.setScene(startScene);
 
         //set Stage boundaries to visible bounds of the main screen
-        stage.setWidth((double) primaryScreenBounds.getWidth() * 7.0 / 9.0);
-        stage.setHeight((double) primaryScreenBounds.getHeight() * 7.0 / 9.0);
+        stage.setWidth(stageWidth);
+        stage.setHeight(stageHeight);
+        isFullScreen = false;
 
         stage.toFront();
         stage.setResizable(true);
@@ -52,16 +59,34 @@ public class Runner extends Application {
 
     }
 
+    public static void windowButtonResize() {
+        if (isFullScreen) {
+            resizeWindow(lastStageWidth, lastStageHeight);
+            isFullScreen = false;
+        } else {
+            lastStageWidth = stageWidth;
+            lastStageHeight = stageHeight;
+            resizeWindow(screenBounds.getWidth(), screenBounds.getHeight());
+            isFullScreen = true;
+        }
+        //implement
+    }
+
+    public static void resizeWindow(double length, double width) {
+        int i;
+        //implement
+    }
+
     public static Stage getStage() {
         return stage;
     }
 
     public static double getStageWidth() {
-        return ((double) primaryScreenBounds.getWidth() * 7.0 / 9.0);
+        return ((double) screenBounds.getWidth() * 7.0 / 9.0);
     }
 
     public static double getStageHeight() {
-        return ((double) primaryScreenBounds.getHeight() * 7.0 / 9.0);
+        return ((double) screenBounds.getHeight() * 7.0 / 9.0);
     }
 
 }
