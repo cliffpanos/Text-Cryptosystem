@@ -100,7 +100,7 @@ public class EncryptDecryptMenu extends StackPane {
                 passwordField.setText(passwordCoverUp);
                 passwordField.setEditable(false);
             });
-        passwordField.setPromptText("**********");
+        passwordField.setPromptText("enter here");
         passwordField.setMaxWidth(width - 80);
         passwordField.setAlignment(Pos.CENTER);
 

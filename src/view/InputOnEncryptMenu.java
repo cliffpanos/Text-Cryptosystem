@@ -1,6 +1,7 @@
 package view;
 
 import controller.Encryptor;
+import resources.Resources;
 
 public class InputOnEncryptMenu extends InputMenu {
 
@@ -22,6 +23,7 @@ public class InputOnEncryptMenu extends InputMenu {
                 String output = Encryptor.run();
                 if (output != null) {
                     outputField.setText(output);
+                    Resources.playSound("encryptionComplete.aiff");
                 }
             });
     }

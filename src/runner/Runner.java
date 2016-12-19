@@ -29,6 +29,8 @@ public class Runner extends Application {
     private static double stageHeight = screenBounds.getHeight() * 7.0 / 9.0;
     private static double lastStageWidth = stageWidth;
     private static double lastStageHeight = stageHeight;
+    private static double lastX = 0;
+    private static double lastY = 0;
 
     public static void main(String[] args) {
         launch(args);
@@ -48,6 +50,8 @@ public class Runner extends Application {
         stage.setWidth(stageWidth);
         stage.setHeight(stageHeight);
         stage.centerOnScreen();
+        lastX = stage.getX();
+        lastY = stage.getY();
         isFullScreen = false;
 
         stage.toFront();
@@ -59,22 +63,30 @@ public class Runner extends Application {
 
     }
 
-    public static void windowButtonResize() {
+    public static void toggleFullScreen() {
         if (isFullScreen) {
-            resizeWindow(lastStageWidth, lastStageHeight);
+            stage.setX(lastX);
+            stage.setY(lastY);
+            stage.setWidth(lastStageWidth);
+            stage.setHeight(lastStageHeight);
             isFullScreen = false;
         } else {
             lastStageWidth = stageWidth;
             lastStageHeight = stageHeight;
-            resizeWindow(screenBounds.getWidth(), screenBounds.getHeight());
+            lastX = stage.getX();
+            lastY = stage.getY();
+            stage.setX(screenBounds.getMinX());
+            stage.setY(screenBounds.getMinY());
+            stage.setWidth(screenBounds.getWidth());
+            stage.setHeight(screenBounds.getHeight());
             isFullScreen = true;
         }
-        //TODO
     }
 
     public static void resizeWindow(double length, double width) {
         int i;
         //implement
+        //TODO
     }
 
     public static Stage getStage() {
@@ -87,6 +99,11 @@ public class Runner extends Application {
 
     public static double getStageHeight() {
         return stageHeight;
+    }
+
+    public static void setXandY(double x, double y) {
+        lastX = y;
+        lastY = y;
     }
 
 }

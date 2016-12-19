@@ -80,7 +80,7 @@ public class WindowButtons extends HBox {
                         } else if (buttonPressed == minimizeOnHover) {
                             stage.setIconified(true);
                         } else if (buttonPressed == fullScreenOnHover) {
-                            Runner.windowButtonResize();
+                            Runner.toggleFullScreen();
                         }
                         setWindowButtonsOnHover();
                     } else {
@@ -172,13 +172,16 @@ public class WindowButtons extends HBox {
             // record a delta distance for the drag and drop operation.
             dragDelta.x = stage.getX() - mouseEvent.getScreenX();
             dragDelta.y = stage.getY() - mouseEvent.getScreenY();
-            byNode.setCursor(Cursor.MOVE);
+            byNode.setCursor(Cursor.HAND);
         });
         final BooleanProperty inDrag = new SimpleBooleanProperty(false);
 
         byNode.setOnMouseReleased(mouseEvent -> {
             instructionsLabel.setTextFill(Color.web("#F7F7F7", 0.7));
             byNode.setCursor(Cursor.HAND);
+            Runner.setXandY(stage.getX(), stage.getY());
+            //Update where Runner thinks the stage is on the screen
+            //since we just moved the stage
 
             /*if (inDrag.get()) {
                 stage.hide();
@@ -200,7 +203,6 @@ public class WindowButtons extends HBox {
         byNode.setOnMouseDragged(mouseEvent -> {
             stage.setX(mouseEvent.getScreenX() + dragDelta.x + 1);
             stage.setY(mouseEvent.getScreenY() + dragDelta.y + 1);
-
             inDrag.set(true);
         });
         byNode.setOnMouseEntered(mouseEvent -> {

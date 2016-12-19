@@ -26,7 +26,16 @@ public class TransparentButton extends StackPane {
     private Rectangle background;
     private Label button;
 
+    private static TransparentButton encryptPane = null;
+    private static TransparentButton decryptPane = null;
+    private static TransparentButton paneSelected = null;
+
+
     public TransparentButton(String imageURL, String text, double dimension) {
+
+        //Setup the StackPane variables to be the two instances of this class
+        encryptPane = (text.equals("Encrypt")) ? this : encryptPane;
+        decryptPane = (text.equals("Decrypt")) ? this : decryptPane;
 
         double imageDecrement = (text.equals("Encrypt")) ? 7.5 : 0;
         imageView = Resources.getImageView(imageURL,
@@ -39,16 +48,32 @@ public class TransparentButton extends StackPane {
         background.setArcHeight((double) dim / 4.0);
         background.setStroke(Color.web("#F7F7F7"));
         this.setOnMouseEntered(e -> {
-                background.setStroke(Color.web("#3498DB", 0.9));
+                if (paneSelected == null) {
+                    background.setStroke(Color.web("#3498DB")); //blue
+                }
+                if (paneSelected != null && this != paneSelected) {
+                    background.setStroke(Color.web("#5D6D7E", 0.9));
+                } else {
+                    background.setStroke(Color.web("#3498DB")); //blue
+                }
             });
         this.setOnMouseExited(e -> {
-                background.setStroke(Color.web("#F7F7F7", 0.9));
+                if (paneSelected == null) {
+                    background.setStroke(Color.web("#F7F7F7", 0.9));
+                }
+                if (paneSelected != null && this != paneSelected) {
+                    background.setStroke(Color.web("#F7F7F7", 0.9));
+                }
             });
         String keyword = (text.equals("Encrypt")) ? "encrypt" : "decrypt";
         this.setOnMouseClicked(e -> {
+                paneSelected = this;
                 background.setFill(Color.web("#212F3C"));
                 Encryptor.setKeyword(keyword);
+                updateSelected();
             });
+        this.setMaxWidth(dim + 2);
+        this.setMaxHeight(dim + 2);
 
         button = new Label(text);
         button.setTextAlignment(TextAlignment.CENTER);
@@ -59,6 +84,24 @@ public class TransparentButton extends StackPane {
         this.getChildren().addAll(background, vBox);
         this.setAlignment(Pos.CENTER);
 
+    }
+
+    public void updateSelected() {
+
+        TransparentButton other = (this == encryptPane) ? decryptPane
+            : encryptPane;
+        //Whichever instance calls the update method is the Pane that was
+        //clicked on, so the other Pane is the one no longer selected
+
+        this.background.setFill(Color.web("#212F3C")); //New Fill
+        other.getTheBackground().setFill(Color.TRANSPARENT);
+
+        this.background.setStroke(Color.web("#3498DB"));
+        other.getTheBackground().setStroke(Color.web("#F7F7F7"));
+    }
+
+    public Rectangle getTheBackground() { //must be named this; can't override
+        return this.background;
     }
 
 }
