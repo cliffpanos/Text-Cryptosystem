@@ -6,6 +6,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Circle;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -27,13 +28,14 @@ public class UIButton extends StackPane {
     }
 
     public UIButton(String iconURL, double width, double height) {
-
+        this(iconURL, width, height, null);
+        //This will create a CIRCULAR icon button rather than a rectangular one
     }
 
     public UIButton(String iconURL, double width, double height, String text) {
 
-        this.setMaxWidth(width);
-        this.setMaxHeight(height);
+        this.setPrefWidth(width);
+        this.setPrefHeight(height);
 
         background = new Rectangle(width, height, Color.WHITE);
         background.setArcWidth((double) height / 4.0);
@@ -41,27 +43,24 @@ public class UIButton extends StackPane {
         background.setStroke(Color.web("#3498DB"));
 
         buttonText = new Label(text);
-        buttonText.setFont(new Font(height / 2.5));
+        buttonText.setFont(new Font(height / 2.25));
         buttonText.setTextAlignment(TextAlignment.CENTER);
 
         //This buttonHolder is the HBox to hold the icon (if present) and Label
-        buttonHolder = new HBox(5);
+        buttonHolder = new HBox(8);
         buttonHolder.setAlignment(Pos.CENTER);
 
         // Sets simple highlighting when mouse goes over button
         buttonHolder.setOnMouseEntered(e -> {
-                setBackgroundColor(Color.web("#D7DBDD", 0.9));
+                background.setFill(Color.web("#D7DBDD", 0.9));
             });
         buttonHolder.setOnMouseExited(e -> {
-                setBackgroundColor(Color.WHITE);
+                background.setFill(Color.WHITE);
             });
 
         //Constructs the buttonHolder HBox according to having an icon or not
         if (iconURL != null) {
-            ImageView iconIV = new ImageView(Resources.getImage(iconURL));
-            iconIV.setFitHeight(height);
-            iconIV.setPreserveRatio(true);
-            iconIV.setSmooth(true);
+            ImageView iconIV = Resources.getImageView(iconURL, (height - 14));
             buttonHolder.getChildren().addAll(iconIV, buttonText);
         } else {
             buttonHolder.getChildren().add(buttonText);

@@ -1,33 +1,20 @@
 package view;
 
-import controller.Encryptor;
-import resources.Resources;
-
 public class InputOnEncryptMenu extends InputMenu {
 
     public InputOnEncryptMenu() {
 
         double stageHeight = MainScreen.getStageHeight();
-        inputField.setMinHeight(((double) stageHeight * 2.0 / 3.0) - 50);
+        inputField.setPrefHeight(((double) stageHeight * 2.0 / 3.0) - 75);
         inputField.setPromptText("Copy or type text here to be encrypted");
 
-        outputField.setMinHeight(((double) stageHeight * 1.0 / 3.0) - 50);
+        outputField.setPrefHeight(((double) stageHeight * 1.0 / 3.0) - 75);
         outputField.setPromptText("The encrypted text will appear here");
 
-        runButton.getLabel().setText("Encrypt");
+        runButton = new UIButton("encrypt.png", 100, 30, "Encrypt");
 
-        runButton.getClickable().setOnMouseClicked(e -> {
-                Encryptor.setText(inputField.getText());
-                String output = Encryptor.run();
-                if (output != null) {
-                    outputField.setText(output);
-                    Resources.playSound("encryptionComplete.aiff");
-                }
-            });
-    }
+        completeSetUp(); //Finish runButton and add all to the VBox
 
-    public String getInputFieldText() {
-        return inputField.getText();
     }
 
 }
