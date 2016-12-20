@@ -23,6 +23,7 @@ public class MainScreen extends BorderPane {
     private static VBox innerBorderPaneVBox = new VBox(inputOEMenu
         .getRootNode());
     private static boolean isEncryptingNotDecrypting = true;
+    private static MenuOptions selectedMenu = MenuOptions.INPUTTEXT;
 
 
     public MainScreen() {
@@ -57,6 +58,9 @@ public class MainScreen extends BorderPane {
 
     public static void setIsEncryptingNotDecrypting(boolean areWeEncrypting) {
         isEncryptingNotDecrypting = areWeEncrypting;
+        if (selectedMenu == MenuOptions.INPUTTEXT) {
+            switchMenu(MenuOptions.INPUTTEXT);
+        }
     }
 
     public static void switchMenu(MenuOptions option) {
@@ -75,12 +79,15 @@ public class MainScreen extends BorderPane {
             //if EncryptDecryptMenu's Encrypt button is pressed, set the
             //right pane to be the inputOEMenu, otherwise the inputODMenu
             System.out.println("Input Text Menu & " + isEncryptingNotDecrypting);
+            selectedMenu = MenuOptions.INPUTTEXT;
             break;
         case CHOOSEFILE :
             innerBorderPane.setCenter(filePane);
+            selectedMenu = MenuOptions.CHOOSEFILE;
             break;
         case CHOOSEFOLDER :
             System.out.println("implement this to show folder choosing");
+            selectedMenu = MenuOptions.CHOOSEFOLDER;
             break;
         }
         innerBorderPaneVBox.getChildren().setAll(toAdd);
