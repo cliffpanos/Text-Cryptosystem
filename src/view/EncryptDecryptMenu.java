@@ -56,28 +56,6 @@ public class EncryptDecryptMenu extends StackPane {
         menu.setMaxWidth(width);
         menu.setPrefHeight(height);
 
-//These can be deleted
-        // Encrpyt/Decrypt Buttons
-        UIButton encryptButton = new UIButton((width - 50), 30, "Encrypt");
-        UIButton decryptButton = new UIButton((width - 50), 30, "Decrypt");
-        encryptButton.setOnMouseClicked(e -> {
-                Encryptor.setKeyword("encrypt");
-
-                System.out.println("encrypt pressed");
-
-                // Shades this button and makes sure other button is not shaded
-                encryptButton.setBackgroundColor(Color.web("#B3B3B3", 0.9));
-                decryptButton.setBackgroundColor(Color.web("#F7F7F7", 0.9));
-            });
-        decryptButton.setOnMouseClicked(e -> {
-                Encryptor.setKeyword("decrypt");
-
-                // Shades this button and makes sure other button is not shaded
-                decryptButton.setBackgroundColor(Color.web("#B3B3B3", 0.9));
-                encryptButton.setBackgroundColor(Color.web("#F7F7F7", 0.9));
-            });
-//Delete from here to the above outdented comment
-
         // Password Field TextField Actions
         passwordField.setOnAction(e -> {
                 Encryptor.setPassword(passwordField.getText());

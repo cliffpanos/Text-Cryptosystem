@@ -15,8 +15,8 @@ public class MainScreen extends BorderPane {
 
     private static BorderPane innerBorderPane = new BorderPane();
     private static EncryptDecryptMenu edMenu = new EncryptDecryptMenu();
-    private static InputOnEncryptMenu inputOEMenu = new InputOnEncryptMenu();
     private static InputOnDecryptMenu inputODMenu = new InputOnDecryptMenu();
+    private static InputOnEncryptMenu inputOEMenu = new InputOnEncryptMenu();
     private static OptionsMenu optionsMenu = new OptionsMenu();
     private static FilePane filePane = new FilePane();
 
@@ -33,7 +33,8 @@ public class MainScreen extends BorderPane {
         System.out.println("computed width: " + computePrefWidth(MainScreen.getStageHeight()));
         System.out.println("Stage width: " + (double) MainScreen.getStageWidth() * 0.57);
         innerBorderPaneVBox.setPrefWidth((double) MainScreen.getStageWidth() * 0.57 - 20.0);
-        System.out.println("innerBorderPaneVBox dims: " + innerBorderPaneVBox.getWidth() + " x " + innerBorderPaneVBox.getHeight());
+        System.out.println("innerBorderPaneVBox dims: " + innerBorderPaneVBox.getWidth() + " x "
+            + innerBorderPaneVBox.getHeight());
 
         /*this.setStyle(
                 "-fx-effect: dropshadow(gaussian, black, " + 70 + ", 0, 0, 0);"
@@ -41,15 +42,18 @@ public class MainScreen extends BorderPane {
         //This shadow adding is not working
 
         innerBorderPane.setLeft(optionsMenu);
-        System.out.println("innerBorder dims: " + innerBorderPane.getWidth() + " x " + innerBorderPane.getHeight());
+        System.out.println("innerBorder dims: " + innerBorderPane.getWidth() + " x "
+            + innerBorderPane.getHeight());
         innerBorderPane.setCenter(inputOEMenu.getRootNode());
-        System.out.println("InputMenu dims: " + inputOEMenu.getRootNode().getWidth() + " x " + inputOEMenu.getRootNode().getHeight());
+        System.out.println("InputMenu dims: " + inputOEMenu.getRootNode().getWidth()
+            + " x " + inputOEMenu.getRootNode().getHeight());
 
         innerBorderPane.setBackground(new Background(new BackgroundFill(Color
             .web("#F2F3F4", 1.0), new CornerRadii(0.0, 5.0, 5.0, 0.0, false),
             new Insets(0))));
         this.setCenter(innerBorderPane);
-        System.out.println("computed width: " + this.computePrefWidth(MainScreen.getStageHeight()) * 0.57);
+        System.out.println("computed width: "
+            + this.computePrefWidth(MainScreen.getStageHeight()) * 0.57);
     }
 
     public enum MenuOptions {
@@ -72,8 +76,10 @@ public class MainScreen extends BorderPane {
         switch (option) {
         case INPUTTEXT :
             if (isEncryptingNotDecrypting) {
+                System.out.println("Encrypting");
                 innerBorderPane.setCenter(inputOEMenu.getRootNode());
             } else {
+                System.out.println("Decrypting");
                 innerBorderPane.setCenter(inputODMenu.getRootNode());
             }
             //if EncryptDecryptMenu's Encrypt button is pressed, set the
@@ -94,6 +100,19 @@ public class MainScreen extends BorderPane {
 
     }
 
+
+    public static InputOnDecryptMenu getInputODMenu() {
+        return inputODMenu;
+    }
+
+    public static InputOnEncryptMenu getInputOEMenu() {
+        return inputOEMenu;
+    }
+
+    public static boolean getIsEncryptingNotDecrypting() {
+        return isEncryptingNotDecrypting;
+    }
+
     public static double getStageHeight() {
         return Runner.getStageHeight();
     }
@@ -101,4 +120,5 @@ public class MainScreen extends BorderPane {
     public static double getStageWidth() {
         return Runner.getStageWidth();
     }
+
 }

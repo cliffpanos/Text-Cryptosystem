@@ -26,7 +26,7 @@ public class InputOnDecryptMenu extends InputMenu {
             });
     }
 
-    public static String getInputFieldText() {
+    public String getInputFieldText() {
         return inputField.getText();
     }
 

@@ -23,6 +23,7 @@ import runner.Runner;
 import view.UIAlert;
 import view.EncryptDecryptMenu;
 import view.InputOnEncryptMenu;
+import view.MainScreen;
 
 import java.util.Scanner;
 import java.io.File;
@@ -110,7 +111,12 @@ public class Encryptor {
 
 
         // GET THE TEXT TO BE ENCRYPTED/DECRYPTED FROM THE USER
-        text = InputOnEncryptMenu.getInputFieldText();
+        if (MainScreen.getIsEncryptingNotDecrypting()) {
+            text = MainScreen.getInputOEMenu().getInputFieldText();
+        } else {
+            text = MainScreen.getInputODMenu().getInputFieldText();
+        }
+
         if (text == null || text.equals("")) {
 
             UIAlert.show("Enter Text to be " + keyword + "ed",

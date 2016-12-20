@@ -9,9 +9,9 @@ import javafx.geometry.Pos;
 public abstract class InputMenu {
 
     protected VBox menu;
-    protected static TextArea inputField = new TextArea();
-    protected static TextArea outputField = new TextArea();
-    protected static UIButton runButton = new UIButton(60, 25, "setInSubclass");
+    protected TextArea inputField = new TextArea();
+    protected TextArea outputField = new TextArea();
+    protected UIButton runButton = new UIButton(60, 25, "setInSubclass");
 
     public InputMenu() {
 
