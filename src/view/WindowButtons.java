@@ -154,7 +154,7 @@ public class WindowButtons extends HBox {
 
         instructionsLabel = new Label();
         instructionsLabel.setText("             ");
-        instructionsLabel.setTextFill(Color.web("#F7F7F7", 0.85));
+        instructionsLabel.setTextFill(Color.web("#F7F7F7", 0.88));
         instructionsLabel.setTextAlignment(TextAlignment.CENTER);
         translator.getChildren().add(instructionsLabel);
 
@@ -177,7 +177,7 @@ public class WindowButtons extends HBox {
         final BooleanProperty inDrag = new SimpleBooleanProperty(false);
 
         byNode.setOnMouseReleased(mouseEvent -> {
-            instructionsLabel.setTextFill(Color.web("#F7F7F7", 0.7));
+            instructionsLabel.setTextFill(Color.web("#F7F7F7", 0.88));
             byNode.setCursor(Cursor.HAND);
             Runner.setXandY(stage.getX(), stage.getY());
             //Update where Runner thinks the stage is on the screen

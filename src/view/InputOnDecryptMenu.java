@@ -3,18 +3,18 @@ package view;
 import controller.Encryptor;
 import resources.Resources;
 
-public class InputOnEncryptMenu extends InputMenu {
+public class InputOnDecryptMenu extends InputMenu {
 
-    public InputOnEncryptMenu() {
+    public InputOnDecryptMenu() {
 
         double stageHeight = MainScreen.getStageHeight();
-        inputField.setMinHeight(((double) stageHeight * 2.0 / 3.0) - 50);
-        inputField.setPromptText("Copy or type text here to be encrypted");
+        inputField.setMinHeight(((double) stageHeight * 1.0 / 3.0) - 50);
+        inputField.setPromptText("Copy or type text here to be decrypted");
 
-        outputField.setMinHeight(((double) stageHeight * 1.0 / 3.0) - 50);
-        outputField.setPromptText("The encrypted text will appear here");
+        outputField.setMinHeight(((double) stageHeight * 2.0 / 3.0) - 50);
+        outputField.setPromptText("The decrypted text will appear here");
 
-        runButton.getLabel().setText("Encrypt");
+        runButton.getLabel().setText("Decrypt");
 
         runButton.getClickable().setOnMouseClicked(e -> {
                 Encryptor.setText(inputField.getText());

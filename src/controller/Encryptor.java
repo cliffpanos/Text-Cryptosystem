@@ -29,8 +29,6 @@ import java.io.File;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 
-import javafx.stage.DirectoryChooser;
-
 public class Encryptor {
 
     // Class-wide variables
@@ -299,14 +297,6 @@ public class Encryptor {
 
     public static int getNumKeys() {
         return numKeys;
-    }
-
-    public static File getFileFromDirectory() {
-
-        DirectoryChooser chooser = new DirectoryChooser();
-        chooser.setTitle("JavaFX Projects");
-        File selectedDirectory = chooser.showDialog(Runner.getStage());
-        return selectedDirectory;
     }
 
     public static void copyToClipboard(String toCopy) {

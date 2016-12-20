@@ -47,13 +47,13 @@ public class EncryptDecryptMenu extends StackPane {
         backgroundBlur.setPrefWidth(width);
         backgroundBlur.setPrefHeight(height);
         backgroundBlur.setBackground(new Background(new BackgroundFill(Color
-            .web("#212F3C", 0.975), new CornerRadii(5.0, 0.0, 0.0, 5.0, false),
+            .web("#212F3C", 0.968), new CornerRadii(5.0, 0.0, 0.0, 5.0, false),
             new Insets(0))));
         //backgroundBlur.setEffect(new BoxBlur(width, (height - 20), 3));
 
         menu.setAlignment(Pos.CENTER);
         menu.setBackground(null);
-        menu.setPrefWidth(width);
+        menu.setMaxWidth(width);
         menu.setPrefHeight(height);
 
 //These can be deleted

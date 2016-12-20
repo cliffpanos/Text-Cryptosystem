@@ -5,7 +5,6 @@ import view.MainScreen;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
-
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -42,9 +41,9 @@ public class Runner extends Application {
         stage.initStyle(StageStyle.TRANSPARENT);
         stage.setTitle("Encryptor");
 
-        Scene startScene = new Scene(new MainScreen());
-        startScene.setFill(Color.TRANSPARENT);
-        stage.setScene(startScene);
+        Scene mainScene = new Scene(new MainScreen());
+        mainScene.setFill(Color.TRANSPARENT);
+        stage.setScene(mainScene);
 
         //set Stage boundaries to visible bounds of the main screen
         stage.setWidth(stageWidth);
@@ -64,13 +63,13 @@ public class Runner extends Application {
     }
 
     public static void toggleFullScreen() {
-        if (isFullScreen) {
+        if (isFullScreen) { //revert the stage to the previous size & location
             stage.setX(lastX);
             stage.setY(lastY);
             stage.setWidth(lastStageWidth);
             stage.setHeight(lastStageHeight);
             isFullScreen = false;
-        } else {
+        } else { //make it fullScreen
             lastStageWidth = stageWidth;
             lastStageHeight = stageHeight;
             lastX = stage.getX();

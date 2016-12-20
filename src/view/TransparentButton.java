@@ -65,11 +65,14 @@ public class TransparentButton extends StackPane {
                     background.setStroke(Color.web("#F7F7F7", 0.9));
                 }
             });
-        String keyword = (text.equals("Encrypt")) ? "encrypt" : "decrypt";
+        boolean isEncrypt = text.equals("Encrypt");
+        String keyword = (isEncrypt) ? "encrypt" : "decrypt";
         this.setOnMouseClicked(e -> {
                 paneSelected = this;
                 background.setFill(Color.web("#212F3C"));
                 Encryptor.setKeyword(keyword);
+                FilePane.setProcessType(text);
+                MainScreen.setIsEncryptingNotDecrypting(isEncrypt);
                 updateSelected();
             });
         this.setMaxWidth(dim + 2);

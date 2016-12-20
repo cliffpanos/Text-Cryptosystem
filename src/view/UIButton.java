@@ -20,9 +20,14 @@ public class UIButton extends StackPane {
     private Label buttonText;
     private ImageView buttonIcon;
     private HBox buttonHolder;
+    private boolean isSelected = false;
 
     public UIButton(double width, double height, String text) {
         this(null, width, height, text);
+    }
+
+    public UIButton(String iconURL, double width, double height) {
+
     }
 
     public UIButton(String iconURL, double width, double height, String text) {
@@ -30,7 +35,7 @@ public class UIButton extends StackPane {
         this.setMaxWidth(width);
         this.setMaxHeight(height);
 
-        background = new Rectangle(width, height, Color.web("#F7F7F7", 0.9));
+        background = new Rectangle(width, height, Color.WHITE);
         background.setArcWidth((double) height / 4.0);
         background.setArcHeight((double) height / 4.0);
         background.setStroke(Color.web("#3498DB"));
@@ -45,10 +50,10 @@ public class UIButton extends StackPane {
 
         // Sets simple highlighting when mouse goes over button
         buttonHolder.setOnMouseEntered(e -> {
-                setBackgroundColor(Color.web("#B3B3B3", 0.9));
+                setBackgroundColor(Color.web("#D7DBDD", 0.9));
             });
         buttonHolder.setOnMouseExited(e -> {
-                setBackgroundColor(Color.web("#F7F7F7", 0.9));
+                setBackgroundColor(Color.WHITE);
             });
 
         //Constructs the buttonHolder HBox according to having an icon or not
@@ -66,8 +71,6 @@ public class UIButton extends StackPane {
 
     public void setBackgroundColor(Paint color) {
         background.setFill(color);
-        //this.getChildren().clear();
-        //this.getChildren().addAll(background, buttonHolder);
     }
 
     public void setTextColor(Paint color) {
@@ -80,6 +83,14 @@ public class UIButton extends StackPane {
 
     public HBox getClickable() {
         return this.buttonHolder;
+    }
+
+    public void setSelected(boolean isSelected) {
+        this.isSelected = isSelected;
+    }
+
+    public boolean isSelected() {
+        return this.isSelected;
     }
 
 }
