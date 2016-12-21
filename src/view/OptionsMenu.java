@@ -33,9 +33,11 @@ public class OptionsMenu extends StackPane {
             new Insets(10, 10, 10, 10))));
 
         Color c = Color.TRANSPARENT;
-        this.setBorder(new Border(new BorderStroke(Color.web("#B3B3B3"),
-            BorderStrokeStyle.SOLID, new CornerRadii(0.0),
-            new BorderWidths(1.0))));
+        this.setBorder(new Border(new BorderStroke(Color.TRANSPARENT,
+            Color.web("#B3B3B3"), Color.TRANSPARENT, Color.TRANSPARENT,
+            BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID,
+            BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID,
+            new CornerRadii(0.0), new BorderWidths(1.66), new Insets(0.0))));
 
 
         menu = new VBox(20);
@@ -58,12 +60,17 @@ public class OptionsMenu extends StackPane {
             // Sets simple highlighting when mouse goes over button
             buttonHolder.setOnMouseEntered(e -> {
                     if (!button.isSelected()) {
-                        button.setBackgroundColor(Color.web("#D6DBDF", 0.9));
+                        button.setBackgroundColor(Color.web("#EAEDED", 0.9));
                     }
                 });
             buttonHolder.setOnMouseExited(e -> {
                     if (!button.isSelected()) {
                         button.setBackgroundColor(Color.WHITE);
+                    }
+                });
+            buttonHolder.setOnMousePressed(e -> {
+                    if (!button.isSelected()) {
+                        button.setBackgroundColor(Color.web("#D6DBDF"));
                     }
                 });
 
@@ -75,11 +82,10 @@ public class OptionsMenu extends StackPane {
             buttonHolder.setOnMouseClicked(e -> {
                     for (UIButton updateButton : buttons) {
                         updateButton.setSelected(false);
-                        updateButton.setBackgroundColor(Color.web("#F7F7F7",
-                            0.9));
+                        updateButton.setBackgroundColor(Color.WHITE);
                     }
                     button.setSelected(true);
-                    button.setBackgroundColor(Color.web("#AEB6BF", 0.9));
+                    button.setBackgroundColor(Color.web("#D6EAF8", 0.9));
                     MainScreen.switchMenu(option);
             });
         }

@@ -18,10 +18,9 @@ public abstract class InputMenu {
     protected UIButton runButton;
 
     private HBox upperMenuBar = new HBox(7.5);
+    private double paneWidth = MainScreen.getStageWidth() * 0.57;
 
     public InputMenu() {
-
-        double paneWidth = MainScreen.getStageWidth() * 0.57;
 
         menu = new VBox(10);
         menu.setPrefWidth(paneWidth - 40.0);
@@ -34,8 +33,15 @@ public abstract class InputMenu {
         inputField.setWrapText(true);
         outputField.setWrapText(true);
 
+        UIButton trashButton = new UIButton("trash_icon.png", 30);
+        trashButton.setOnMouseClicked(e -> {
+                inputField.clear();
+            });
+
         upperMenuBar.setPrefWidth(paneWidth - 40.0);
         upperMenuBar.setPrefHeight(30);
+        upperMenuBar.setAlignment(Pos.CENTER_LEFT);
+        upperMenuBar.getChildren().add(trashButton);
 
     }
 
@@ -50,8 +56,11 @@ public abstract class InputMenu {
                     Resources.playSound("encryptionComplete.aiff");
                 }
             });
+        HBox runButtonHBox = new HBox(runButton);
+        runButtonHBox.setAlignment(Pos.CENTER_RIGHT);
+        runButtonHBox.setPrefWidth(paneWidth - 45.0);
 
-        menu.getChildren().addAll(upperMenuBar, inputField, runButton,
+        menu.getChildren().addAll(upperMenuBar, inputField, runButtonHBox,
             outputField);
 
     }

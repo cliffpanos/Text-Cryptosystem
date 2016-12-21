@@ -86,7 +86,11 @@ public class FilePane extends StackPane {
     }
 
     private static void processFile(File fileToProcess) {
-        if (fileToProcess != null) {
+        if (fileToProcess == null) {
+            System.out.println("Trying to process a null file");
+            return;
+        } else {
+
             String textToProcess = "";
 
             // Gets text to process from fileToProcess
@@ -129,8 +133,8 @@ public class FilePane extends StackPane {
             // Processes text
             Encryptor.setText(textToProcess);
             String processedText = Encryptor.run();
-            if (processedText != null) {
-                Resources.playSound("encryptionComplete.aiff");
+            if (processedText == null) {
+                return;
             }
 
             // Writes processedText to fileToProcess
@@ -141,9 +145,11 @@ public class FilePane extends StackPane {
 
                 fw = new FileWriter(fileToProcess);
                 bw = new BufferedWriter(fw);
-                bw.write(processedText);
+                if (bw != null && processedText != null) {
+                    bw.write(processedText);
+                }
 
-            } catch (IOException e) {
+            } catch (Exception e) {
 
                 e.printStackTrace();
 
@@ -165,11 +171,11 @@ public class FilePane extends StackPane {
                 }
 
             }
-
-        } else {
-
-            System.out.println("Warning: User is trying to process a null file.");
+            
+            Resources.playSound("encryptionComplete.aiff");
 
         }
+
     }
+
 }

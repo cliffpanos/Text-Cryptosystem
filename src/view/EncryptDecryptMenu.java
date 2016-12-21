@@ -70,7 +70,7 @@ public class EncryptDecryptMenu extends StackPane {
                 passwordFieldText = passwordField.getText();
                 lastCaretPosition = passwordField.getCaretPosition();
                 //Replace the password with * characters so that onlookers
-                //cannot see it
+                    //cannot see it
                 String passwordCoverUp = "";
                 for (char c : passwordFieldText.toCharArray()) {
                     passwordCoverUp += "*";

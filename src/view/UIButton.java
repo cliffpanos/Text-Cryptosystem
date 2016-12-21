@@ -5,6 +5,8 @@ import resources.Resources;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 
+import javafx.scene.Node;
+import javafx.scene.shape.Shape;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Circle;
 import javafx.scene.control.Label;
@@ -27,9 +29,17 @@ public class UIButton extends StackPane {
         this(null, width, height, text);
     }
 
-    public UIButton(String iconURL, double width, double height) {
-        this(iconURL, width, height, null);
+    public UIButton(String iconURL, double dimension) {
         //This will create a CIRCULAR icon button rather than a rectangular one
+        Circle circle = new Circle((dimension / 2.0), Color.WHITE);
+        this.setOnMousePressed(e -> {
+                circle.setFill(Color.web("#D7DBDD"));
+            });
+        this.setOnMouseReleased(e -> {
+                circle.setFill(Color.WHITE);
+            });
+        ImageView icon = Resources.getImageView(iconURL, (dimension - 12.5));
+        this.getChildren().addAll(circle, icon);
     }
 
     public UIButton(String iconURL, double width, double height, String text) {
@@ -50,13 +60,8 @@ public class UIButton extends StackPane {
         buttonHolder = new HBox(8);
         buttonHolder.setAlignment(Pos.CENTER);
 
-        // Sets simple highlighting when mouse goes over button
-        buttonHolder.setOnMouseEntered(e -> {
-                background.setFill(Color.web("#D7DBDD", 0.9));
-            });
-        buttonHolder.setOnMouseExited(e -> {
-                background.setFill(Color.WHITE);
-            });
+        //On pressed, released, entered, clicked
+        setMouseActions(buttonHolder, background);
 
         //Constructs the buttonHolder HBox according to having an icon or not
         if (iconURL != null) {
@@ -66,6 +71,23 @@ public class UIButton extends StackPane {
             buttonHolder.getChildren().add(buttonText);
         }
         this.getChildren().addAll(background, buttonHolder);
+    }
+
+    //Setup mouse actions for a given UIButton's color Node
+    public void setMouseActions(Node actionNode, Shape colorNode) {
+
+        actionNode.setOnMouseEntered(e -> {
+                colorNode.setFill(Color.web("#EAEDED", 0.9));
+            });
+        actionNode.setOnMouseExited(e -> {
+                colorNode.setFill(Color.WHITE);
+            });
+        actionNode.setOnMousePressed(e -> {
+                colorNode.setFill(Color.web("#D6DBDF"));
+            });
+        actionNode.setOnMouseClicked(e -> {
+                colorNode.setFill(Color.web("#D6EAF8"));
+            });
     }
 
     public void setBackgroundColor(Paint color) {
