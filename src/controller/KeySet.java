@@ -38,7 +38,6 @@ public class KeySet {
 
         for (int i = 0; i < numKeys; i++) {
             keys[0][i] = createKey(i, passwordHashAlpha);
-            System.out.println(keys[0][i]);
         }
         for (int i = 0; i < numKeys; i++) {
             keys[1][i] = createKey(i, passwordHashBeta);

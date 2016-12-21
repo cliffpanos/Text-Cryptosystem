@@ -88,7 +88,13 @@ public class OptionsMenu extends StackPane {
                     button.setBackgroundColor(Color.web("#D6EAF8", 0.9));
                     MainScreen.switchMenu(option);
             });
+
         }
+
+        //The options menu initializes with inputText selected by default
+        inputText.setSelected(true);
+        inputText.setBackgroundColor(Color.web("#D6EAF8", 0.9));
+
     }
 
 }

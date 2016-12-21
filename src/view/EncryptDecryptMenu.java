@@ -104,7 +104,7 @@ public class EncryptDecryptMenu extends StackPane {
         //Used to hold the window buttons and Encrypt / Decrypt menu
         VBox outerVBox = new VBox();
         WindowButtons windowButtons = new WindowButtons(width);
-        outerVBox.setAlignment(Pos.TOP_LEFT);
+        outerVBox.setAlignment(Pos.TOP_CENTER);
         outerVBox.getChildren().addAll(windowButtons.getRootNode(), menu);
         this.getChildren().addAll(backgroundBlur, outerVBox);
 

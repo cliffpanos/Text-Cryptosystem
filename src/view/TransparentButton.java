@@ -69,7 +69,6 @@ public class TransparentButton extends StackPane {
         String keyword = (isEncrypt) ? "encrypt" : "decrypt";
         this.setOnMouseClicked(e -> {
                 paneSelected = this;
-                background.setFill(Color.web("#212F3C"));
                 Encryptor.setKeyword(keyword);
                 FilePane.setProcessType(text);
                 MainScreen.setIsEncryptingNotDecrypting(isEncrypt);
@@ -86,6 +85,17 @@ public class TransparentButton extends StackPane {
         vBox.setAlignment(Pos.CENTER);
         this.getChildren().addAll(background, vBox);
         this.setAlignment(Pos.CENTER);
+
+        //The program initializes with encryptPane selected by default:
+        if (this == encryptPane) {
+            paneSelected = encryptPane;
+            Encryptor.setKeyword(keyword);
+            FilePane.setProcessType(text);
+            MainScreen.setIsEncryptingNotDecrypting(isEncrypt);
+            background.setFill(Color.web("#212F3C"));
+            background.setStroke(Color.web("#3498DB"));
+        }
+
 
     }
 

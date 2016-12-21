@@ -14,14 +14,12 @@ import javafx.geometry.Insets;
 public class MainScreen extends BorderPane {
 
     private static BorderPane innerBorderPane = new BorderPane();
+    private static FilePane filePane = new FilePane();
     private static EncryptDecryptMenu edMenu = new EncryptDecryptMenu();
     private static InputOnDecryptMenu inputODMenu = new InputOnDecryptMenu();
     private static InputOnEncryptMenu inputOEMenu = new InputOnEncryptMenu();
     private static OptionsMenu optionsMenu = new OptionsMenu();
-    private static FilePane filePane = new FilePane();
 
-    private static VBox innerBorderPaneVBox = new VBox(inputOEMenu
-        .getRootNode());
     private static boolean isEncryptingNotDecrypting = true;
     private static MenuOptions selectedMenu = MenuOptions.INPUTTEXT;
 
@@ -30,11 +28,6 @@ public class MainScreen extends BorderPane {
 
         this.setBackground(null);
         this.setLeft(edMenu);
-        System.out.println("computed width: " + computePrefWidth(MainScreen.getStageHeight()));
-        System.out.println("Stage width: " + (double) MainScreen.getStageWidth() * 0.57);
-        innerBorderPaneVBox.setPrefWidth((double) MainScreen.getStageWidth() * 0.57 - 20.0);
-        System.out.println("innerBorderPaneVBox dims: " + innerBorderPaneVBox.getWidth() + " x "
-            + innerBorderPaneVBox.getHeight());
 
         /*this.setStyle(
                 "-fx-effect: dropshadow(gaussian, black, " + 70 + ", 0, 0, 0);"
@@ -42,18 +35,13 @@ public class MainScreen extends BorderPane {
         //This shadow adding is not working
 
         innerBorderPane.setLeft(optionsMenu);
-        System.out.println("innerBorder dims: " + innerBorderPane.getWidth() + " x "
-            + innerBorderPane.getHeight());
         innerBorderPane.setCenter(inputOEMenu.getRootNode());
-        System.out.println("InputMenu dims: " + inputOEMenu.getRootNode().getWidth()
-            + " x " + inputOEMenu.getRootNode().getHeight());
 
         innerBorderPane.setBackground(new Background(new BackgroundFill(Color
             .web("#F2F3F4", 1.0), new CornerRadii(0.0, 5.0, 5.0, 0.0, false),
             new Insets(0))));
         this.setCenter(innerBorderPane);
-        System.out.println("computed width: "
-            + this.computePrefWidth(MainScreen.getStageHeight()) * 0.57);
+
     }
 
     public enum MenuOptions {
@@ -71,8 +59,7 @@ public class MainScreen extends BorderPane {
 
         innerBorderPane.setCenter(null);
         System.out.println("SwitchMenu called!");
-        VBox toAdd = new VBox();
-        toAdd.setMinWidth(MainScreen.getStageWidth() * 0.57);
+
         switch (option) {
         case INPUTTEXT :
             if (isEncryptingNotDecrypting) {
@@ -96,7 +83,6 @@ public class MainScreen extends BorderPane {
             selectedMenu = MenuOptions.CHOOSEFOLDER;
             break;
         }
-        innerBorderPaneVBox.getChildren().setAll(toAdd);
 
     }
 
@@ -114,11 +100,7 @@ public class MainScreen extends BorderPane {
     }
 
     public static boolean isInputtingDirectly() {
-        if (selectedMenu == MenuOptions.INPUTTEXT) {
-            return true;
-        } else {
-            return false;
-        }
+        return selectedMenu == MenuOptions.INPUTTEXT;
     }
 
     public static double getStageHeight() {
