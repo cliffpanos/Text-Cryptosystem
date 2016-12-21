@@ -109,21 +109,23 @@ public class Encryptor {
             return null;
         }
 
+        // Special operations for getting text variable if inputting directly
+        if (MainScreen.isInputtingDirectly()) {
+            // GET THE TEXT TO BE ENCRYPTED/DECRYPTED FROM THE USER
+            if (MainScreen.getIsEncryptingNotDecrypting()) {
+                text = MainScreen.getInputOEMenu().getInputFieldText();
+            } else {
+                text = MainScreen.getInputODMenu().getInputFieldText();
+            }
 
-        // GET THE TEXT TO BE ENCRYPTED/DECRYPTED FROM THE USER
-        if (MainScreen.getIsEncryptingNotDecrypting()) {
-            text = MainScreen.getInputOEMenu().getInputFieldText();
-        } else {
-            text = MainScreen.getInputODMenu().getInputFieldText();
-        }
+            if (text == null || text.equals("")) {
 
-        if (text == null || text.equals("")) {
-
-            UIAlert.show("Enter Text to be " + keyword + "ed",
-                "You did not input any text to be " + keyword + "ed.\n"
-                + "Please type or copy text into the box.",
-                javafx.scene.control.Alert.AlertType.ERROR);
-            return null;
+                UIAlert.show("Enter Text to be " + keyword + "ed",
+                    "You did not input any text to be " + keyword + "ed.\n"
+                    + "Please type or copy text into the box.",
+                    javafx.scene.control.Alert.AlertType.ERROR);
+                return null;
+            }
         }
 
         System.out.println("Text is: '" + text + "'");

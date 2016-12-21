@@ -113,6 +113,14 @@ public class MainScreen extends BorderPane {
         return isEncryptingNotDecrypting;
     }
 
+    public static boolean isInputtingDirectly() {
+        if (selectedMenu == MenuOptions.INPUTTEXT) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public static double getStageHeight() {
         return Runner.getStageHeight();
     }
