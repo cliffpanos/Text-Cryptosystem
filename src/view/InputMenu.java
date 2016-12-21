@@ -33,15 +33,41 @@ public abstract class InputMenu {
         inputField.setWrapText(true);
         outputField.setWrapText(true);
 
-        UIButton trashButton = new UIButton("trash_icon.png", 30);
+        double iconSize = 32.5;
+        UIButton trashButton = new UIButton("trash_icon.png", iconSize);
         trashButton.setOnMouseClicked(e -> {
                 inputField.clear();
             });
+        UIButton selectAllButton = new UIButton("selectAll_icon.png", iconSize);
+        selectAllButton.setOnMouseClicked(e -> {
+                inputField.selectAll();
+        });
+        UIButton pasteButton = new UIButton("paste_icon.png", iconSize);
+        pasteButton.setOnMouseClicked(e -> {
+                inputField.paste();
+        });
+        UIButton copyButton = new UIButton("copy_icon.png", iconSize);
+        copyButton.setOnMouseClicked(e -> {
+                inputField.copy();
+        });
+        UIButton cutButton = new UIButton("cut_icon.png", iconSize);
+        cutButton.setOnMouseClicked(e -> {
+                inputField.cut();
+        });
+        UIButton undoButton = new UIButton("undo_icon.png", iconSize);
+        undoButton.setOnMouseClicked(e -> {
+                inputField.undo();
+        });
+        UIButton redoButton = new UIButton("redo_icon.png", iconSize);
+        redoButton.setOnMouseClicked(e -> {
+                inputField.redo();
+        });
 
         upperMenuBar.setPrefWidth(paneWidth - 40.0);
         upperMenuBar.setPrefHeight(30);
         upperMenuBar.setAlignment(Pos.CENTER_LEFT);
-        upperMenuBar.getChildren().add(trashButton);
+        upperMenuBar.getChildren().addAll(trashButton, selectAllButton,
+            pasteButton, copyButton, cutButton, undoButton, redoButton);
 
     }
 
