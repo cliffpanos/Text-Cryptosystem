@@ -25,6 +25,8 @@ import javafx.geometry.Pos;
 public class FilePane extends StackPane {
 
     private VBox vBox = new VBox(10);
+    private static UIButton runButton =
+        new UIButton("encrypt.png", 200, 30, "Encrypt");
 
     private static String processType = "encrypt"; // "encrypt" or "decrypt"
     private static UIButton chooseFileButton;
@@ -41,18 +43,50 @@ public class FilePane extends StackPane {
 
         chooseFileButton = new UIButton(MainScreen.getStageWidth() * 0.57
             - 100.0, 30, "Choose a file to " + processType);
-        chooseFileButton.setOnMouseClicked(e -> {
-                fileToProcess = getFileFromDirectory();
-
-                // Process the chosen File
-                processFile(fileToProcess);
-            });
         chooseFileButton.setAlignment(Pos.TOP_CENTER);
+        chooseFileButton.setOnMouseClicked(e -> {
+                File tempFile = getFileFromDirectory();
+                if (tempFile != null) {
+                    fileToProcess = tempFile;
+                    vBox.getChildren().add(runButton);
+                }
+                Resources.playSound("fileUpload.aiff");
+            });
+
+        runButton.setOnMouseClicked(e -> {
+                processFile();
+            });
 
         vBox.setAlignment(Pos.CENTER);
         vBox.getChildren().add(chooseFileButton);
 
         this.getChildren().add(vBox);
+
+    }
+
+    public static void setProcessType(String encryptOrDecrypt) {
+        processType = encryptOrDecrypt;
+        chooseFileButton.getLabel().setText(
+            "Choose a file to " + processType); //change to encrypt or decrypt
+        runButton.getLabel().setText(processType.substring(0, 1).toUpperCase()
+            + processType.substring(1));
+        runButton.updateIcon(encryptOrDecrypt + ".png");
+    }
+
+
+    //Code to get and process Files ----------------- :
+
+    public void processFile() {
+
+        String extension = getFileExtension(fileToProcess.getName());
+
+        if (extension.equals("txt")) {
+            Encryptor.setText(readTXTFile(fileToProcess));
+            String processedText = Encryptor.run();
+            if (processedText != null) {
+                writeTXTFile(fileToProcess, processedText);
+            }
+        }
 
     }
 
@@ -62,50 +96,45 @@ public class FilePane extends StackPane {
         fileChooser.setTitle("Select a File");
         //Set extension filter
         FileChooser.ExtensionFilter extFilter =
-            new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
+            new FileChooser.ExtensionFilter("TXT files (.txt)", "*.txt");
 
         fileChooser.getExtensionFilters().add(extFilter);
-
-        //Show save file dialog
         return fileChooser.showOpenDialog(Runner.getStage());
+
     }
 
-    //put this in the folderchooser thing and delete fom
-    public File getFolderFromDirectory() {
+    //Returns a String of the file extension, such as "txt" or "doc"
+    public static String getFileExtension(String fileName) {
 
-        DirectoryChooser chooser = new DirectoryChooser();
-        chooser.setTitle("Select a Folder");
-        File selectedDirectory = chooser.showDialog(Runner.getStage());
-        return selectedDirectory;
+        String extension = ""; //Get the extension of the file
+        int dot = fileName.lastIndexOf('.');
+        int slash = Math.max(fileName.lastIndexOf('/'),
+            fileName.lastIndexOf('\\'));
+        if (dot > slash) {
+            extension = fileName.substring(dot + 1);
+        }
+        return extension;
     }
 
-    public static void setProcessType(String encryptOrDecrypt) {
-        processType = encryptOrDecrypt;
-        chooseFileButton.getLabel().setText(
-            "Choose a file to " + processType); //change to encrypt or decrypt
-    }
+    private static String readTXTFile(File txtFile) {
 
-    private static void processFile(File fileToProcess) {
-        if (fileToProcess == null) {
-            System.out.println("Trying to process a null file");
-            return;
-        } else {
+        String textToProcess = "";
+        if (txtFile != null) {
 
-            String textToProcess = "";
-
-            // Gets text to process from fileToProcess
+            // Gets text to process from txtFile
             BufferedReader br = null;
             FileReader fr = null;
             try {
 
-                fr = new FileReader(fileToProcess);
+                fr = new FileReader(txtFile);
                 br = new BufferedReader(fr);
 
                 String currentLine;
 
                 while ((currentLine = br.readLine()) != null) {
-                    System.out.println("Adding | " + currentLine + " | to textToProcess");
-                    textToProcess = textToProcess + currentLine;
+                    System.out.println("Adding | " + currentLine
+                        + " | to txt File");
+                    textToProcess += currentLine;
                 }
 
             } catch (IOException e) {
@@ -130,52 +159,73 @@ public class FilePane extends StackPane {
                 }
             }
 
-            // Processes text
-            Encryptor.setText(textToProcess);
-            String processedText = Encryptor.run();
-            if (processedText == null) {
-                return;
+        }
+        return textToProcess;
+
+    }
+
+    public void writeTXTFile(File txtFile, String textToWrite) {
+
+        // Writes textToWrite to txtFile
+        BufferedWriter bw = null;
+        FileWriter fw = null;
+
+        try {
+
+            fw = new FileWriter(txtFile);
+            bw = new BufferedWriter(fw);
+            if (bw != null && textToWrite != null) {
+                bw.write(textToWrite);
             }
 
-            // Writes processedText to fileToProcess
-            BufferedWriter bw = null;
-            FileWriter fw = null;
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        } finally {
 
             try {
 
-                fw = new FileWriter(fileToProcess);
-                bw = new BufferedWriter(fw);
-                if (bw != null && processedText != null) {
-                    bw.write(processedText);
+                if (bw != null) {
+                    bw.close();
+                }
+                if (fw != null) {
+                    fw.close();
                 }
 
-            } catch (Exception e) {
+            } catch (IOException ex) {
 
-                e.printStackTrace();
-
-            } finally {
-
-                try {
-
-                    if (bw != null) {
-                        bw.close();
-                    }
-                    if (fw != null) {
-                        fw.close();
-                    }
-
-                } catch (IOException ex) {
-
-                    ex.printStackTrace();
-
-                }
+                ex.printStackTrace();
 
             }
-            
-            Resources.playSound("encryptionComplete.aiff");
 
         }
 
+        Resources.playSound("encryptionComplete.aiff");
+
     }
+
+
+
+
+
+
+
+
+    //put this in the folderchooser class and delete from here
+    public File getFolderFromDirectory() {
+
+        DirectoryChooser chooser = new DirectoryChooser();
+        chooser.setTitle("Select a Folder");
+        File selectedDirectory = chooser.showDialog(Runner.getStage());
+        return selectedDirectory;
+    }
+
+
+
+
+
+
+
 
 }

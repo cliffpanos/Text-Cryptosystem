@@ -37,9 +37,7 @@ public class TransparentButton extends StackPane {
         encryptPane = (text.equals("Encrypt")) ? this : encryptPane;
         decryptPane = (text.equals("Decrypt")) ? this : decryptPane;
 
-        double imageDecrement = (text.equals("Encrypt")) ? 7.5 : 0;
-        imageView = Resources.getImageView(imageURL,
-            (dimension * 0.25 - imageDecrement));
+        imageView = Resources.getImageView(imageURL, (dimension * 0.22));
 
         //Set background stroke
         double dim = dimension - 85;

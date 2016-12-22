@@ -24,6 +24,7 @@ public class UIButton extends StackPane {
     private ImageView buttonIcon;
     private HBox buttonHolder;
     private boolean isSelected = false;
+    private double height;
 
     public UIButton(double width, double height, String text) {
         this(null, width, height, text);
@@ -42,8 +43,9 @@ public class UIButton extends StackPane {
         this.getChildren().addAll(circle, icon);
     }
 
-    public UIButton(String iconURL, double width, double height, String text) {
+    public UIButton(String iconURL, double width, double ht, String text) {
 
+        this.height = ht;
         this.setPrefWidth(width);
         this.setPrefHeight(height);
 
@@ -57,7 +59,7 @@ public class UIButton extends StackPane {
         buttonText.setTextAlignment(TextAlignment.CENTER);
 
         //This buttonHolder is the HBox to hold the icon (if present) and Label
-        buttonHolder = new HBox(8);
+        buttonHolder = new HBox(7);
         buttonHolder.setAlignment(Pos.CENTER);
 
         //On pressed, released, entered, clicked
@@ -65,7 +67,7 @@ public class UIButton extends StackPane {
 
         //Constructs the buttonHolder HBox according to having an icon or not
         if (iconURL != null) {
-            ImageView iconIV = Resources.getImageView(iconURL, (height - 14));
+            ImageView iconIV = Resources.getImageView(iconURL, (height - 15));
             buttonHolder.getChildren().addAll(iconIV, buttonText);
         } else {
             buttonHolder.getChildren().add(buttonText);
@@ -112,6 +114,12 @@ public class UIButton extends StackPane {
 
     public boolean isSelected() {
         return this.isSelected;
+    }
+
+    public void updateIcon(String newIconURL) {
+        ImageView iconIV = Resources.getImageView(newIconURL, (height - 15));
+        buttonHolder.getChildren().clear();
+        buttonHolder.getChildren().addAll(iconIV, buttonText);
     }
 
 }
