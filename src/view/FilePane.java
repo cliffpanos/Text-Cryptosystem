@@ -24,7 +24,7 @@ import javafx.geometry.Pos;
 
 public class FilePane extends StackPane {
 
-    private VBox vBox = new VBox(10);
+    private VBox vBox = new VBox(20);
     private static UIButton runButton =
         new UIButton("encrypt.png", 200, 30, "Encrypt");
 
@@ -34,8 +34,9 @@ public class FilePane extends StackPane {
 
     public FilePane() {
 
-        this.setPrefWidth(MainScreen.getStageWidth() * 0.57 - 40.0);
-        this.setPrefHeight(MainScreen.getStageHeight());
+        double paneWidth = MainScreen.getStageWidth() * 0.57 - 40.0;
+        this.setPrefWidth(paneWidth);
+        this.setPrefHeight(MainScreen.getStageHeight() - 40.0);
         //this.setBackground(new Background(new BackgroundFill(Color
         //    .WHITE, new CornerRadii(5.0, 5.0, 5.0, 5.0, false),
         //    new Insets(10, 10, 10, 10))));
@@ -48,7 +49,9 @@ public class FilePane extends StackPane {
                 File tempFile = getFileFromDirectory();
                 if (tempFile != null) {
                     fileToProcess = tempFile;
-                    vBox.getChildren().add(runButton);
+                    vBox.getChildren().addAll(Resources.getImageView(
+                        "txtFile.png", (paneWidth - 250.0)),
+                        runButton);
                 }
                 Resources.playSound("fileUpload.aiff");
             });
@@ -57,7 +60,8 @@ public class FilePane extends StackPane {
                 processFile();
             });
 
-        vBox.setAlignment(Pos.CENTER);
+        vBox.setAlignment(Pos.TOP_CENTER);
+        vBox.setMaxHeight(MainScreen.getStageHeight() - 40.0);
         vBox.getChildren().add(chooseFileButton);
 
         this.getChildren().add(vBox);

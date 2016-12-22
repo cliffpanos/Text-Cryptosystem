@@ -153,7 +153,7 @@ public class WindowButtons extends HBox {
         translator.setMinWidth(leftPaneWidth - 60);
 
         instructionsLabel = new Label();
-        instructionsLabel.setText("             ");
+        instructionsLabel.setText("            ");
         instructionsLabel.setTextFill(Color.web("#F7F7F7", 0.88));
         instructionsLabel.setTextAlignment(TextAlignment.CENTER);
         translator.getChildren().add(instructionsLabel);
@@ -206,13 +206,13 @@ public class WindowButtons extends HBox {
             inDrag.set(true);
         });
         byNode.setOnMouseEntered(mouseEvent -> {
-            instructionsLabel.setText("Drag to Move ");
+            instructionsLabel.setText("Move Window");
             if (!mouseEvent.isPrimaryButtonDown()) {
                 byNode.setCursor(Cursor.HAND);
             }
         });
         byNode.setOnMouseExited(mouseEvent -> {
-            instructionsLabel.setText("             ");
+            instructionsLabel.setText("            ");
             if (!mouseEvent.isPrimaryButtonDown()) {
                 byNode.setCursor(Cursor.DEFAULT);
             }
