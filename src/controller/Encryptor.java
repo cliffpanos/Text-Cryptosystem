@@ -189,6 +189,7 @@ public class Encryptor {
                 //If the character IS invalid AND it is not already in
                     //invalidCharacterList, then add it to invalidCharacterList
             }
+
             text = pwCheck + textNoSpaces;
             /*The word Encryptor is added so that it can be checked if it
               decrypted properly when the user tries to decrypt. If on
@@ -200,12 +201,21 @@ public class Encryptor {
             String finalEncryptedCipherText = Recursion.encrypt(text, numKeys);
             //encrypt() works from numKeys down to 1 by decrementing
 
+            String invalidPrintList = "";
+            for (char c : invalidCharacterList.toCharArray()) {
+                invalidPrintList += (c + ", ");
+            }
+            invalidCharacterList = invalidPrintList
+                .substring(0, invalidPrintList.length() - 2); //remove space
+
+            System.out.println(invalidCharacterList);
             if (invalidCharacterList.length() > 0) {
-                System.out.println("Invalid characters are: ");
-                for (char c : invalidCharacterList.toCharArray()) {
-                    System.out.print(c);
-                }
-                System.out.println();
+                UIAlert.show("Invalid Characters Entered",
+                    "The following characters are invalid:\n  "
+                    + invalidCharacterList + "\n\n"
+                    + "When these characters are decrypted,\n"
+                    + "They will appear as '?' characters.",
+                    javafx.scene.control.Alert.AlertType.CONFIRMATION);
             }
             System.out.println("\n\nEncrypted text is: "
                 + finalEncryptedCipherText);
