@@ -16,14 +16,15 @@ public abstract class InputMenu {
     protected TextArea inputField = new TextArea();
     protected TextArea outputField = new TextArea();
     protected UIButton runButton;
+    protected double heightDecrement = 60.0;
 
-    private HBox upperMenuBar = new HBox(7.5);
+    private HBox upperMenuBar = new HBox(8.0);
+    private HBox lowerMenuBar = new HBox(8.0);
+    private double paneWidth = MainScreen.getStageWidth() * 0.57;
 
     public InputMenu() {
 
-        double paneWidth = MainScreen.getStageWidth() * 0.57;
-
-        menu = new VBox(10);
+        menu = new VBox(8.5);
         menu.setPrefWidth(paneWidth - 40.0);
         menu.setPadding(new Insets(10));
         menu.setAlignment(Pos.CENTER);
@@ -34,8 +35,56 @@ public abstract class InputMenu {
         inputField.setWrapText(true);
         outputField.setWrapText(true);
 
+        double iconSize = 32.5;
+        UIButton trashButton = new UIButton("trash_icon.png", iconSize);
+        trashButton.setOnMouseClicked(e -> {
+                inputField.clear();
+            });
+        UIButton selectAllButton = new UIButton("selectAll_icon.png", iconSize);
+        selectAllButton.setOnMouseClicked(e -> {
+                inputField.selectAll();
+        });
+        UIButton copyButton = new UIButton("copy_icon.png", iconSize);
+        copyButton.setOnMouseClicked(e -> {
+                inputField.copy();
+        });
+        UIButton cutButton = new UIButton("cut_icon.png", iconSize);
+        cutButton.setOnMouseClicked(e -> {
+                inputField.cut();
+        });
+        UIButton pasteButton = new UIButton("paste_icon.png", iconSize);
+        pasteButton.setOnMouseClicked(e -> {
+                inputField.paste();
+        });
+        UIButton undoButton = new UIButton("undo_icon.png", iconSize);
+        undoButton.setOnMouseClicked(e -> {
+                inputField.undo();
+        });
+        UIButton redoButton = new UIButton("redo_icon.png", iconSize);
+        redoButton.setOnMouseClicked(e -> {
+                inputField.redo();
+        });
+
         upperMenuBar.setPrefWidth(paneWidth - 40.0);
-        upperMenuBar.setPrefHeight(30);
+        upperMenuBar.setPrefHeight(iconSize);
+        upperMenuBar.setAlignment(Pos.CENTER_LEFT);
+        upperMenuBar.getChildren().addAll(trashButton, selectAllButton,
+            copyButton, cutButton, pasteButton, undoButton, redoButton);
+
+
+        UIButton selectAllButton2 = new UIButton("selectAll_icon2.png",
+            iconSize);
+        selectAllButton2.setOnMouseClicked(e -> {
+                outputField.selectAll();
+        });
+        UIButton copyButton2 = new UIButton("copy_icon2.png", iconSize);
+        copyButton2.setOnMouseClicked(e -> {
+                outputField.copy();
+        });
+        lowerMenuBar.setPrefWidth(paneWidth - 40.0 - 100.0);
+        lowerMenuBar.setPrefHeight(iconSize);
+        lowerMenuBar.setAlignment(Pos.CENTER_LEFT);
+        lowerMenuBar.getChildren().addAll(selectAllButton2, copyButton2);
 
     }
 
@@ -50,8 +99,13 @@ public abstract class InputMenu {
                     Resources.playSound("encryptionComplete.aiff");
                 }
             });
+        HBox runButtonHBox = new HBox(runButton);
+        runButtonHBox.setAlignment(Pos.CENTER_RIGHT);
+        runButtonHBox.setPrefWidth(paneWidth - 45.0 - 80.0);
 
-        menu.getChildren().addAll(upperMenuBar, inputField, runButton,
+        HBox lowerHBox = new HBox(lowerMenuBar, runButtonHBox);
+
+        menu.getChildren().addAll(upperMenuBar, inputField, lowerHBox,
             outputField);
 
     }

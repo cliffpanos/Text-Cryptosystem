@@ -30,6 +30,9 @@ public class Resources {
         Image image = getImage(fileName);
         ImageView imageView = new ImageView(image);
 
+        dimension = (fileName.equals("decrypt.png") ? (1.17 * dimension)
+            : dimension); //System-wide, the decrypt icon needs to be larger
+
         //Resize and resample every ImageView's icon image
         imageView.setFitWidth(dimension);
         imageView.setPreserveRatio(true);

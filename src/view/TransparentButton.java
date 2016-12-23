@@ -37,9 +37,7 @@ public class TransparentButton extends StackPane {
         encryptPane = (text.equals("Encrypt")) ? this : encryptPane;
         decryptPane = (text.equals("Decrypt")) ? this : decryptPane;
 
-        double imageDecrement = (text.equals("Encrypt")) ? 7.5 : 0;
-        imageView = Resources.getImageView(imageURL,
-            (dimension * 0.25 - imageDecrement));
+        imageView = Resources.getImageView(imageURL, (dimension * 0.22));
 
         //Set background stroke
         double dim = dimension - 85;
@@ -69,7 +67,6 @@ public class TransparentButton extends StackPane {
         String keyword = (isEncrypt) ? "encrypt" : "decrypt";
         this.setOnMouseClicked(e -> {
                 paneSelected = this;
-                background.setFill(Color.web("#212F3C"));
                 Encryptor.setKeyword(keyword);
                 FilePane.setProcessType(text);
                 MainScreen.setIsEncryptingNotDecrypting(isEncrypt);
@@ -86,6 +83,17 @@ public class TransparentButton extends StackPane {
         vBox.setAlignment(Pos.CENTER);
         this.getChildren().addAll(background, vBox);
         this.setAlignment(Pos.CENTER);
+
+        //The program initializes with encryptPane selected by default:
+        if (this == encryptPane) {
+            paneSelected = encryptPane;
+            Encryptor.setKeyword(keyword);
+            FilePane.setProcessType(text);
+            MainScreen.setIsEncryptingNotDecrypting(isEncrypt);
+            background.setFill(Color.web("#212F3C"));
+            background.setStroke(Color.web("#3498DB"));
+        }
+
 
     }
 

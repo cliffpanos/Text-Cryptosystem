@@ -1,1 +1,2 @@
-To compile: "javac -cp src src/controller/*.java src/resources/*.java src/runner/*.java src/view/*.java" 
+To compile: "javac -cp src src/controller/*.java src/resources/*.java src/runner/*.java src/view/*.java"
+To run: "java -cp src/runner/Runner"

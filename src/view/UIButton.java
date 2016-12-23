@@ -5,6 +5,8 @@ import resources.Resources;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 
+import javafx.scene.Node;
+import javafx.scene.shape.Shape;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Circle;
 import javafx.scene.control.Label;
@@ -22,18 +24,28 @@ public class UIButton extends StackPane {
     private ImageView buttonIcon;
     private HBox buttonHolder;
     private boolean isSelected = false;
+    private double height;
 
     public UIButton(double width, double height, String text) {
         this(null, width, height, text);
     }
 
-    public UIButton(String iconURL, double width, double height) {
-        this(iconURL, width, height, null);
+    public UIButton(String iconURL, double dimension) {
         //This will create a CIRCULAR icon button rather than a rectangular one
+        Circle circle = new Circle((dimension / 2.0), Color.WHITE);
+        this.setOnMousePressed(e -> {
+                circle.setFill(Color.web("#D7DBDD"));
+            });
+        this.setOnMouseReleased(e -> {
+                circle.setFill(Color.WHITE);
+            });
+        ImageView icon = Resources.getImageView(iconURL, (dimension - 12.5));
+        this.getChildren().addAll(circle, icon);
     }
 
-    public UIButton(String iconURL, double width, double height, String text) {
+    public UIButton(String iconURL, double width, double ht, String text) {
 
+        this.height = ht;
         this.setPrefWidth(width);
         this.setPrefHeight(height);
 
@@ -47,25 +59,37 @@ public class UIButton extends StackPane {
         buttonText.setTextAlignment(TextAlignment.CENTER);
 
         //This buttonHolder is the HBox to hold the icon (if present) and Label
-        buttonHolder = new HBox(8);
+        buttonHolder = new HBox(7);
         buttonHolder.setAlignment(Pos.CENTER);
 
-        // Sets simple highlighting when mouse goes over button
-        buttonHolder.setOnMouseEntered(e -> {
-                background.setFill(Color.web("#D7DBDD", 0.9));
-            });
-        buttonHolder.setOnMouseExited(e -> {
-                background.setFill(Color.WHITE);
-            });
+        //On pressed, released, entered, clicked
+        setMouseActions(buttonHolder, background);
 
         //Constructs the buttonHolder HBox according to having an icon or not
         if (iconURL != null) {
-            ImageView iconIV = Resources.getImageView(iconURL, (height - 14));
+            ImageView iconIV = Resources.getImageView(iconURL, (height - 15));
             buttonHolder.getChildren().addAll(iconIV, buttonText);
         } else {
             buttonHolder.getChildren().add(buttonText);
         }
         this.getChildren().addAll(background, buttonHolder);
+    }
+
+    //Setup mouse actions for a given UIButton's color Node
+    public void setMouseActions(Node actionNode, Shape colorNode) {
+
+        actionNode.setOnMouseEntered(e -> {
+                colorNode.setFill(Color.web("#EAEDED", 0.9));
+            });
+        actionNode.setOnMouseExited(e -> {
+                colorNode.setFill(Color.WHITE);
+            });
+        actionNode.setOnMousePressed(e -> {
+                colorNode.setFill(Color.web("#D6DBDF"));
+            });
+        actionNode.setOnMouseClicked(e -> {
+                colorNode.setFill(Color.web("#D6EAF8"));
+            });
     }
 
     public void setBackgroundColor(Paint color) {
@@ -90,6 +114,12 @@ public class UIButton extends StackPane {
 
     public boolean isSelected() {
         return this.isSelected;
+    }
+
+    public void updateIcon(String newIconURL) {
+        ImageView iconIV = Resources.getImageView(newIconURL, (height - 15));
+        buttonHolder.getChildren().clear();
+        buttonHolder.getChildren().addAll(iconIV, buttonText);
     }
 
 }
