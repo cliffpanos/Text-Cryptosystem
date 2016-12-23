@@ -4,6 +4,8 @@ import controller.Encryptor;
 import resources.Resources;
 import runner.Runner;
 
+import java.util.List;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -27,8 +29,8 @@ public class FilePane extends StackPane {
     private VBox vBox = new VBox(10);
 
     private static String processType = "encrypt"; // "encrypt" or "decrypt"
-    private static UIButton chooseFileButton;
-    private File fileToProcess;
+    private static UIButton chooseFilesButton;
+    private List<File> filesToProcess;
 
     public FilePane() {
 
@@ -39,27 +41,29 @@ public class FilePane extends StackPane {
         //    new Insets(10, 10, 10, 10))));
         //this.setPadding(new Insets(20));
 
-        chooseFileButton = new UIButton(MainScreen.getStageWidth() * 0.57
-            - 100.0, 30, "Choose a file to " + processType);
-        chooseFileButton.setOnMouseClicked(e -> {
-                fileToProcess = getFileFromDirectory();
+        chooseFilesButton = new UIButton(MainScreen.getStageWidth() * 0.57
+            - 100.0, 30, "Choose files to " + processType);
+        chooseFilesButton.setOnMouseClicked(e -> {
+                filesToProcess = getFilesFromDirectory();
 
                 // Process the chosen File
-                processFile(fileToProcess);
+                for (File fileToProcess : filesToProcess) {
+                    processFile(fileToProcess);
+                }
             });
-        chooseFileButton.setAlignment(Pos.TOP_CENTER);
+        chooseFilesButton.setAlignment(Pos.TOP_CENTER);
 
         vBox.setAlignment(Pos.CENTER);
-        vBox.getChildren().add(chooseFileButton);
+        vBox.getChildren().add(chooseFilesButton);
 
         this.getChildren().add(vBox);
 
     }
 
-    public File getFileFromDirectory() {
+    public List<File> getFilesFromDirectory() {
 
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Select a File");
+        fileChooser.setTitle("Select files");
         //Set extension filter
         FileChooser.ExtensionFilter extFilter =
             new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
@@ -67,7 +71,7 @@ public class FilePane extends StackPane {
         fileChooser.getExtensionFilters().add(extFilter);
 
         //Show save file dialog
-        return fileChooser.showOpenDialog(Runner.getStage());
+        return fileChooser.showOpenMultipleDialog(Runner.getStage());
     }
 
     //put this in the folderchooser thing and delete fom
@@ -81,8 +85,8 @@ public class FilePane extends StackPane {
 
     public static void setProcessType(String encryptOrDecrypt) {
         processType = encryptOrDecrypt;
-        chooseFileButton.getLabel().setText(
-            "Choose a file to " + processType); //change to encrypt or decrypt
+        chooseFilesButton.getLabel().setText(
+            "Choose files to " + processType); //change to encrypt or decrypt
     }
 
     private static void processFile(File fileToProcess) {
@@ -100,8 +104,7 @@ public class FilePane extends StackPane {
                 String currentLine;
 
                 while ((currentLine = br.readLine()) != null) {
-                    System.out.println("Adding | " + currentLine + " | to textToProcess");
-                    textToProcess = textToProcess + currentLine;
+                    textToProcess = textToProcess + currentLine + "\n";
                 }
 
             } catch (IOException e) {
