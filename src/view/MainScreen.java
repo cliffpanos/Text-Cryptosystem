@@ -58,20 +58,16 @@ public class MainScreen extends BorderPane {
     public static void switchMenu(MenuOptions option) {
 
         innerBorderPane.setCenter(null);
-        System.out.println("SwitchMenu called!");
 
         switch (option) {
         case INPUTTEXT :
             if (isEncryptingNotDecrypting) {
-                System.out.println("Encrypting");
                 innerBorderPane.setCenter(inputOEMenu.getRootNode());
             } else {
-                System.out.println("Decrypting");
                 innerBorderPane.setCenter(inputODMenu.getRootNode());
             }
             //if EncryptDecryptMenu's Encrypt button is pressed, set the
             //right pane to be the inputOEMenu, otherwise the inputODMenu
-            System.out.println("Input Text Menu & " + isEncryptingNotDecrypting);
             selectedMenu = MenuOptions.INPUTTEXT;
             break;
         case CHOOSEFILE :

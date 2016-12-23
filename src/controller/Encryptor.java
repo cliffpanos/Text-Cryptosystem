@@ -62,8 +62,6 @@ public class Encryptor {
 
     public static String run() {
 
-        System.out.println("Welcome to Encryptor.");
-
         // GET THE KEYWORD FROM THE USER
         if (keyword == null) {
             UIAlert.show("Choose to Encrypt or Decrypt",
@@ -73,8 +71,6 @@ public class Encryptor {
             return null;
         }
 
-
-// Getting the password could be nicely implemented with a TextInputDialog
         // GET THE PASSWORD FROM THE USER
         password = EncryptDecryptMenu.getPasswordFieldText();
         if (password == null || password.equals("")) {
@@ -171,9 +167,29 @@ public class Encryptor {
 
         String pwCheck = "$Enc$"; //See below for explanation if this String
         if (keyword.equals("encrypt")) {
-            String invalidCharacterList = "";
                 //will hold all user-entered characters that are invalid
 
+            for (char c : text.toCharArray()) {
+                if (!String.valueOf(c).matches(".")) {
+                    System.out.println("NOT A MATCH");
+                }
+            }
+            System.out.println("Text length: " + text.length());
+            String temporaryText = "";
+            for (int i = 0; i < text.length(); i++) {
+                if ((i != text.length() - 1) //Prevent indexOutOfBounds
+                    && text.substring(i, i + 1).equals("\n")) {
+                    System.out.println("NEWLINE");
+                    temporaryText += "/N/$/L/";
+                    i += 1; //Skip both the \ and the n in \n
+                } else {
+                    temporaryText += text.charAt(i);
+                }
+            }
+            text = temporaryText;
+
+
+            String invalidCharacterList = "";
             String textNoSpaces = "";
             for (char c : text.toCharArray()) {
                 textNoSpaces += (c == ' ' ? "~"
@@ -205,10 +221,13 @@ public class Encryptor {
             for (char c : invalidCharacterList.toCharArray()) {
                 invalidPrintList += (c + ", ");
             }
-            invalidCharacterList = invalidPrintList
-                .substring(0, invalidPrintList.length() - 2); //remove space
+            if (invalidPrintList.length() > 1) {
+                invalidCharacterList = invalidPrintList
+                    .substring(0, invalidPrintList.length() - 2); //remove space
+                System.out.println("Invalid character List: " + invalidCharacterList);
 
-            System.out.println(invalidCharacterList);
+            }
+
             if (invalidCharacterList.length() > 0) {
                 UIAlert.show("Invalid Characters Entered",
                     "The following characters are invalid:\n  "
@@ -257,6 +276,22 @@ public class Encryptor {
             }
             finalDecryptedCipherText = decryptedNoTildes.substring(5);
                 //This goes from index 9 to the end to remove the "$Enc$"
+
+
+
+            String temporaryText = "";
+            for (int i = 0; i < finalDecryptedCipherText.length(); i++) {
+                if (!(i > finalDecryptedCipherText.length() - 6)
+                    && finalDecryptedCipherText.substring(i, i + 6)
+                        .equals("/N/$/L/")) {
+                    System.out.println("NEWLINE DECRYPTING");
+                    temporaryText += "\n";
+                    i += 6; //Skip both the \ and the n in \n
+                } else {
+                    temporaryText += text.charAt(i);
+                }
+            }
+            finalDecryptedCipherText = temporaryText;
             System.out.println("\nDecrypted text is: "
                 + finalDecryptedCipherText);
             return finalDecryptedCipherText;
