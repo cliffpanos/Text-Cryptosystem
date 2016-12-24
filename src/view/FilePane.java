@@ -52,8 +52,8 @@ public class FilePane extends StackPane {
                     vBox.getChildren().addAll(Resources.getImageView(
                         "txtFile.png", (paneWidth - 250.0)),
                         runButton);
+                    Resources.playSound("fileUpload.aiff");
                 }
-                Resources.playSound("fileUpload.aiff");
             });
 
         runButton.setOnMouseClicked(e -> {
@@ -138,8 +138,12 @@ public class FilePane extends StackPane {
                 while ((currentLine = br.readLine()) != null) {
                     System.out.println("Adding | " + currentLine
                         + " | to txt File");
-                    textToProcess += currentLine;
+                    textToProcess += currentLine + "\n";
                 }
+                textToProcess =
+                    textToProcess.substring(0, textToProcess.length() - 1);
+                //remove the extra "\n" that was added at the end
+                System.out.println("TEXTTT:\n" + textToProcess);
 
             } catch (IOException e) {
 

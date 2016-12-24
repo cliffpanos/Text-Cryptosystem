@@ -158,7 +158,6 @@ public class Encryptor {
 
 
 
-//------
 // These print statements are for testing
         System.out.println("password: '" + password + "'");
         System.out.println("numKeys: " + numKeys);
@@ -182,12 +181,10 @@ public class Encryptor {
             System.out.println("Text length: " + text.length());
             /*for (int i = 0; i < text.length(); i++) {
                 if ((i != text.length() - 1) //Prevent indexOutOfBounds
-                    && text.substring(i, i + 1).equals("\n")) {
+                    && (text.substring(i, i + 1).equals("\n"))
+                    || (text.substring(i, i + 1).equals("\r"))
+                    ) {
                     System.out.println("NEWLINE");
-                    temporaryText += nLSubstitute;
-                    i += 1; //Skip both the \ and the n in \n
-                } else {
-                    temporaryText += text.charAt(i);
                 }
             }*/
             text = temporaryText;
@@ -287,7 +284,6 @@ public class Encryptor {
                 //This goes from index 9 to the end to remove the "$Enc$"
 
 
-
             String temporaryText = "";
             for (int i = 0; i < finalDecryptedCipherText.length(); i++) {
                 if (!(i > finalDecryptedCipherText.length() - 7)
@@ -295,7 +291,7 @@ public class Encryptor {
                         .equals(nLSubstitute)) {
                     System.out.println("NEWLINE DECRYPTING");
                     temporaryText += "\r\n";
-                    i += 6; //Skip both the \ and the n in \n
+                    i += 6; //the for loop already increments i by 1
                 } else {
                     temporaryText += finalDecryptedCipherText.charAt(i);
                 }
@@ -323,7 +319,7 @@ public class Encryptor {
         // In javafx we should implement this so that
     	} catch (IOException e) {
 	      e.printStackTrace();
-      }*/
+        }*/
         return null;
     }
 
