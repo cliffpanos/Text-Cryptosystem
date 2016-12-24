@@ -166,6 +166,7 @@ public class Encryptor {
         System.out.println();
 
         String pwCheck = "$Enc$"; //See below for explanation if this String
+        String nLSubstitute = "/N/$/L/"; //Used to substitute newLine characters
         if (keyword.equals("encrypt")) {
                 //will hold all user-entered characters that are invalid
 
@@ -180,7 +181,7 @@ public class Encryptor {
                 if ((i != text.length() - 1) //Prevent indexOutOfBounds
                     && text.substring(i, i + 1).equals("\n")) {
                     System.out.println("NEWLINE");
-                    temporaryText += "/N/$/L/";
+                    temporaryText += nLSubstitute;
                     i += 1; //Skip both the \ and the n in \n
                 } else {
                     temporaryText += text.charAt(i);
@@ -282,13 +283,13 @@ public class Encryptor {
             String temporaryText = "";
             for (int i = 0; i < finalDecryptedCipherText.length(); i++) {
                 if (!(i > finalDecryptedCipherText.length() - 6)
-                    && finalDecryptedCipherText.substring(i, i + 6)
-                        .equals("/N/$/L/")) {
+                    && finalDecryptedCipherText.substring(i, i + 7)
+                        .equals(nLSubstitute)) {
                     System.out.println("NEWLINE DECRYPTING");
                     temporaryText += "\n";
                     i += 6; //Skip both the \ and the n in \n
                 } else {
-                    temporaryText += text.charAt(i);
+                    temporaryText += finalDecryptedCipherText.charAt(i);
                 }
             }
             finalDecryptedCipherText = temporaryText;
