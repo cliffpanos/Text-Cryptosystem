@@ -170,14 +170,17 @@ public class Encryptor {
         if (keyword.equals("encrypt")) {
                 //will hold all user-entered characters that are invalid
 
+            String temporaryText = "";
             for (char c : text.toCharArray()) {
                 if (!String.valueOf(c).matches(".")) {
                     System.out.println("NOT A MATCH");
+                    temporaryText += nLSubstitute;
+                } else {
+                    temporaryText += c;
                 }
             }
             System.out.println("Text length: " + text.length());
-            String temporaryText = "";
-            for (int i = 0; i < text.length(); i++) {
+            /*for (int i = 0; i < text.length(); i++) {
                 if ((i != text.length() - 1) //Prevent indexOutOfBounds
                     && text.substring(i, i + 1).equals("\n")) {
                     System.out.println("NEWLINE");
@@ -186,7 +189,7 @@ public class Encryptor {
                 } else {
                     temporaryText += text.charAt(i);
                 }
-            }
+            }*/
             text = temporaryText;
 
 
@@ -282,17 +285,17 @@ public class Encryptor {
 
             String temporaryText = "";
             for (int i = 0; i < finalDecryptedCipherText.length(); i++) {
-                if (!(i > finalDecryptedCipherText.length() - 6)
+                if (!(i > finalDecryptedCipherText.length() - 7)
                     && finalDecryptedCipherText.substring(i, i + 7)
                         .equals(nLSubstitute)) {
                     System.out.println("NEWLINE DECRYPTING");
-                    temporaryText += "\n";
+                    temporaryText += "\r\n";
                     i += 6; //Skip both the \ and the n in \n
                 } else {
                     temporaryText += finalDecryptedCipherText.charAt(i);
                 }
             }
-            finalDecryptedCipherText = temporaryText;
+            finalDecryptedCipherText = temporaryText + "\r\nHEYY";
             System.out.println("\nDecrypted text is: "
                 + finalDecryptedCipherText);
             return finalDecryptedCipherText;
