@@ -25,16 +25,16 @@ import javafx.geometry.Pos;
 public class FilePane extends StackPane {
 
     private VBox vBox = new VBox(20);
-    private static UIButton runButton =
-        new UIButton("encrypt.png", 200, 30, "Encrypt");
+    private static double paneWidth = MainScreen.getStageWidth() * 0.57 - 40.0;
 
+    private static UIButton runButton =
+        new UIButton("encrypt.png", paneWidth - 60.0, 30, "Encrypt");
     private static String processType = "encrypt"; // "encrypt" or "decrypt"
     private static UIButton chooseFileButton;
     private File fileToProcess;
 
     public FilePane() {
 
-        double paneWidth = MainScreen.getStageWidth() * 0.57 - 40.0;
         this.setPrefWidth(paneWidth);
         this.setPrefHeight(MainScreen.getStageHeight() - 40.0);
         //this.setBackground(new Background(new BackgroundFill(Color
@@ -42,8 +42,8 @@ public class FilePane extends StackPane {
         //    new Insets(10, 10, 10, 10))));
         //this.setPadding(new Insets(20));
 
-        chooseFileButton = new UIButton(MainScreen.getStageWidth() * 0.57
-            - 100.0, 30, "Choose a file to " + processType);
+        chooseFileButton = new UIButton(paneWidth - 60.0, 30,
+            "Choose a file to " + processType);
         chooseFileButton.setAlignment(Pos.TOP_CENTER);
         chooseFileButton.setOnMouseClicked(e -> {
                 File tempFile = getFileFromDirectory();

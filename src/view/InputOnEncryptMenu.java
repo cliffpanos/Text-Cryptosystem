@@ -7,7 +7,7 @@ public class InputOnEncryptMenu extends InputMenu {
         double stageHeight = MainScreen.getStageHeight();
         inputField.setPrefHeight(((double) stageHeight * 2.0 / 3.0)
             - heightDecrement);
-        inputField.setPromptText("Copy or type text here to be encrypted");
+        inputField.setPromptText("Paste or type text here to be encrypted");
 
         outputField.setPrefHeight(((double) stageHeight * 1.0 / 3.0)
             - heightDecrement);

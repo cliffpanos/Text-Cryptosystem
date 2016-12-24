@@ -233,12 +233,17 @@ public class Encryptor {
             }
 
             if (invalidCharacterList.length() > 0) {
-                UIAlert.show("Invalid Characters Entered",
+                boolean cancelling = UIAlert.show("Invalid Characters Entered",
                     "The following characters are invalid:\n  "
                     + invalidCharacterList + "\n\n"
                     + "When these characters are decrypted,\n"
-                    + "They will appear as '?' characters.",
-                    javafx.scene.control.Alert.AlertType.CONFIRMATION);
+                    + "They will appear as '?' characters.\n\n"
+                    + "Would you like to proceed?",
+                    javafx.scene.control.Alert.AlertType.CONFIRMATION, true);
+
+                if (cancelling) {
+                    return null; //Exit the encryption process
+                }
             }
             System.out.println("\n\nEncrypted text is: "
                 + finalEncryptedCipherText);
@@ -295,7 +300,7 @@ public class Encryptor {
                     temporaryText += finalDecryptedCipherText.charAt(i);
                 }
             }
-            finalDecryptedCipherText = temporaryText + "\r\nHEYY";
+            finalDecryptedCipherText = temporaryText;
             System.out.println("\nDecrypted text is: "
                 + finalDecryptedCipherText);
             return finalDecryptedCipherText;

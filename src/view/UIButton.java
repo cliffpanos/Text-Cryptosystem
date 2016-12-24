@@ -19,7 +19,7 @@ import javafx.geometry.Pos;
 
 public class UIButton extends StackPane {
 
-    private Rectangle background;
+    private Shape background;
     private Label buttonText;
     private ImageView buttonIcon;
     private HBox buttonHolder;
@@ -32,15 +32,16 @@ public class UIButton extends StackPane {
 
     public UIButton(String iconURL, double dimension) {
         //This will create a CIRCULAR icon button rather than a rectangular one
-        Circle circle = new Circle((dimension / 2.0), Color.WHITE);
+        background = new Circle((dimension / 2.0), Color.WHITE);
         this.setOnMousePressed(e -> {
-                circle.setFill(Color.web("#D7DBDD"));
+                background.setFill(Color.web("#D7DBDD"));
             });
         this.setOnMouseReleased(e -> {
-                circle.setFill(Color.WHITE);
+                background.setFill(Color.WHITE);
             });
         ImageView icon = Resources.getImageView(iconURL, (dimension - 12.5));
-        this.getChildren().addAll(circle, icon);
+        this.setAlignment(Pos.CENTER);
+        this.getChildren().addAll(background, icon);
     }
 
     public UIButton(String iconURL, double width, double ht, String text) {
@@ -50,8 +51,8 @@ public class UIButton extends StackPane {
         this.setPrefHeight(height);
 
         background = new Rectangle(width, height, Color.WHITE);
-        background.setArcWidth((double) height / 4.0);
-        background.setArcHeight((double) height / 4.0);
+        ((Rectangle) background).setArcWidth((double) height / 4.0);
+        ((Rectangle) background).setArcHeight((double) height / 4.0);
         background.setStroke(Color.web("#3498DB"));
 
         buttonText = new Label(text);

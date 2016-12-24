@@ -55,9 +55,7 @@ public class Runner extends Application {
 
         stage.toFront();
         stage.setResizable(true);
-        /*stage.onResize(e -> {
-                System.out.println("resizing");
-            });*/
+
         stage.show();
 
     }

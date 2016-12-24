@@ -9,6 +9,7 @@ import javafx.scene.layout.HBox;
 import javafx.geometry.Pos;
 import javafx.geometry.Insets;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -21,11 +22,11 @@ import javafx.scene.layout.BorderWidths;
 public class OptionsMenu extends StackPane {
 
     private VBox menu;
+    private double paneWidth = MainScreen.getStageWidth() * 0.27;
 
     public OptionsMenu() {
 
-        double width = (double) MainScreen.getStageWidth() * 0.27;
-        this.setPrefWidth(width);
+        this.setPrefWidth(paneWidth);
         this.setPrefHeight(MainScreen.getStageHeight());
         this.setAlignment(Pos.TOP_CENTER);
         this.setBackground(new Background(new BackgroundFill(Color
@@ -44,14 +45,20 @@ public class OptionsMenu extends StackPane {
         menu.setMinHeight(MainScreen.getStageHeight() - 20);
         menu.setPadding(new Insets(20));
 
-        UIButton inputText = new UIButton((width - 40), 30,
+        UIButton inputText = new UIButton((paneWidth - 40), 30,
             "Input Text Directly");
-        UIButton chooseFile = new UIButton((width - 40), 30,
+        UIButton chooseFile = new UIButton((paneWidth - 40), 30,
             "Choose a File");
-        UIButton chooseFolder = new UIButton((width - 40), 30,
+        UIButton chooseFolder = new UIButton((paneWidth - 40), 30,
             "Choose a Folder");
 
-        menu.getChildren().addAll(inputText, chooseFile, chooseFolder);
+        IconBox iconBox1 = new IconBox("pencil.png", false);
+        IconBox iconBox2 = new IconBox("file.png", true);
+        IconBox iconBox3 = new IconBox("folder.png", true);
+
+
+        menu.getChildren().addAll(iconBox1, inputText, iconBox2, chooseFile,
+            iconBox3, chooseFolder);
         this.getChildren().add(menu);
 
         UIButton[] buttons = {inputText, chooseFile, chooseFolder};
@@ -97,4 +104,34 @@ public class OptionsMenu extends StackPane {
 
     }
 
+    private class IconBox extends VBox {
+
+        private UIButton icon;
+
+        public IconBox(String iconURL, boolean topLineYes) {
+
+            this.setPrefWidth(paneWidth - 40.0);
+            this.setAlignment(Pos.CENTER);
+            this.setSpacing(20);
+
+            icon = new UIButton(iconURL, (paneWidth / 3.5));
+            icon.setOnMousePressed(e -> {});
+            icon.setOnMouseReleased(e -> {});
+            icon.setBackgroundColor(Color.web("#EAEDED", 0.9));
+
+            HBox iconHBox = new HBox(icon);
+            iconHBox.setPrefWidth(paneWidth - 40);
+            iconHBox.setAlignment(Pos.CENTER_LEFT);
+
+            Rectangle topLine =
+                new Rectangle((paneWidth - 30), 1.5, Color.web("#D7DBDD"));
+
+            if (topLineYes) {
+                this.getChildren().addAll(topLine, icon);
+            } else {
+                this.getChildren().add(icon);
+            }
+
+        }
+    }
 }

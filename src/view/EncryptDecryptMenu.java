@@ -53,7 +53,7 @@ public class EncryptDecryptMenu extends StackPane {
 
         menu.setAlignment(Pos.CENTER);
         menu.setBackground(null);
-        menu.setMaxWidth(width);
+        menu.setPrefWidth(width);
         menu.setPrefHeight(height);
 
         // Password Field TextField Actions
