@@ -54,8 +54,6 @@ public class Runner extends Application {
         stage.setResizable(true);
 
         stage.show();
-        String abc = "12345678";
-        System.out.println(abc.substring(0, abc.length() - 2));
 
     }
 
