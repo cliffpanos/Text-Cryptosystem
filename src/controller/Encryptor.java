@@ -19,7 +19,6 @@ package controller;
 //
 //  Additionally, the text is encrypted and then re-encrypted recursively.
 
-import runner.Runner;
 import view.UIAlert;
 import view.EncryptDecryptMenu;
 import view.InputOnEncryptMenu;
@@ -225,7 +224,7 @@ public class Encryptor {
             if (invalidPrintList.length() > 1) {
                 invalidCharacterList = invalidPrintList
                     .substring(0, invalidPrintList.length() - 2); //remove space
-                System.out.println("Invalid character List: " + invalidCharacterList);
+                System.out.println("Invalid charList: " + invalidCharacterList);
 
             }
 
@@ -260,7 +259,7 @@ public class Encryptor {
                 return null;
             }
 
-            if(!(Recursion.decrypt(text.substring(0, 5), 1)).equals(pwCheck)) {
+            if (!(Recursion.decrypt(text.substring(0, 5), 1)).equals(pwCheck)) {
                 UIAlert.show("Incorrect Password",
                     "The decryption password that you entered is incorrect.\n"
                     + "Attempting to decrypt the text with an incorrect\n"

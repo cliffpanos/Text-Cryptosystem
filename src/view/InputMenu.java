@@ -43,27 +43,27 @@ public abstract class InputMenu {
         UIButton selectAllButton = new UIButton("selectAll_icon.png", iconSize);
         selectAllButton.setOnMouseClicked(e -> {
                 inputField.selectAll();
-        });
+            });
         UIButton copyButton = new UIButton("copy_icon.png", iconSize);
         copyButton.setOnMouseClicked(e -> {
                 inputField.copy();
-        });
+            });
         UIButton cutButton = new UIButton("cut_icon.png", iconSize);
         cutButton.setOnMouseClicked(e -> {
                 inputField.cut();
-        });
+            });
         UIButton pasteButton = new UIButton("paste_icon.png", iconSize);
         pasteButton.setOnMouseClicked(e -> {
                 inputField.paste();
-        });
+            });
         UIButton undoButton = new UIButton("undo_icon.png", iconSize);
         undoButton.setOnMouseClicked(e -> {
                 inputField.undo();
-        });
+            });
         UIButton redoButton = new UIButton("redo_icon.png", iconSize);
         redoButton.setOnMouseClicked(e -> {
                 inputField.redo();
-        });
+            });
 
         upperMenuBar.setPrefWidth(paneWidth - 40.0);
         upperMenuBar.setPrefHeight(iconSize);

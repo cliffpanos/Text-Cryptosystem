@@ -10,9 +10,6 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.control.TextInputDialog;
-import java.util.Optional;
-import javafx.scene.control.Alert;
 import javafx.stage.Screen;
 import javafx.geometry.Rectangle2D;
 

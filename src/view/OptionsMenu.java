@@ -124,7 +124,7 @@ public class OptionsMenu extends StackPane {
             iconHBox.setAlignment(Pos.CENTER_LEFT);
 
             Rectangle topLine =
-                new Rectangle((paneWidth - 30), 1.5, Color.web("#D7DBDD"));
+                new Rectangle((paneWidth - 20), 1.18, Color.web("#D7DBDD"));
 
             if (topLineYes) {
                 this.getChildren().addAll(topLine, icon);
