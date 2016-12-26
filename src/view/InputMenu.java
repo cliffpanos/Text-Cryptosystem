@@ -10,7 +10,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 
 
-public abstract class InputMenu {
+public abstract class InputMenu implements Resizable {
 
     protected VBox menu;
     protected TextArea inputField = new TextArea();
@@ -18,20 +18,23 @@ public abstract class InputMenu {
     protected UIButton runButton;
     protected double heightDecrement = 60.0;
 
+    protected double stageHeight = MainScreen.getStageHeight();
+    private double paneWidth = MainScreen.getStageWidth() * 0.57;
+
     private HBox upperMenuBar = new HBox(8.0);
     private HBox lowerMenuBar = new HBox(8.0);
-    private double paneWidth = MainScreen.getStageWidth() * 0.57;
+    private HBox runButtonHBox;
+    private HBox lowerHBox;
+
+
 
     public InputMenu() {
 
         menu = new VBox(8.5);
-        menu.setPrefWidth(paneWidth - 40.0);
         menu.setPadding(new Insets(10));
         menu.setAlignment(Pos.CENTER);
         menu.setFillWidth(false);
 
-        inputField.setPrefWidth(paneWidth - 20.0);
-        outputField.setPrefWidth(paneWidth - 20.0);
         inputField.setWrapText(true);
         outputField.setWrapText(true);
 
@@ -65,7 +68,6 @@ public abstract class InputMenu {
                 inputField.redo();
             });
 
-        upperMenuBar.setPrefWidth(paneWidth - 40.0);
         upperMenuBar.setPrefHeight(iconSize);
         upperMenuBar.setAlignment(Pos.CENTER_LEFT);
         upperMenuBar.getChildren().addAll(trashButton, selectAllButton,
@@ -81,7 +83,6 @@ public abstract class InputMenu {
         copyButton2.setOnMouseClicked(e -> {
                 outputField.copy();
         });
-        lowerMenuBar.setPrefWidth(paneWidth - 40.0 - 100.0);
         lowerMenuBar.setPrefHeight(iconSize);
         lowerMenuBar.setAlignment(Pos.CENTER_LEFT);
         lowerMenuBar.getChildren().addAll(selectAllButton2, copyButton2);
@@ -99,14 +100,11 @@ public abstract class InputMenu {
                     Resources.playSound("encryptionComplete.aiff");
                 }
             });
-        HBox runButtonHBox = new HBox(runButton);
+
+        runButtonHBox = new HBox(runButton);
         runButtonHBox.setAlignment(Pos.CENTER_RIGHT);
-        runButtonHBox.setPrefWidth(paneWidth - 45.0 - 80.0);
 
-        HBox lowerHBox = new HBox(lowerMenuBar, runButtonHBox);
-
-        menu.getChildren().addAll(upperMenuBar, inputField, lowerHBox,
-            outputField);
+        lowerHBox = new HBox(lowerMenuBar, runButtonHBox);
 
     }
 
@@ -116,6 +114,30 @@ public abstract class InputMenu {
 
     public String getInputFieldText() {
         return inputField.getText();
+    }
+
+    public void resize() {
+
+        System.out.println("An InputMenu resizing");
+
+        stageHeight = MainScreen.getStageHeight();
+        paneWidth = MainScreen.getStageWidth() * 0.57;
+        System.out.println("PaneWidth is: " + paneWidth);
+
+        menu.setPrefWidth(paneWidth - 40.0);
+
+        inputField.setPrefWidth(paneWidth - 20.0);
+        outputField.setPrefWidth(paneWidth - 20.0);
+
+        upperMenuBar.setPrefWidth(paneWidth - 40.0);
+        lowerMenuBar.setPrefWidth(paneWidth - 40.0 - 100.0);
+
+        runButtonHBox.setPrefWidth(paneWidth - 45.0 - 80.0);
+
+        menu.getChildren().clear();
+        menu.getChildren().addAll(upperMenuBar, inputField, lowerHBox,
+            outputField);
+
     }
 
 }

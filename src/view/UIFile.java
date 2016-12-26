@@ -1,4 +1,4 @@
-package controller;
+package view;
 
 import controller.Encryptor;
 import resources.Resources;
@@ -13,33 +13,75 @@ import java.io.IOException;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 
+/* //This will be used to process word documents
+import java.io.*;
+import org.apache.poi.hwpf.HWPFDocument;
+import org.apache.poi.hwpf.extractor.WordExtractor;*/
+
 public class UIFile {
 
     private File fileToProcess;
+    private String fileExtension;
 
     public UIFile(File fileToProcess) {
         this.fileToProcess = fileToProcess;
+        this.fileExtension = computeFileExtension(fileToProcess.getName());
     }
 
     //Code to get and process Files ----------------- :
 
     public void processFile() {
 
-        String extension = getFileExtension(fileToProcess.getName());
-
-        if (extension.equals("txt")) {
+        if (fileExtension.equals("txt")) {
             Encryptor.setText(readTXTFile(fileToProcess));
             String processedText = Encryptor.run();
             if (processedText != null) {
                 writeTXTFile(fileToProcess, processedText);
             }
+        } else if (fileExtension.equals("doc")) {
+            readDocFile(fileToProcess);
         }
 
     }
 
+    public String getFileExtension() {
+        return this.fileExtension;
+    }
+
+    public boolean isReadable() {
+        return this.fileToProcess.canRead();
+    }
+
+    public boolean isWritable() {
+        return this.fileToProcess.canWrite();
+    }
+
+    public String getName() {
+        return this.fileToProcess.getName();
+    }
+
+    public String getIconURL() {
+
+        String toReturn = "";
+
+        switch (getFileExtension()) {
+        case "txt" :
+            toReturn = "txtFile.png";
+            break;
+        case "doc" :
+            toReturn = "docFile.png";
+            break;
+        default :
+            toReturn = "blankFile.png";
+            break;
+        }
+
+        return toReturn;
+    }
+
 
     //Returns a String of the file extension, such as "txt" or "doc"
-    public static String getFileExtension(String fileName) {
+    public static String computeFileExtension(String fileName) {
 
         String extension = ""; //Get the extension of the file
         int dot = fileName.lastIndexOf('.');
@@ -153,7 +195,7 @@ public class UIFile {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select a File");
 
-        //Set extension filter
+        //Set extension filters
         FileChooser.ExtensionFilter extFilter =
             new FileChooser.ExtensionFilter("TXT files (.txt)", "*.txt");
         FileChooser.ExtensionFilter extFilter2 =
@@ -175,8 +217,71 @@ public class UIFile {
 
 
 
+    /* public static void readParagraphs(HWPFDocument doc) throws Exception{
+        WordExtractor we = new WordExtractor(doc);
 
+        //Get the total number of paragraphs
+        String[] paragraphs = we.getParagraphText();
+        System.out.println("Total Paragraphs: "+paragraphs.length);
 
+        for (int i = 0; i < paragraphs.length; i++) {
+
+            System.out.println("Length of paragraph "+(i +1)+": "+ paragraphs[i].length());
+            System.out.println(paragraphs[i].toString());
+
+        }
+
+    }
+
+    public static void readHeader(HWPFDocument doc, int pageNumber){
+        HeaderStories headerStore = new HeaderStories( doc);
+        String header = headerStore.getHeader(pageNumber);
+        System.out.println("Header Is: "+header);
+
+    }
+
+    public static void readFooter(HWPFDocument doc, int pageNumber){
+        HeaderStories headerStore = new HeaderStories( doc);
+        String footer = headerStore.getFooter(pageNumber);
+        System.out.println("Footer Is: "+footer);
+
+    }*/
+
+    /*public static void readDocumentSummary(HWPFDocument doc) {
+        DocumentSummaryInformation summaryInfo=doc.getDocumentSummaryInformation();
+        String category = summaryInfo.getCategory();
+        String company = summaryInfo.getCompany();
+        int lineCount=summaryInfo.getLineCount();
+        int sectionCount=summaryInfo.getSectionCount();
+        int slideCount=summaryInfo.getSlideCount();
+
+        System.out.println("---------------------------");
+        System.out.println("Category: "+category);
+        System.out.println("Company: "+company);
+        System.out.println("Line Count: "+lineCount);
+        System.out.println("Section Count: "+sectionCount);
+        System.out.println("Slide Count: "+slideCount);
+
+    }*/
+
+    public static void readDocFile(File docFile) {
+        /*WordExtractor extractor = null;
+        try {
+
+            FileInputStream fis = new FileInputStream(docFile.getAbsolutePath());
+            HWPFDocument document = new HWPFDocument(fis);
+            extractor = new WordExtractor(document);
+            String[] fileData = extractor.getParagraphText();
+            for (int i = 0; i < fileData.length; i++)
+            {
+                if (fileData[i] != null)
+                    System.out.println(fileData[i]);
+            }
+        } catch (Exception exep) {
+            exep.printStackTrace();
+        } */
+
+    }
 
 
 

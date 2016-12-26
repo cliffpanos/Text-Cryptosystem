@@ -14,11 +14,12 @@ import javafx.geometry.Insets;
 public class MainScreen extends BorderPane {
 
     private static BorderPane innerBorderPane = new BorderPane();
-    private static FilePane filePane = new FilePane();
-    private static EncryptDecryptMenu edMenu = new EncryptDecryptMenu();
-    private static InputOnDecryptMenu inputODMenu = new InputOnDecryptMenu();
-    private static InputOnEncryptMenu inputOEMenu = new InputOnEncryptMenu();
     private static OptionsMenu optionsMenu = new OptionsMenu();
+    private static EncryptDecryptMenu edMenu = new EncryptDecryptMenu();
+    private static InputMenu inputODMenu = new InputOnDecryptMenu();
+    private static InputMenu inputOEMenu = new InputOnEncryptMenu();
+    private static FilePane filePane = new FilePane();
+    private static FolderPane folderPane = new FolderPane();
 
     private static boolean isEncryptingNotDecrypting = true;
     private static MenuOptions selectedMenu = MenuOptions.INPUTTEXT;
@@ -82,13 +83,12 @@ public class MainScreen extends BorderPane {
 
     }
 
-
-    public static InputOnDecryptMenu getInputODMenu() {
-        return inputODMenu;
+    public static InputOnEncryptMenu getInputOEMenu() {
+        return (InputOnEncryptMenu) inputOEMenu;
     }
 
-    public static InputOnEncryptMenu getInputOEMenu() {
-        return inputOEMenu;
+    public static InputOnDecryptMenu getInputODMenu() {
+        return (InputOnDecryptMenu) inputODMenu;
     }
 
     public static boolean getIsEncryptingNotDecrypting() {
@@ -105,6 +105,15 @@ public class MainScreen extends BorderPane {
 
     public static double getStageWidth() {
         return Runner.getStageWidth();
+    }
+
+    public static Resizable[] getResizables() {
+
+        Resizable[] resizables = {(Resizable) inputOEMenu,
+            (Resizable) inputODMenu, (Resizable) filePane,
+            (Resizable) folderPane};
+
+        return resizables;
     }
 
 }

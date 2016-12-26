@@ -1,6 +1,7 @@
 package runner;
 
 import view.MainScreen;
+import view.Resizable;
 
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -64,6 +65,8 @@ public class Runner extends Application {
             stage.setWidth(lastStageWidth);
             stage.setHeight(lastStageHeight);
             isFullScreen = false;
+            resizeWindow();
+
         } else { //make it fullScreen
             lastStageWidth = stageWidth;
             lastStageHeight = stageHeight;
@@ -74,13 +77,18 @@ public class Runner extends Application {
             stage.setWidth(screenBounds.getWidth());
             stage.setHeight(screenBounds.getHeight());
             isFullScreen = true;
+            resizeWindow();
         }
     }
 
-    public static void resizeWindow(double length, double width) {
-        int i;
-        //implement
-        //TODO
+    public static void resizeWindow() {
+
+        Resizable[] resizables = MainScreen.getResizables();
+
+        for (Resizable resizablePane : resizables) {
+            resizablePane.resize();
+        }
+
     }
 
     public static Stage getStage() {

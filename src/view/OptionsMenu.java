@@ -106,30 +106,27 @@ public class OptionsMenu extends StackPane {
 
     private class IconBox extends VBox {
 
-        private UIButton icon;
-
         public IconBox(String iconURL, boolean topLineYes) {
 
-            this.setPrefWidth(paneWidth - 40.0);
+            this.setPrefWidth(paneWidth - 100.0);
             this.setAlignment(Pos.CENTER);
             this.setSpacing(20);
 
-            icon = new UIButton(iconURL, (paneWidth / 3.5));
+            UIButton icon = new UIButton(iconURL, (paneWidth / 3.5));
             icon.setOnMousePressed(e -> {});
             icon.setOnMouseReleased(e -> {});
             icon.setBackgroundColor(Color.web("#EAEDED", 0.9));
 
             HBox iconHBox = new HBox(icon);
-            iconHBox.setPrefWidth(paneWidth - 40);
-            iconHBox.setAlignment(Pos.CENTER_LEFT);
+            iconHBox.setAlignment(Pos.CENTER);
 
             Rectangle topLine =
                 new Rectangle((paneWidth - 20), 1.18, Color.web("#D7DBDD"));
 
             if (topLineYes) {
-                this.getChildren().addAll(topLine, icon);
+                this.getChildren().addAll(topLine, iconHBox);
             } else {
-                this.getChildren().add(icon);
+                this.getChildren().add(iconHBox);
             }
 
         }
