@@ -38,7 +38,7 @@ public class OptionsMenu extends StackPane {
             Color.web("#B3B3B3"), Color.TRANSPARENT, Color.TRANSPARENT,
             BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID,
             BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID,
-            new CornerRadii(0.0), new BorderWidths(1.66), new Insets(0.0))));
+            new CornerRadii(0.0), new BorderWidths(1.33), new Insets(0.0))));
 
 
         menu = new VBox(20);

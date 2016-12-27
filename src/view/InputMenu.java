@@ -16,7 +16,7 @@ public abstract class InputMenu implements Resizable {
     protected TextArea inputField = new TextArea();
     protected TextArea outputField = new TextArea();
     protected UIButton runButton;
-    protected double heightDecrement = 60.0;
+    protected double heightDecrement = 60.0; //Used in subclass TextArea sizing
 
     protected double stageHeight = MainScreen.getStageHeight();
     private double paneWidth = MainScreen.getStageWidth() * 0.57;
@@ -47,6 +47,10 @@ public abstract class InputMenu implements Resizable {
         selectAllButton.setOnMouseClicked(e -> {
                 inputField.selectAll();
             });
+        UIButton pasteButton = new UIButton("paste_icon.png", iconSize);
+        pasteButton.setOnMouseClicked(e -> {
+                inputField.paste();
+            });
         UIButton copyButton = new UIButton("copy_icon.png", iconSize);
         copyButton.setOnMouseClicked(e -> {
                 inputField.copy();
@@ -54,10 +58,6 @@ public abstract class InputMenu implements Resizable {
         UIButton cutButton = new UIButton("cut_icon.png", iconSize);
         cutButton.setOnMouseClicked(e -> {
                 inputField.cut();
-            });
-        UIButton pasteButton = new UIButton("paste_icon.png", iconSize);
-        pasteButton.setOnMouseClicked(e -> {
-                inputField.paste();
             });
         UIButton undoButton = new UIButton("undo_icon.png", iconSize);
         undoButton.setOnMouseClicked(e -> {
@@ -71,7 +71,7 @@ public abstract class InputMenu implements Resizable {
         upperMenuBar.setPrefHeight(iconSize);
         upperMenuBar.setAlignment(Pos.CENTER_LEFT);
         upperMenuBar.getChildren().addAll(trashButton, selectAllButton,
-            copyButton, cutButton, pasteButton, undoButton, redoButton);
+            pasteButton, copyButton, cutButton, undoButton, redoButton);
 
 
         UIButton selectAllButton2 = new UIButton("selectAll_icon2.png",
@@ -106,6 +106,8 @@ public abstract class InputMenu implements Resizable {
 
         lowerHBox = new HBox(lowerMenuBar, runButtonHBox);
 
+        menu.getChildren().addAll(upperMenuBar, inputField, lowerHBox,
+            outputField);
     }
 
     public VBox getRootNode() {
@@ -118,25 +120,19 @@ public abstract class InputMenu implements Resizable {
 
     public void resize() {
 
-        System.out.println("An InputMenu resizing");
-
         stageHeight = MainScreen.getStageHeight();
         paneWidth = MainScreen.getStageWidth() * 0.57;
-        System.out.println("PaneWidth is: " + paneWidth);
 
         menu.setPrefWidth(paneWidth - 40.0);
 
         inputField.setPrefWidth(paneWidth - 20.0);
         outputField.setPrefWidth(paneWidth - 20.0);
 
-        upperMenuBar.setPrefWidth(paneWidth - 40.0);
+        upperMenuBar.setPrefWidth(paneWidth - 30.0);
         lowerMenuBar.setPrefWidth(paneWidth - 40.0 - 100.0);
+        lowerHBox.setPrefWidth(paneWidth - 30.0);
 
         runButtonHBox.setPrefWidth(paneWidth - 45.0 - 80.0);
-
-        menu.getChildren().clear();
-        menu.getChildren().addAll(upperMenuBar, inputField, lowerHBox,
-            outputField);
 
     }
 

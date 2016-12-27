@@ -5,6 +5,8 @@ import resources.Resources;
 import runner.Runner;
 
 import java.io.File;
+import java.util.List;
+import java.util.ArrayList;
 
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -21,46 +23,60 @@ import javafx.geometry.Pos;
 public class FilePane extends StackPane implements Resizable {
 
     private VBox vBox = new VBox(20);
+    private VBox centralDisplay = new VBox();
     private static double paneWidth = MainScreen.getStageWidth() * 0.57 - 40.0;
     private static String processType = "encrypt"; // "encrypt" or "decrypt"
 
     private static UIButton chooseFileButton;
     private static UIButton runButton =
-        new UIButton("encrypt.png", paneWidth - 60.0, 30, "Encrypt");
-    private static UIFile file = null; //the file to be processed
+        new UIButton("encrypt.png", paneWidth - 60.0, 30, "Encrypt", false);
+    private static ArrayList<UIFile> files = new ArrayList<>();
+        //All of the files to be processed from fileChooser in UIFile
+    private static UIFile file = null; //THIS IS TEMPORARY AND NEEDS TO BE DELETED later
+                                                                                        //TODO
 
     public FilePane() {
-
-        this.setPrefWidth(paneWidth);
-        this.setPrefHeight(MainScreen.getStageHeight() - 40.0);
-        //this.setBackground(new Background(new BackgroundFill(Color
-        //    .WHITE, new CornerRadii(5.0, 5.0, 5.0, 5.0, false),
-        //    new Insets(10, 10, 10, 10))));
-        //this.setPadding(new Insets(20));
 
         chooseFileButton = new UIButton(paneWidth - 60.0, 30,
             "Choose a File to " + processType);
         chooseFileButton.setAlignment(Pos.TOP_CENTER);
         chooseFileButton.setOnMouseClicked(e -> {
-                File tempFile = UIFile.getFileFromDirectory();
-                if (tempFile != null) {
-                    file = new UIFile(tempFile);
-                    System.out.println(file.getName() + "\n" + file.isReadable() + "\n" + file.isWritable());
-                    FileDisplay fileDisplay = new FileDisplay();
+
+                //@Anthony
+                    //PLZ don't modify this part beyond what you need to with the List<UIFile>;
+                        //just to the backend and i'll worry about all of this <333
+
+                List<File> tempFiles = UIFile.getFilesFromDirectory();
+                if (tempFiles != null) {                                //TODO
+                    for (File f : tempFiles) {
+                        files.add(new UIFile(f));
+                    }
+                    file = files.get(0); //CHANGE THIS SO THAT IT GETS MORE THAN JUST THE FIRST FILE
                     updateRunButtonText();
-                    vBox.getChildren().clear();
-                    vBox.getChildren().addAll(chooseFileButton, fileDisplay);
+                    centralDisplay.getChildren().setAll(new FileDisplay());
                     Resources.playSound("fileUpload.aiff");
+                    runButton.setMouseActions(runButton.getClickable());
+                    runButton.setBackgroundColor(Color.WHITE);
+                    runButton.setOnMouseClicked(e2 -> {
+                            file.processFile();
+                            runButton.setBackgroundColor(Color.web("#D6EAF8"));
+                        });
                 }
             });
 
-        runButton.setOnMouseClicked(e -> {
-                file.processFile();
-            });
+        runButton.setBackgroundColor(Color.web("#D6DBDF"));
 
-        vBox.setAlignment(Pos.TOP_CENTER);
-        vBox.setMaxHeight(MainScreen.getStageHeight() - 40.0);
-        vBox.getChildren().addAll(chooseFileButton);
+        vBox.setAlignment(Pos.CENTER);
+
+        centralDisplay.setBackground(new Background(new BackgroundFill(Color
+            .WHITE, new CornerRadii(5.0, 5.0, 5.0, 5.0, false),
+            new Insets(20))));
+        centralDisplay.setPadding(new Insets(10));
+        centralDisplay.setAlignment(Pos.CENTER);
+        centralDisplay.getChildren().add(new Label("Choose one or more files"));
+
+        vBox.getChildren().addAll(chooseFileButton, centralDisplay,
+            runButton);
 
         this.getChildren().add(vBox);
 
@@ -69,6 +85,7 @@ public class FilePane extends StackPane implements Resizable {
         resize();
 
     }
+
 
     public static void setProcessType(String encryptOrDecrypt) {
         processType = encryptOrDecrypt;
@@ -102,9 +119,13 @@ public class FilePane extends StackPane implements Resizable {
             this.setSpacing(15);
             this.setAlignment(Pos.CENTER);
 
-            this.getChildren().addAll(Resources.getImageView(
-                file.getIconURL(), (paneWidth - 250.0)),
-                runButton);
+            this.setHeight(MainScreen.getStageHeight() - 200);
+            this.setPrefWidth(paneWidth - 40);
+
+            System.out.println(file.getName() + "\n" + file.isReadable() + "\n" + file.isWritable());
+
+            this.getChildren().add(Resources.getImageView(
+                file.getIconURL(), (paneWidth - 400.0)));
 
         }
 
@@ -112,7 +133,17 @@ public class FilePane extends StackPane implements Resizable {
 
     @Override
     public void resize() {
+
         System.out.println("FilePane resizing");
+
+        paneWidth = MainScreen.getStageWidth() * 0.57 - 40.0;
+        this.setPrefWidth(paneWidth);
+        this.setPrefHeight(MainScreen.getStageHeight() - 40.0);
+        vBox.setPrefHeight(MainScreen.getStageHeight() - 40.0);
+
+        centralDisplay.setPrefWidth(paneWidth - 40.0);
+        centralDisplay.setMinHeight(MainScreen.getStageHeight() - 200);
+
     }
 
 }

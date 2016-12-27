@@ -4,6 +4,8 @@ import controller.Encryptor;
 import resources.Resources;
 import runner.Runner;
 
+import java.util.List;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -187,22 +189,19 @@ public class UIFile {
     }
 
 
-
-
-
-    public static File getFileFromDirectory() {
+    public static List<File> getFilesFromDirectory() {
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select a File");
 
-        //Set extension filters
+        //Set extension filters: txt & doc
         FileChooser.ExtensionFilter extFilter =
             new FileChooser.ExtensionFilter("TXT files (.txt)", "*.txt");
         FileChooser.ExtensionFilter extFilter2 =
             new FileChooser.ExtensionFilter("Doc files (.doc)", "*.doc");
 
         fileChooser.getExtensionFilters().addAll(extFilter, extFilter2);
-        return fileChooser.showOpenDialog(Runner.getStage());
+        return fileChooser.showOpenMultipleDialog(Runner.getStage());
 
     }
 
@@ -283,6 +282,20 @@ public class UIFile {
 
     }
 
+    /*
+    //Create the file to which the encrypted text will be written.
+    try {
+    // Using "Encrypted Text.txt" is just for testing
+        File fileToWrite = new File("Encrypted Text.txt");
 
+        if (file.createNewFile()){
+            System.out.println("File is created!");
+        } else {
+            System.out.println("File already exists.");
+        }
+    // In javafx we should implement this so that
+    } catch (IOException e) {
+      e.printStackTrace();
+    }*/
 
 }
