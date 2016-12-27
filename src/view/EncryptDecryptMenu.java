@@ -31,6 +31,7 @@ public class EncryptDecryptMenu extends StackPane {
     private static TextField passwordField = new TextField();
 
     private static String passwordFieldText = "";
+    private static boolean passwordFieldEnteredYet = false;
     private static int lastCaretPosition = 0;
 
     public EncryptDecryptMenu() {
@@ -62,6 +63,11 @@ public class EncryptDecryptMenu extends StackPane {
                 passwordFieldText = passwordField.getText();
             });
         passwordField.setOnMouseEntered(e -> {
+                if (!passwordFieldEnteredYet) {
+                    passwordFieldText = passwordField.getText();
+                    passwordFieldEnteredYet = true;
+                    lastCaretPosition = passwordField.getCaretPosition();
+                }
                 passwordField.setText(passwordFieldText);
                 passwordField.positionCaret(lastCaretPosition);
                 passwordField.setEditable(true);
@@ -72,7 +78,7 @@ public class EncryptDecryptMenu extends StackPane {
                 //Replace the password with * characters so that onlookers
                     //cannot see it
                 String passwordCoverUp = "";
-                for (char c : passwordFieldText.toCharArray()) {
+                for (int i = 0; i < passwordFieldText.length(); i++) {
                     passwordCoverUp += "*";
                 }
                 passwordField.setText(passwordCoverUp);
@@ -111,6 +117,9 @@ public class EncryptDecryptMenu extends StackPane {
     }
 
     public static String getPasswordFieldText() {
+        if (!passwordFieldEnteredYet) {
+            return passwordField.getText();
+        }
         return passwordFieldText;
     }
 

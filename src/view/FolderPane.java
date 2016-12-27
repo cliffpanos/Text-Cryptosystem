@@ -13,6 +13,6 @@ public class FolderPane extends StackPane implements Resizable {
     }
 
     public void resize() {
-        System.out.println("FolderPane resizing");
+        //TODO
     }
 }

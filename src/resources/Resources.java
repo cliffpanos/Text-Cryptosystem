@@ -37,7 +37,7 @@ public class Resources {
         imageView.setFitWidth(dimension);
         imageView.setPreserveRatio(true);
         imageView.setSmooth(true);
-        imageView.setCache(true);
+        //imageView.setCache(true);
 
         return imageView;
     }

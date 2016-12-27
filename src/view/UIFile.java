@@ -24,6 +24,7 @@ public class UIFile {
 
     private File fileToProcess;
     private String fileExtension;
+    private String fileText;
 
     public UIFile(File fileToProcess) {
         this.fileToProcess = fileToProcess;
@@ -56,6 +57,22 @@ public class UIFile {
 
     public boolean isWritable() {
         return this.fileToProcess.canWrite();
+    }
+
+    public boolean isEncryptable() {
+        if (fileExtension.equals("txt")) {
+            fileText = readTXTFile(fileToProcess);
+        }
+        if (fileText == null) {
+            return false;
+        }
+        if (fileText.length() >= 6) {
+            if (fileText.substring(0, 3).equals("%E%")
+                && fileText.substring(fileText.length() - 3).equals("$E$")) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public String getName() {
@@ -118,7 +135,6 @@ public class UIFile {
                 textToProcess =
                     textToProcess.substring(0, textToProcess.length() - 1);
                 //remove the extra "\n" that was added at the end
-                System.out.println("TEXTTT:\n" + textToProcess);
 
             } catch (IOException e) {
 
