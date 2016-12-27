@@ -1,9 +1,8 @@
 To compile:
-java -cp src/ src/controller/*.java src/runner/*.java src/resources/*.java src/view/*.java
+javac -cp src/ src/controller/*.java src/runner/*.java src/resources/*.java src/view/*.java
 
 To run:
 java -cp src/ runner.Runner
 
 Remove CLASS files:
 rm src/*/*.class
-

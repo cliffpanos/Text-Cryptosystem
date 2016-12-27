@@ -32,8 +32,7 @@ public class FilePane extends StackPane implements Resizable {
         new UIButton("encrypt.png", paneWidth - 60.0, 30, "Encrypt", false);
     private static ArrayList<UIFile> files = new ArrayList<>();
         //All of the files to be processed from fileChooser in UIFile
-    private static UIFile file = null; //THIS IS TEMPORARY AND NEEDS TO BE DELETED later
-                                                                                        //TODO
+
 
     public FilePane() {
 
@@ -49,16 +48,23 @@ public class FilePane extends StackPane implements Resizable {
                 List<File> tempFiles = UIFile.getFilesFromDirectory();
                 if (tempFiles != null) {                                //TODO
                     for (File f : tempFiles) {
-                        files.add(new UIFile(f));
+
+                        if (f != null) {
+                            files.add(new UIFile(f));
+                        }
+
                     }
-                    file = files.get(0); //CHANGE THIS SO THAT IT GETS MORE THAN JUST THE FIRST FILE
                     updateRunButtonText();
                     centralDisplay.getChildren().setAll(new FileDisplay());
                     Resources.playSound("fileUpload.aiff");
                     runButton.setMouseActions(runButton.getClickable());
                     runButton.setBackgroundColor(Color.WHITE);
                     runButton.setOnMouseClicked(e2 -> {
-                            file.processFile();
+                            for (UIFile f : files) {
+                                System.out.println("Processing a file");
+                                f.processFile();
+                            }
+
                             runButton.setBackgroundColor(Color.web("#D6EAF8"));
                         });
                 }
@@ -98,11 +104,19 @@ public class FilePane extends StackPane implements Resizable {
     public static void updateRunButtonText() {
 
         String fileName = "";
-        if (file != null) {
-            fileName = " \"" + file.getName() + "\"";
+        Label buttonLabel = runButton.getLabel();
+
+        // Sets the initial text
+        buttonLabel.setText(processType.substring(0, 1).toUpperCase()
+            + processType.substring(1));
+
+        // Adds additional text for additional files
+        for (UIFile file : files) {
+            if (file != null) {
+                fileName = " \"" + file.getName() + "\"";
+                buttonLabel.setText(buttonLabel.getText() + fileName);
+            }
         }
-        runButton.getLabel().setText(processType.substring(0, 1).toUpperCase()
-            + processType.substring(1) + fileName);
     }
 
 
@@ -122,10 +136,16 @@ public class FilePane extends StackPane implements Resizable {
             this.setHeight(MainScreen.getStageHeight() - 200);
             this.setPrefWidth(paneWidth - 40);
 
-            System.out.println(file.getName() + "\n" + file.isReadable() + "\n" + file.isWritable());
+            for (UIFile file : files) {
+                System.out.println(file.getName() + "\n" + file.isReadable()
+                    + "\n" + file.isWritable());
 
-            this.getChildren().add(Resources.getImageView(
-                file.getIconURL(), (paneWidth - 400.0)));
+                // Message from Anthony: Cliff, the following two lines create a
+                // weird effect when multiple files are selected. I will let you
+                // decide how to handle that
+                this.getChildren().add(Resources.getImageView(
+                    file.getIconURL(), (paneWidth - 400.0)));
+            }
 
         }
 
