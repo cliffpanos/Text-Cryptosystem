@@ -1,2 +1,9 @@
-To compile: "javac -cp src src/controller/*.java src/resources/*.java src/runner/*.java src/view/*.java"
-To run: "java -cp src/runner/Runner"
+To compile:
+java -cp src/ src/controller/*.java src/runner/*.java src/resources/*.java src/view/*.java
+
+To run:
+java -cp src/ runner.Runner
+
+Remove CLASS files:
+rm src/*/*.class
+

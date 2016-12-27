@@ -10,28 +10,31 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 
 
-public abstract class InputMenu {
+public abstract class InputMenu implements Resizable {
 
     protected VBox menu;
     protected TextArea inputField = new TextArea();
     protected TextArea outputField = new TextArea();
     protected UIButton runButton;
-    protected double heightDecrement = 60.0;
+    protected double heightDecrement = 60.0; //Used in subclass TextArea sizing
+
+    protected double stageHeight = MainScreen.getStageHeight();
+    private double paneWidth = MainScreen.getStageWidth() * 0.57;
 
     private HBox upperMenuBar = new HBox(8.0);
     private HBox lowerMenuBar = new HBox(8.0);
-    private double paneWidth = MainScreen.getStageWidth() * 0.57;
+    private HBox runButtonHBox;
+    private HBox lowerHBox;
+
+
 
     public InputMenu() {
 
         menu = new VBox(8.5);
-        menu.setPrefWidth(paneWidth - 40.0);
         menu.setPadding(new Insets(10));
         menu.setAlignment(Pos.CENTER);
         menu.setFillWidth(false);
 
-        inputField.setPrefWidth(paneWidth - 20.0);
-        outputField.setPrefWidth(paneWidth - 20.0);
         inputField.setWrapText(true);
         outputField.setWrapText(true);
 
@@ -43,33 +46,32 @@ public abstract class InputMenu {
         UIButton selectAllButton = new UIButton("selectAll_icon.png", iconSize);
         selectAllButton.setOnMouseClicked(e -> {
                 inputField.selectAll();
-        });
-        UIButton copyButton = new UIButton("copy_icon.png", iconSize);
-        copyButton.setOnMouseClicked(e -> {
-                inputField.copy();
-        });
-        UIButton cutButton = new UIButton("cut_icon.png", iconSize);
-        cutButton.setOnMouseClicked(e -> {
-                inputField.cut();
-        });
+            });
         UIButton pasteButton = new UIButton("paste_icon.png", iconSize);
         pasteButton.setOnMouseClicked(e -> {
                 inputField.paste();
-        });
+            });
+        UIButton copyButton = new UIButton("copy_icon.png", iconSize);
+        copyButton.setOnMouseClicked(e -> {
+                inputField.copy();
+            });
+        UIButton cutButton = new UIButton("cut_icon.png", iconSize);
+        cutButton.setOnMouseClicked(e -> {
+                inputField.cut();
+            });
         UIButton undoButton = new UIButton("undo_icon.png", iconSize);
         undoButton.setOnMouseClicked(e -> {
                 inputField.undo();
-        });
+            });
         UIButton redoButton = new UIButton("redo_icon.png", iconSize);
         redoButton.setOnMouseClicked(e -> {
                 inputField.redo();
-        });
+            });
 
-        upperMenuBar.setPrefWidth(paneWidth - 40.0);
         upperMenuBar.setPrefHeight(iconSize);
         upperMenuBar.setAlignment(Pos.CENTER_LEFT);
         upperMenuBar.getChildren().addAll(trashButton, selectAllButton,
-            copyButton, cutButton, pasteButton, undoButton, redoButton);
+            pasteButton, copyButton, cutButton, undoButton, redoButton);
 
 
         UIButton selectAllButton2 = new UIButton("selectAll_icon2.png",
@@ -81,7 +83,6 @@ public abstract class InputMenu {
         copyButton2.setOnMouseClicked(e -> {
                 outputField.copy();
         });
-        lowerMenuBar.setPrefWidth(paneWidth - 40.0 - 100.0);
         lowerMenuBar.setPrefHeight(iconSize);
         lowerMenuBar.setAlignment(Pos.CENTER_LEFT);
         lowerMenuBar.getChildren().addAll(selectAllButton2, copyButton2);
@@ -99,15 +100,14 @@ public abstract class InputMenu {
                     Resources.playSound("encryptionComplete.aiff");
                 }
             });
-        HBox runButtonHBox = new HBox(runButton);
-        runButtonHBox.setAlignment(Pos.CENTER_RIGHT);
-        runButtonHBox.setPrefWidth(paneWidth - 45.0 - 80.0);
 
-        HBox lowerHBox = new HBox(lowerMenuBar, runButtonHBox);
+        runButtonHBox = new HBox(runButton);
+        runButtonHBox.setAlignment(Pos.CENTER_RIGHT);
+
+        lowerHBox = new HBox(lowerMenuBar, runButtonHBox);
 
         menu.getChildren().addAll(upperMenuBar, inputField, lowerHBox,
             outputField);
-
     }
 
     public VBox getRootNode() {
@@ -116,6 +116,24 @@ public abstract class InputMenu {
 
     public String getInputFieldText() {
         return inputField.getText();
+    }
+
+    public void resize() {
+
+        stageHeight = MainScreen.getStageHeight();
+        paneWidth = MainScreen.getStageWidth() * 0.57;
+
+        menu.setPrefWidth(paneWidth - 40.0);
+
+        inputField.setPrefWidth(paneWidth - 20.0);
+        outputField.setPrefWidth(paneWidth - 20.0);
+
+        upperMenuBar.setPrefWidth(paneWidth - 30.0);
+        lowerMenuBar.setPrefWidth(paneWidth - 40.0 - 100.0);
+        lowerHBox.setPrefWidth(paneWidth - 30.0);
+
+        runButtonHBox.setPrefWidth(paneWidth - 45.0 - 80.0);
+
     }
 
 }

@@ -18,17 +18,15 @@ package controller;
 //  text is severely more convoluted to those who do not know the pw.
 //
 //  Additionally, the text is encrypted and then re-encrypted recursively.
+//
 
-import runner.Runner;
 import view.UIAlert;
 import view.EncryptDecryptMenu;
 import view.InputOnEncryptMenu;
 import view.MainScreen;
 
-import java.util.Scanner;
 import java.io.File;
-import javafx.scene.input.Clipboard;
-import javafx.scene.input.ClipboardContent;
+
 
 public class Encryptor {
 
@@ -38,7 +36,6 @@ public class Encryptor {
         + "TUVWXYZ/:;[]{}abcdefghijklmnop!@#$%^qrstuvwxyz0123456789\"";
         /* allCharacters replaced the space character with a tilde here to
            prevent user input error */
-    private static Scanner scan = new Scanner(System.in);
 
     private static String keyword = null;
     private static String password = null;
@@ -46,6 +43,10 @@ public class Encryptor {
     private static String passwordHashAlpha;
     private static String passwordHashBeta;
     private static int numKeys = 0;
+
+    private static String pwCheck = "$Enc$"; //See below for explanation
+    private static String nLSubstitute = "/N/$/L/";
+        //Used to substitute newLine characters
 
 
     public static void setKeyword(String aKeyword) {
@@ -62,8 +63,6 @@ public class Encryptor {
 
     public static String run() {
 
-        System.out.println("Welcome to Encryptor.");
-
         // GET THE KEYWORD FROM THE USER
         if (keyword == null) {
             UIAlert.show("Choose to Encrypt or Decrypt",
@@ -73,8 +72,6 @@ public class Encryptor {
             return null;
         }
 
-
-// Getting the password could be nicely implemented with a TextInputDialog
         // GET THE PASSWORD FROM THE USER
         password = EncryptDecryptMenu.getPasswordFieldText();
         if (password == null || password.equals("")) {
@@ -162,126 +159,189 @@ public class Encryptor {
 
 
 
-//------
 // These print statements are for testing
         System.out.println("password: '" + password + "'");
         System.out.println("numKeys: " + numKeys);
         System.out.println("i Key: " + initialKey);
-        System.out.println();
+        System.out.println("");
 
-        String pwCheck = "$Enc$"; //See below for explanation if this String
         if (keyword.equals("encrypt")) {
-            String invalidCharacterList = "";
-                //will hold all user-entered characters that are invalid
+            return encrypt();
+        } else if (keyword.equals("decrypt")) {
+            return decrypt();
+        } else {
+            return null;
+        }
 
-            String textNoSpaces = "";
-            for (char c : text.toCharArray()) {
-                textNoSpaces += (c == ' ' ? "~"
-                    : (allCharactersWithSpace.indexOf(c) == -1 ? "?" : c));
-                //If a character is a space, make it a ~ so that it will work
-                    //in Recursion's encrypt function
-                //If the character is not in allCharactersWithSpace, then change
-                    // it to be a ? so that it will work in Recursion's encrypt
-                invalidCharacterList +=
-                    (allCharactersWithSpace.indexOf(c) == -1
-                        ? (invalidCharacterList.indexOf(c) == -1 ? c : "")
-                        : "");
-                //If the character IS invalid AND it is not already in
-                    //invalidCharacterList, then add it to invalidCharacterList
+    }
+
+    //ENCRYPT
+
+    private static String encrypt() {
+
+        System.out.println(text.substring(0, 3));
+        System.out.println(text.substring(3));
+
+        if (text.length() >= 6) {
+            if (text.substring(0, 3).equals("%E%")
+                && text.substring(text.length() - 3).equals("$E$")) {
+                UIAlert.show("Text Already Encrypted",
+                    "The text that you are attempting to encrypt\n"
+                    + "has already been encrypted. To prevent the\n"
+                    + "convolution inherent in multiple encryptions,\n"
+                    + "You may not encrypt this text again.",
+                    javafx.scene.control.Alert.AlertType.ERROR);
+                return null;
             }
+        }
 
-            text = pwCheck + textNoSpaces;
-            /*The word Encryptor is added so that it can be checked if it
-              decrypted properly when the user tries to decrypt. If on
-              decryption, the first 9 characters are not '$Enc$', then
-              the user entered an incorrect password, and the remaining text
-              will not be decrypted because doing so would harm the data.*/
-            System.out.println("New text is: " + text);
-
-            String finalEncryptedCipherText = Recursion.encrypt(text, numKeys);
-            //encrypt() works from numKeys down to 1 by decrementing
-
-            String invalidPrintList = "";
-            for (char c : invalidCharacterList.toCharArray()) {
-                invalidPrintList += (c + ", ");
+        String temporaryText = "";
+        for (char c : text.toCharArray()) {
+            if (!String.valueOf(c).matches(".")) {
+                System.out.println("NOT A MATCH");
+                temporaryText += nLSubstitute;
+            } else {
+                temporaryText += c;
             }
+        }
+        System.out.println("Text length: " + text.length());
+        /*for (int i = 0; i < text.length(); i++) {
+            if ((i != text.length() - 1) //Prevent indexOutOfBounds
+                && (text.substring(i, i + 1).equals("\n"))
+                || (text.substring(i, i + 1).equals("\r"))
+                ) {
+                System.out.println("NEWLINE");
+            }
+        }*/
+        text = temporaryText;
+
+        //will hold all user-entered characters that are invalid
+        String invalidCharacterList = "";
+        String textNoSpaces = "";
+        for (char c : text.toCharArray()) {
+            textNoSpaces += (c == ' ' ? "~"
+                : (allCharactersWithSpace.indexOf(c) == -1 ? "?" : c));
+            //If a character is a space, make it a ~ so that it will work
+                //in Recursion's encrypt function
+            //If the character is not in allCharactersWithSpace, then change
+                // it to be a ? so that it will work in Recursion's encrypt
+            invalidCharacterList +=
+                (allCharactersWithSpace.indexOf(c) == -1
+                    ? (invalidCharacterList.indexOf(c) == -1 ? c : "")
+                    : "");
+            //If the character IS invalid AND it is not already in
+                //invalidCharacterList, then add it to invalidCharacterList
+        }
+
+        text = pwCheck + textNoSpaces;
+        /*The word Encryptor is added so that it can be checked if it
+          decrypted properly when the user tries to decrypt. If on
+          decryption, the first 9 characters are not '$Enc$', then
+          the user entered an incorrect password, and the remaining text
+          will not be decrypted because doing so would harm the data.*/
+        System.out.println("New text is: " + text);
+
+        String finalEncryptedCipherText = Recursion.encrypt(text, numKeys);
+        //encrypt() works from numKeys down to 1 by decrementing
+
+        String invalidPrintList = "";
+        for (char c : invalidCharacterList.toCharArray()) {
+            invalidPrintList += (c + ", ");
+        }
+        if (invalidPrintList.length() > 1) {
             invalidCharacterList = invalidPrintList
                 .substring(0, invalidPrintList.length() - 2); //remove space
+            System.out.println("Invalid charList: " + invalidCharacterList);
 
-            System.out.println(invalidCharacterList);
-            if (invalidCharacterList.length() > 0) {
-                UIAlert.show("Invalid Characters Entered",
-                    "The following characters are invalid:\n  "
-                    + invalidCharacterList + "\n\n"
-                    + "When these characters are decrypted,\n"
-                    + "They will appear as '?' characters.",
-                    javafx.scene.control.Alert.AlertType.CONFIRMATION);
-            }
-            System.out.println("\n\nEncrypted text is: "
-                + finalEncryptedCipherText);
-            return finalEncryptedCipherText;
         }
 
-        if (keyword.equals("decrypt")) {
+        if (invalidCharacterList.length() > 0) {
+            boolean cancelling = UIAlert.show("Invalid Characters Entered",
+                "The following characters are invalid:\n  "
+                + invalidCharacterList + "\n\n"
+                + "When these characters are decrypted,\n"
+                + "They will appear as '?' characters.\n\n"
+                + "Would you like to proceed?",
+                javafx.scene.control.Alert.AlertType.CONFIRMATION, true);
 
-            //Test to make sure that decrypting the first nine characters
-            // returns '$Enc$'
-            //If it does not, decryption will halt.
-            if (text.length() < 5) {
-                UIAlert.show("Inputted Text Incorrect",
-                    "The text that you entered to decrypt is incorrect.\n"
-                    + "All correctly inputted text is greater than length 5.",
-                    javafx.scene.control.Alert.AlertType.ERROR);
-                return null;
+            if (cancelling) {
+                return null; //Exit the encryption process
             }
-
-            if(!(Recursion.decrypt(text.substring(0, 5), 1)).equals(pwCheck)) {
-                UIAlert.show("Incorrect Password",
-                    "The decryption password that you entered is incorrect.\n"
-                    + "Attempting to decrypt the text with an incorrect\n"
-                    + "password would render a disarray of useless data.\n\n"
-                    + "Try to decrypt again using a different password.",
-                    javafx.scene.control.Alert.AlertType.ERROR);
-                return null;
-            }
-            String finalDecryptedCipherText =
-                Recursion.decrypt(text, 1);
-                //The second argument of decrypt() MUST be 1 because the
-                //encrypt function works from 1 to numKeys
-                //this is because it must undo the encrypt function oppositely
-            String decryptedNoTildes = "";
-            for (char c : finalDecryptedCipherText.toCharArray()) {
-                decryptedNoTildes += (c == '~' ? " " : c);
-                //Spaces were made into ~ characters before being encrypted, so
-                    //now they must be transformed back into spaces.
-            }
-            finalDecryptedCipherText = decryptedNoTildes.substring(5);
-                //This goes from index 9 to the end to remove the "$Enc$"
-            System.out.println("\nDecrypted text is: "
-                + finalDecryptedCipherText);
-            return finalDecryptedCipherText;
         }
 
-        //-------------------------------------------------------------------//
+        //Add two %E% & $E$ tags to prevent multiple encryptions:
+        finalEncryptedCipherText
+            = "%E%" + finalEncryptedCipherText + "$E$";
 
+        System.out.println("\n\nEncrypted text is: "
+            + finalEncryptedCipherText);
+        return finalEncryptedCipherText;
 
-        /*
-        //Create the file to which the encrypted text will be written.
-        try {
-        // Using "Encrypted Text.txt" is just for testing
-	        File fileToWrite = new File("Encrypted Text.txt");
-
-	        if (file.createNewFile()){
-	            System.out.println("File is created!");
-	        } else {
-	            System.out.println("File already exists.");
-	        }
-        // In javafx we should implement this so that
-    	} catch (IOException e) {
-	      e.printStackTrace();
-      }*/
-        return null;
     }
+
+    //DECRYPT
+
+    private static String decrypt() {
+
+        //Test to make sure that decrypting the first nine characters
+        // returns '$Enc$'
+        //If it does not, decryption will halt.
+        if (text.length() < 11) {
+            UIAlert.show("Inputted Text Incorrect",
+                "The text that you entered to decrypt is incorrect.\n"
+                + "All correctly inputted text is greater than length 11.",
+                javafx.scene.control.Alert.AlertType.ERROR);
+            return null;
+        }
+
+        //Remove the %E% & $E$ tags that were added at the end of the encryption
+        text = text.substring(3, text.length() - 3);
+
+        if (!(Recursion.decrypt(text.substring(0, 5), 1)).equals(pwCheck)) {
+            UIAlert.show("Incorrect Password",
+                "The decryption password that you entered is incorrect.\n"
+                + "Attempting to decrypt the text with an incorrect\n"
+                + "password would render a disarray of useless data.\n\n"
+                + "Try to decrypt again using a different password.",
+                javafx.scene.control.Alert.AlertType.ERROR);
+            return null;
+        }
+        String finalDecryptedCipherText =
+            Recursion.decrypt(text, 1);
+            //The second argument of decrypt() MUST be 1 because the
+            //encrypt function works from 1 to numKeys
+            //this is because it must undo the encrypt function oppositely
+        String decryptedNoTildes = "";
+        for (char c : finalDecryptedCipherText.toCharArray()) {
+            decryptedNoTildes += (c == '~' ? " " : c);
+            //Spaces were made into ~ characters before being encrypted, so
+                //now they must be transformed back into spaces.
+        }
+        finalDecryptedCipherText = decryptedNoTildes.substring(5);
+            //This goes from index 9 to the end to remove the "$Enc$"
+
+
+        String temporaryText = "";
+        for (int i = 0; i < finalDecryptedCipherText.length(); i++) {
+            if (!(i > finalDecryptedCipherText.length() - 7)
+                && finalDecryptedCipherText.substring(i, i + 7)
+                    .equals(nLSubstitute)) {
+                System.out.println("NEWLINE DECRYPTING");
+                temporaryText += "\r\n";
+                i += 6; //the for loop already increments i by 1
+            } else {
+                temporaryText += finalDecryptedCipherText.charAt(i);
+            }
+        }
+        finalDecryptedCipherText = temporaryText;
+        System.out.println("\nDecrypted text is: "
+            + finalDecryptedCipherText);
+        return finalDecryptedCipherText;
+    }
+
+
+
+    //--------------------------------------------------------------------//
 
 
 
@@ -315,14 +375,6 @@ public class Encryptor {
 
     public static int getNumKeys() {
         return numKeys;
-    }
-
-    public static void copyToClipboard(String toCopy) {
-        Clipboard clipboard = Clipboard.getSystemClipboard();
-        clipboard.clear();
-        ClipboardContent content = new ClipboardContent();
-        content.putString(toCopy);
-        clipboard.setContent(content);
     }
 
 }

@@ -76,6 +76,7 @@ public class WindowButtons extends HBox {
             onHoverButton.setOnMouseReleased(e -> {
                     if (isInControlBounds) {
                         if (buttonPressed == exitOnHover) {
+                            Platform.exit();
                             System.exit(0);
                         } else if (buttonPressed == minimizeOnHover) {
                             stage.setIconified(true);
@@ -168,55 +169,45 @@ public class WindowButtons extends HBox {
     public void makeDraggable(final Stage stage, final Node byNode) {
         final Delta dragDelta = new Delta();
         byNode.setOnMousePressed(mouseEvent -> {
-            instructionsLabel.setTextFill(Color.web("#B3B3B3", 0.8));
-            // record a delta distance for the drag and drop operation.
-            dragDelta.x = stage.getX() - mouseEvent.getScreenX();
-            dragDelta.y = stage.getY() - mouseEvent.getScreenY();
-            byNode.setCursor(Cursor.HAND);
-        });
+                instructionsLabel.setTextFill(Color.web("#B3B3B3", 0.8));
+                // record a delta distance for the drag and drop operation.
+                dragDelta.x = stage.getX() - mouseEvent.getScreenX();
+                dragDelta.y = stage.getY() - mouseEvent.getScreenY();
+                byNode.setCursor(Cursor.HAND);
+            });
         final BooleanProperty inDrag = new SimpleBooleanProperty(false);
 
         byNode.setOnMouseReleased(mouseEvent -> {
-            instructionsLabel.setTextFill(Color.web("#F7F7F7", 0.88));
-            byNode.setCursor(Cursor.HAND);
-            Runner.setXandY(stage.getX(), stage.getY());
-            //Update where Runner thinks the stage is on the screen
-            //since we just moved the stage
-
-            /*if (inDrag.get()) {
-                stage.hide();
-
-                Timeline pause = new Timeline(new KeyFrame(Duration.millis(50),
-                    event -> {
-                    background.setImage(copyBackground(stage));
-                    layout.getChildren().set(
-                            0,
-                            background
-                    );
-                    stage.show();
-                }));
-                pause.play();
-            }*/
-
-            inDrag.set(false);
-        });
-        byNode.setOnMouseDragged(mouseEvent -> {
-            stage.setX(mouseEvent.getScreenX() + dragDelta.x + 1);
-            stage.setY(mouseEvent.getScreenY() + dragDelta.y + 1);
-            inDrag.set(true);
-        });
-        byNode.setOnMouseEntered(mouseEvent -> {
-            instructionsLabel.setText("Move Window");
-            if (!mouseEvent.isPrimaryButtonDown()) {
+                instructionsLabel.setTextFill(Color.web("#F7F7F7", 0.88));
                 byNode.setCursor(Cursor.HAND);
-            }
-        });
+                Runner.setXandY(stage.getX(), stage.getY());
+                //Update where Runner thinks the stage is on the screen
+                //since we just moved the stage
+                inDrag.set(false);
+            });
+        byNode.setOnMouseDragged(mouseEvent -> {
+                if (mouseEvent.getScreenY() + dragDelta.y >= 22.0) {
+                    stage.setY(mouseEvent.getScreenY() + dragDelta.y);
+                    inDrag.set(true);
+                }
+                if (mouseEvent.getScreenX() + dragDelta.x >= 0) {
+                    stage.setX(mouseEvent.getScreenX() + dragDelta.x);
+                    inDrag.set(true);
+                }
+            });
+        byNode.setOnMouseEntered(mouseEvent -> {
+                instructionsLabel.setText("Move Window");
+                if (!mouseEvent.isPrimaryButtonDown()) {
+                    byNode.setCursor(Cursor.HAND);
+                }
+            });
         byNode.setOnMouseExited(mouseEvent -> {
-            instructionsLabel.setText("            ");
-            if (!mouseEvent.isPrimaryButtonDown()) {
-                byNode.setCursor(Cursor.DEFAULT);
-            }
-        });
+                instructionsLabel.setText("            ");
+                if (!mouseEvent.isPrimaryButtonDown()) {
+                    byNode.setCursor(Cursor.DEFAULT);
+                }
+            });
+
     }
 
     /** records relative x and y co-ordinates. */

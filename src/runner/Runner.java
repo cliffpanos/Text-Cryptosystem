@@ -1,6 +1,7 @@
 package runner;
 
 import view.MainScreen;
+import view.Resizable;
 
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -10,9 +11,6 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.control.TextInputDialog;
-import java.util.Optional;
-import javafx.scene.control.Alert;
 import javafx.stage.Screen;
 import javafx.geometry.Rectangle2D;
 
@@ -20,12 +18,12 @@ import javafx.geometry.Rectangle2D;
 public class Runner extends Application {
 
     private static Stage stage;
+    private static boolean isFullScreen;
     private static Rectangle2D screenBounds =
         Screen.getPrimary().getVisualBounds();
-    private static boolean isFullScreen;
 
-    private static double stageWidth = screenBounds.getWidth() * 7.0 / 9.0;
-    private static double stageHeight = screenBounds.getHeight() * 7.0 / 9.0;
+    private static double stageWidth = screenBounds.getWidth() * 7.5 / 9.0;
+    private static double stageHeight = screenBounds.getHeight() * 7.5 / 9.0;
     private static double lastStageWidth = stageWidth;
     private static double lastStageHeight = stageHeight;
     private static double lastX = 0;
@@ -55,9 +53,7 @@ public class Runner extends Application {
 
         stage.toFront();
         stage.setResizable(true);
-        /*stage.onResize(e -> {
-                System.out.println("resizing");
-            });*/
+
         stage.show();
 
     }
@@ -68,8 +64,12 @@ public class Runner extends Application {
             stage.setY(lastY);
             stage.setWidth(lastStageWidth);
             stage.setHeight(lastStageHeight);
+            stageWidth = lastStageWidth; //Update actual width for resize()
+            stageHeight = lastStageHeight; //Update actual height for resize()
             isFullScreen = false;
-        } else { //make it fullScreen
+            resizeWindow();
+
+        } else { //make it fullScreen since it is not already fullScreen
             lastStageWidth = stageWidth;
             lastStageHeight = stageHeight;
             lastX = stage.getX();
@@ -78,14 +78,21 @@ public class Runner extends Application {
             stage.setY(screenBounds.getMinY());
             stage.setWidth(screenBounds.getWidth());
             stage.setHeight(screenBounds.getHeight());
+            stageWidth = screenBounds.getWidth(); //Update width for resize()
+            stageHeight = screenBounds.getHeight(); //Update height for resize()
             isFullScreen = true;
+            resizeWindow();
         }
     }
 
-    public static void resizeWindow(double length, double width) {
-        int i;
-        //implement
-        //TODO
+    public static void resizeWindow() {
+
+        Resizable[] resizables = MainScreen.getResizables();
+
+        for (Resizable resizablePane : resizables) {
+            resizablePane.resize();
+        }
+
     }
 
     public static Stage getStage() {

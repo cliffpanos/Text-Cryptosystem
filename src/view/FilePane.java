@@ -4,232 +4,146 @@ import controller.Encryptor;
 import resources.Resources;
 import runner.Runner;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.File;
-import java.io.IOException;
-import javafx.stage.DirectoryChooser;
-import javafx.stage.FileChooser;
+import java.util.List;
+import java.util.ArrayList;
 
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
+import javafx.scene.control.Label;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 
-public class FilePane extends StackPane {
+public class FilePane extends StackPane implements Resizable {
 
     private VBox vBox = new VBox(20);
-    private static UIButton runButton =
-        new UIButton("encrypt.png", 200, 30, "Encrypt");
-
+    private VBox centralDisplay = new VBox();
+    private static double paneWidth = MainScreen.getStageWidth() * 0.57 - 40.0;
     private static String processType = "encrypt"; // "encrypt" or "decrypt"
+
     private static UIButton chooseFileButton;
-    private File fileToProcess;
+    private static UIButton runButton =
+        new UIButton("encrypt.png", paneWidth - 60.0, 30, "Encrypt", false);
+    private static ArrayList<UIFile> files = new ArrayList<>();
+        //All of the files to be processed from fileChooser in UIFile
+    private static UIFile file = null; //THIS IS TEMPORARY AND NEEDS TO BE DELETED later
+                                                                                        //TODO
 
     public FilePane() {
 
-        double paneWidth = MainScreen.getStageWidth() * 0.57 - 40.0;
-        this.setPrefWidth(paneWidth);
-        this.setPrefHeight(MainScreen.getStageHeight() - 40.0);
-        //this.setBackground(new Background(new BackgroundFill(Color
-        //    .WHITE, new CornerRadii(5.0, 5.0, 5.0, 5.0, false),
-        //    new Insets(10, 10, 10, 10))));
-        //this.setPadding(new Insets(20));
-
-        chooseFileButton = new UIButton(MainScreen.getStageWidth() * 0.57
-            - 100.0, 30, "Choose a file to " + processType);
+        chooseFileButton = new UIButton(paneWidth - 60.0, 30,
+            "Choose a File to " + processType);
         chooseFileButton.setAlignment(Pos.TOP_CENTER);
         chooseFileButton.setOnMouseClicked(e -> {
-                File tempFile = getFileFromDirectory();
-                if (tempFile != null) {
-                    fileToProcess = tempFile;
-                    vBox.getChildren().addAll(Resources.getImageView(
-                        "txtFile.png", (paneWidth - 250.0)),
-                        runButton);
+
+                //@Anthony
+                    //PLZ don't modify this part beyond what you need to with the List<UIFile>;
+                        //just to the backend and i'll worry about all of this <333
+
+                List<File> tempFiles = UIFile.getFilesFromDirectory();
+                if (tempFiles != null) {                                //TODO
+                    for (File f : tempFiles) {
+                        files.add(new UIFile(f));
+                    }
+                    file = files.get(0); //CHANGE THIS SO THAT IT GETS MORE THAN JUST THE FIRST FILE
+                    updateRunButtonText();
+                    centralDisplay.getChildren().setAll(new FileDisplay());
+                    Resources.playSound("fileUpload.aiff");
+                    runButton.setMouseActions(runButton.getClickable());
+                    runButton.setBackgroundColor(Color.WHITE);
+                    runButton.setOnMouseClicked(e2 -> {
+                            file.processFile();
+                            runButton.setBackgroundColor(Color.web("#D6EAF8"));
+                        });
                 }
-                Resources.playSound("fileUpload.aiff");
             });
 
-        runButton.setOnMouseClicked(e -> {
-                processFile();
-            });
+        runButton.setBackgroundColor(Color.web("#D6DBDF"));
 
-        vBox.setAlignment(Pos.TOP_CENTER);
-        vBox.setMaxHeight(MainScreen.getStageHeight() - 40.0);
-        vBox.getChildren().add(chooseFileButton);
+        vBox.setAlignment(Pos.CENTER);
+
+        centralDisplay.setBackground(new Background(new BackgroundFill(Color
+            .WHITE, new CornerRadii(5.0, 5.0, 5.0, 5.0, false),
+            new Insets(20))));
+        centralDisplay.setPadding(new Insets(10));
+        centralDisplay.setAlignment(Pos.CENTER);
+        centralDisplay.getChildren().add(new Label("Choose one or more files"));
+
+        vBox.getChildren().addAll(chooseFileButton, centralDisplay,
+            runButton);
 
         this.getChildren().add(vBox);
 
+        setProcessType("Encrypt");
+
+        resize();
+
     }
+
 
     public static void setProcessType(String encryptOrDecrypt) {
         processType = encryptOrDecrypt;
         chooseFileButton.getLabel().setText(
-            "Choose a file to " + processType); //change to encrypt or decrypt
-        runButton.getLabel().setText(processType.substring(0, 1).toUpperCase()
-            + processType.substring(1));
+            "Choose a File to " + processType); //change to encrypt or decrypt
         runButton.updateIcon(encryptOrDecrypt + ".png");
+        updateRunButtonText();
+    }
+
+    public static void updateRunButtonText() {
+
+        String fileName = "";
+        if (file != null) {
+            fileName = " \"" + file.getName() + "\"";
+        }
+        runButton.getLabel().setText(processType.substring(0, 1).toUpperCase()
+            + processType.substring(1) + fileName);
     }
 
 
-    //Code to get and process Files ----------------- :
+    //Private inner class for the display that shows file statistics & the icon
 
-    public void processFile() {
+    private class FileDisplay extends VBox {
 
-        String extension = getFileExtension(fileToProcess.getName());
+        private HBox infoBox = new HBox(15);
+        private ImageView imageView;
+        private Label label;
 
-        if (extension.equals("txt")) {
-            Encryptor.setText(readTXTFile(fileToProcess));
-            String processedText = Encryptor.run();
-            if (processedText != null) {
-                writeTXTFile(fileToProcess, processedText);
-            }
+        public FileDisplay() {
+
+            this.setSpacing(15);
+            this.setAlignment(Pos.CENTER);
+
+            this.setHeight(MainScreen.getStageHeight() - 200);
+            this.setPrefWidth(paneWidth - 40);
+
+            System.out.println(file.getName() + "\n" + file.isReadable() + "\n" + file.isWritable());
+
+            this.getChildren().add(Resources.getImageView(
+                file.getIconURL(), (paneWidth - 400.0)));
+
         }
 
     }
 
-    public File getFileFromDirectory() {
+    @Override
+    public void resize() {
 
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Select a File");
-        //Set extension filter
-        FileChooser.ExtensionFilter extFilter =
-            new FileChooser.ExtensionFilter("TXT files (.txt)", "*.txt");
+        System.out.println("FilePane resizing");
 
-        fileChooser.getExtensionFilters().add(extFilter);
-        return fileChooser.showOpenDialog(Runner.getStage());
+        paneWidth = MainScreen.getStageWidth() * 0.57 - 40.0;
+        this.setPrefWidth(paneWidth);
+        this.setPrefHeight(MainScreen.getStageHeight() - 40.0);
+        vBox.setPrefHeight(MainScreen.getStageHeight() - 40.0);
 
-    }
-
-    //Returns a String of the file extension, such as "txt" or "doc"
-    public static String getFileExtension(String fileName) {
-
-        String extension = ""; //Get the extension of the file
-        int dot = fileName.lastIndexOf('.');
-        int slash = Math.max(fileName.lastIndexOf('/'),
-            fileName.lastIndexOf('\\'));
-        if (dot > slash) {
-            extension = fileName.substring(dot + 1);
-        }
-        return extension;
-    }
-
-    private static String readTXTFile(File txtFile) {
-
-        String textToProcess = "";
-        if (txtFile != null) {
-
-            // Gets text to process from txtFile
-            BufferedReader br = null;
-            FileReader fr = null;
-            try {
-
-                fr = new FileReader(txtFile);
-                br = new BufferedReader(fr);
-
-                String currentLine;
-
-                while ((currentLine = br.readLine()) != null) {
-                    System.out.println("Adding | " + currentLine
-                        + " | to txt File");
-                    textToProcess += currentLine;
-                }
-
-            } catch (IOException e) {
-
-                e.printStackTrace();
-
-            } finally {
-
-                try {
-
-                    if (br != null) {
-                        br.close();
-                    }
-                    if (fr != null) {
-                        fr.close();
-                    }
-
-                } catch (IOException ex) {
-
-                    ex.printStackTrace();
-
-                }
-            }
-
-        }
-        return textToProcess;
+        centralDisplay.setPrefWidth(paneWidth - 40.0);
+        centralDisplay.setMinHeight(MainScreen.getStageHeight() - 200);
 
     }
-
-    public void writeTXTFile(File txtFile, String textToWrite) {
-
-        // Writes textToWrite to txtFile
-        BufferedWriter bw = null;
-        FileWriter fw = null;
-
-        try {
-
-            fw = new FileWriter(txtFile);
-            bw = new BufferedWriter(fw);
-            if (bw != null && textToWrite != null) {
-                bw.write(textToWrite);
-            }
-
-        } catch (Exception e) {
-
-            e.printStackTrace();
-
-        } finally {
-
-            try {
-
-                if (bw != null) {
-                    bw.close();
-                }
-                if (fw != null) {
-                    fw.close();
-                }
-
-            } catch (IOException ex) {
-
-                ex.printStackTrace();
-
-            }
-
-        }
-
-        Resources.playSound("encryptionComplete.aiff");
-
-    }
-
-
-
-
-
-
-
-
-    //put this in the folderchooser class and delete from here
-    public File getFolderFromDirectory() {
-
-        DirectoryChooser chooser = new DirectoryChooser();
-        chooser.setTitle("Select a Folder");
-        File selectedDirectory = chooser.showDialog(Runner.getStage());
-        return selectedDirectory;
-    }
-
-
-
-
-
-
-
 
 }

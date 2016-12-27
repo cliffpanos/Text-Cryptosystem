@@ -19,7 +19,7 @@ import javafx.geometry.Pos;
 
 public class UIButton extends StackPane {
 
-    private Rectangle background;
+    private Shape background;
     private Label buttonText;
     private ImageView buttonIcon;
     private HBox buttonHolder;
@@ -32,26 +32,33 @@ public class UIButton extends StackPane {
 
     public UIButton(String iconURL, double dimension) {
         //This will create a CIRCULAR icon button rather than a rectangular one
-        Circle circle = new Circle((dimension / 2.0), Color.WHITE);
+        background = new Circle((dimension / 2.0), Color.WHITE);
         this.setOnMousePressed(e -> {
-                circle.setFill(Color.web("#D7DBDD"));
+                background.setFill(Color.web("#D7DBDD"));
             });
         this.setOnMouseReleased(e -> {
-                circle.setFill(Color.WHITE);
+                background.setFill(Color.WHITE);
             });
         ImageView icon = Resources.getImageView(iconURL, (dimension - 12.5));
-        this.getChildren().addAll(circle, icon);
+        this.setAlignment(Pos.CENTER);
+        this.getChildren().addAll(background, icon);
     }
 
+    //This constructor is the most widely used of them all
     public UIButton(String iconURL, double width, double ht, String text) {
+        this(iconURL, width, ht, text, true);
+    }
+
+    public UIButton(String iconURL, double width, double ht, String text,
+        boolean doSetMouseActions) {
 
         this.height = ht;
         this.setPrefWidth(width);
         this.setPrefHeight(height);
 
         background = new Rectangle(width, height, Color.WHITE);
-        background.setArcWidth((double) height / 4.0);
-        background.setArcHeight((double) height / 4.0);
+        ((Rectangle) background).setArcWidth((double) height / 4.0);
+        ((Rectangle) background).setArcHeight((double) height / 4.0);
         background.setStroke(Color.web("#3498DB"));
 
         buttonText = new Label(text);
@@ -63,7 +70,9 @@ public class UIButton extends StackPane {
         buttonHolder.setAlignment(Pos.CENTER);
 
         //On pressed, released, entered, clicked
-        setMouseActions(buttonHolder, background);
+        if (doSetMouseActions) {
+            setMouseActions(buttonHolder);
+        }
 
         //Constructs the buttonHolder HBox according to having an icon or not
         if (iconURL != null) {
@@ -76,20 +85,32 @@ public class UIButton extends StackPane {
     }
 
     //Setup mouse actions for a given UIButton's color Node
-    public void setMouseActions(Node actionNode, Shape colorNode) {
+    public void setMouseActions(Node actionNode) {
 
         actionNode.setOnMouseEntered(e -> {
-                colorNode.setFill(Color.web("#EAEDED", 0.9));
+                background.setFill(Color.web("#EAEDED", 0.9));
             });
         actionNode.setOnMouseExited(e -> {
-                colorNode.setFill(Color.WHITE);
+                background.setFill(Color.WHITE);
             });
         actionNode.setOnMousePressed(e -> {
-                colorNode.setFill(Color.web("#D6DBDF"));
+                background.setFill(Color.web("#D6DBDF"));
             });
         actionNode.setOnMouseClicked(e -> {
-                colorNode.setFill(Color.web("#D6EAF8"));
+                background.setFill(Color.web("#D6EAF8"));
             });
+        actionNode.setOnMouseReleased(e -> {
+                background.setFill(Color.WHITE);
+            });
+    }
+
+    public void eraseMouseActions(Node actionNode) {
+
+        actionNode.setOnMouseEntered(e -> {});
+        actionNode.setOnMouseExited(e -> {});
+        actionNode.setOnMousePressed(e -> {});
+        actionNode.setOnMouseClicked(e -> {});
+
     }
 
     public void setBackgroundColor(Paint color) {
@@ -116,7 +137,7 @@ public class UIButton extends StackPane {
         return this.isSelected;
     }
 
-    public void updateIcon(String newIconURL) {
+    public void updateIcon(String newIconURL) { //Used in FilePane & FolderPane
         ImageView iconIV = Resources.getImageView(newIconURL, (height - 15));
         buttonHolder.getChildren().clear();
         buttonHolder.getChildren().addAll(iconIV, buttonText);
