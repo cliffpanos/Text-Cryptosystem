@@ -19,15 +19,13 @@ import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.layout.BorderWidths;
 
 
-public class OptionsMenu extends StackPane {
+public class OptionsMenu extends StackPane implements Resizable {
 
     private VBox menu;
     private double paneWidth = MainScreen.getStageWidth() * 0.27;
 
     public OptionsMenu() {
 
-        this.setPrefWidth(paneWidth);
-        this.setPrefHeight(MainScreen.getStageHeight());
         this.setAlignment(Pos.TOP_CENTER);
         this.setBackground(new Background(new BackgroundFill(Color
             .web("#FDFEFE", 1.0), new CornerRadii(5.0, 5.0, 5.0, 5.0, false),
@@ -102,6 +100,8 @@ public class OptionsMenu extends StackPane {
         inputText.setSelected(true);
         inputText.setBackgroundColor(Color.web("#D6EAF8", 0.9));
 
+        resize();
+
     }
 
     private class IconBox extends VBox {
@@ -112,7 +112,8 @@ public class OptionsMenu extends StackPane {
             this.setAlignment(Pos.CENTER);
             this.setSpacing(20);
 
-            UIButton icon = new UIButton(iconURL, (paneWidth / 3.5));
+            UIButton icon = new UIButton(iconURL,
+                MainScreen.getStageHeight() / 9);
             icon.setOnMousePressed(e -> {});
             icon.setOnMouseReleased(e -> {});
             icon.setBackgroundColor(Color.web("#EAEDED", 0.9));
@@ -131,4 +132,12 @@ public class OptionsMenu extends StackPane {
 
         }
     }
+
+    public void resize() {
+
+        this.setPrefWidth(paneWidth);
+        this.setPrefHeight(MainScreen.getStageHeight());
+
+    }
+
 }

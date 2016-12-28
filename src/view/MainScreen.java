@@ -109,9 +109,9 @@ public class MainScreen extends BorderPane {
 
     public static Resizable[] getResizables() {
 
-        Resizable[] resizables = {(Resizable) inputOEMenu,
-            (Resizable) inputODMenu, (Resizable) filePane,
-            (Resizable) folderPane};
+        Resizable[] resizables = {(Resizable) edMenu, (Resizable) optionsMenu,
+            (Resizable) inputOEMenu, (Resizable) inputODMenu,
+            (Resizable) filePane, (Resizable) folderPane};
 
         return resizables;
     }

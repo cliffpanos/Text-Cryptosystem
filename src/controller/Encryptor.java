@@ -189,7 +189,7 @@ public class Encryptor {
                     "The text that you are attempting to encrypt\n"
                     + "has already been encrypted. To prevent the\n"
                     + "convolution inherent in multiple encryptions,\n"
-                    + "You may not encrypt this text again.",
+                    + "you may not encrypt this text again.",
                     javafx.scene.control.Alert.AlertType.ERROR);
                 return null;
             }
@@ -204,15 +204,6 @@ public class Encryptor {
                 temporaryText += c;
             }
         }
-        System.out.println("Text length: " + text.length());
-        /*for (int i = 0; i < text.length(); i++) {
-            if ((i != text.length() - 1) //Prevent indexOutOfBounds
-                && (text.substring(i, i + 1).equals("\n"))
-                || (text.substring(i, i + 1).equals("\r"))
-                ) {
-                System.out.println("NEWLINE");
-            }
-        }*/
         text = temporaryText;
 
         //will hold all user-entered characters that are invalid
@@ -260,7 +251,7 @@ public class Encryptor {
                 "The following characters are invalid:\n  "
                 + invalidCharacterList + "\n\n"
                 + "When these characters are decrypted,\n"
-                + "They will appear as '?' characters.\n\n"
+                + "they will appear as '?' characters.\n\n"
                 + "Would you like to proceed?",
                 javafx.scene.control.Alert.AlertType.CONFIRMATION, true);
 
@@ -284,7 +275,7 @@ public class Encryptor {
     private static String decrypt() {
 
         //Test to make sure that decrypting the first nine characters
-        // returns '$Enc$'
+        //returns '$Enc$'
         //If it does not, decryption will halt.
         if (text.length() < 11) {
             UIAlert.show("Inputted Text Incorrect",
@@ -292,6 +283,19 @@ public class Encryptor {
                 + "All correctly inputted text is greater than length 11.",
                 javafx.scene.control.Alert.AlertType.ERROR);
             return null;
+        }
+
+        if (text.length() >= 6) {
+            if (!(text.substring(0, 3).equals("%E%")
+                && text.substring(text.length() - 3).equals("$E$"))) {
+                UIAlert.show("Text Not Encrypted",
+                    "The text that you are attempting to decrypt\n"
+                    + "has NOT been encrypted by this system.\n"
+                    + "To prevent a loss of data through false\n"
+                    + "decryption, you may not decrypt this text.",
+                    javafx.scene.control.Alert.AlertType.ERROR);
+                return null;
+            }
         }
 
         //Remove the %E% & $E$ tags that were added at the end of the encryption

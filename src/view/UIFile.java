@@ -24,6 +24,7 @@ public class UIFile {
 
     private File fileToProcess;
     private String fileExtension;
+    private String fileText;
 
     public UIFile(File fileToProcess) {
         this.fileToProcess = fileToProcess;
@@ -58,8 +59,31 @@ public class UIFile {
         return this.fileToProcess.canWrite();
     }
 
+    public String isActionable(String processType) {
+        boolean hasEncryptedTags = false;
+        if (fileExtension.equals("txt")) {
+            fileText = readTXTFile(fileToProcess);
+        }
+        if (fileText != null && fileText.length() >= 6) {
+            if (fileText.substring(0, 3).equals("%E%")
+                && fileText.substring(fileText.length() - 3).equals("$E$")) {
+                hasEncryptedTags = true;
+            }
+        }
+        return processType.equals("Encrypt")
+            ? (!hasEncryptedTags ? "Encryptable"
+                : "Already Encrypted")
+            : (hasEncryptedTags ? "Decryptable"
+                : "Not Encrypted");
+    }
+
     public String getName() {
-        return this.fileToProcess.getName();
+        String name = this.fileToProcess.getName();
+        if (name.length() > 55) {
+            name = name.substring(0, 55) + "..." + name.substring(name.length()
+                - fileExtension.length() - 1);
+        }
+        return name;
     }
 
     public String getIconURL() {
@@ -118,7 +142,6 @@ public class UIFile {
                 textToProcess =
                     textToProcess.substring(0, textToProcess.length() - 1);
                 //remove the extra "\n" that was added at the end
-                System.out.println("TEXTTT:\n" + textToProcess);
 
             } catch (IOException e) {
 
