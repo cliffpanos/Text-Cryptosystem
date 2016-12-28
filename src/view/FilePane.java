@@ -41,10 +41,6 @@ public class FilePane extends StackPane implements Resizable {
         chooseFileButton.setAlignment(Pos.TOP_CENTER);
         chooseFileButton.setOnMouseClicked(e -> {
 
-                //@Anthony
-                    //PLZ don't modify this part beyond what you need to with the List<UIFile>;
-                        //just to the backend and i'll worry about all of this <333
-
                 List<File> tempFiles = UIFile.getFilesFromDirectory();
                 if (tempFiles != null) {                                //TODO
                     for (File f : tempFiles) {
