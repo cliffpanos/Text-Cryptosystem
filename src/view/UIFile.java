@@ -59,24 +59,31 @@ public class UIFile {
         return this.fileToProcess.canWrite();
     }
 
-    public boolean isEncryptable() {
+    public String isActionable(String processType) {
+        boolean hasEncryptedTags = false;
         if (fileExtension.equals("txt")) {
             fileText = readTXTFile(fileToProcess);
         }
-        if (fileText == null) {
-            return false;
-        }
-        if (fileText.length() >= 6) {
+        if (fileText != null && fileText.length() >= 6) {
             if (fileText.substring(0, 3).equals("%E%")
                 && fileText.substring(fileText.length() - 3).equals("$E$")) {
-                return false;
+                hasEncryptedTags = true;
             }
         }
-        return true;
+        return processType.equals("Encrypt")
+            ? (!hasEncryptedTags ? "Encryptable"
+                : "Already Encrypted")
+            : (hasEncryptedTags ? "Decryptable"
+                : "Not Encrypted");
     }
 
     public String getName() {
-        return this.fileToProcess.getName();
+        String name = this.fileToProcess.getName();
+        if (name.length() > 55) {
+            name = name.substring(0, 55) + "..." + name.substring(name.length()
+                - fileExtension.length() - 1);
+        }
+        return name;
     }
 
     public String getIconURL() {

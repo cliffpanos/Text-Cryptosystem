@@ -3,9 +3,6 @@ package view;
 import resources.Resources;
 import controller.Encryptor;
 
-import javafx.scene.effect.GaussianBlur;
-import javafx.scene.effect.BoxBlur;
-
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.control.TextField;
@@ -24,10 +21,11 @@ import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 
 
+public class EncryptDecryptMenu extends StackPane implements Resizable {
 
-public class EncryptDecryptMenu extends StackPane {
-
-    private VBox menu = new VBox(40); //holds the two buttons & passwordField
+    private VBox menu = new VBox(); //holds the two buttons & passwordField
+    private static double paneWidth = MainScreen.getStageWidth() * 0.18;
+    private static double height = MainScreen.getStageHeight();
     private static TextField passwordField = new TextField();
 
     private static String passwordFieldText = "";
@@ -35,27 +33,17 @@ public class EncryptDecryptMenu extends StackPane {
     private static int lastCaretPosition = 0;
 
     public EncryptDecryptMenu() {
-        //this.getStylesheets().add(this.getClass()
-        //.getResource("mainScreenStyle.css").toExternalForm());
-        //cliffo will fix this^ later
 
         this.setBackground(null);
 
-        double width = MainScreen.getStageWidth() * 0.18;
-        double height = MainScreen.getStageHeight();
-
-        VBox backgroundBlur = new VBox();
-        backgroundBlur.setPrefWidth(width);
-        backgroundBlur.setPrefHeight(height);
-        backgroundBlur.setBackground(new Background(new BackgroundFill(Color
+        VBox background = new VBox();
+        background.setBackground(new Background(new BackgroundFill(Color
             .web("#212F3C", 0.968), new CornerRadii(5.0, 0.0, 0.0, 5.0, false),
             new Insets(0))));
         //backgroundBlur.setEffect(new BoxBlur(width, (height - 20), 3));
 
         menu.setAlignment(Pos.CENTER);
         menu.setBackground(null);
-        menu.setPrefWidth(width);
-        menu.setPrefHeight(height);
 
         // Password Field TextField Actions
         passwordField.setOnAction(e -> {
@@ -85,12 +73,11 @@ public class EncryptDecryptMenu extends StackPane {
                 passwordField.setEditable(false);
             });
         passwordField.setPromptText("enter here");
-        passwordField.setMaxWidth(width - 80);
         passwordField.setAlignment(Pos.CENTER);
 
         //Create the password trio: the icon, the TextField, and the Label below
         ImageView passwordIcon = Resources.getImageView("password.tiff",
-            (65));
+            (paneWidth * 0.33));
         Label pwInstructions = new Label("Enter Password");
         pwInstructions.setTextFill(Color.WHITE);
         pwInstructions.setTextAlignment(TextAlignment.CENTER);
@@ -109,10 +96,12 @@ public class EncryptDecryptMenu extends StackPane {
 
         //Used to hold the window buttons and Encrypt / Decrypt menu
         VBox outerVBox = new VBox();
-        WindowButtons windowButtons = new WindowButtons(width);
+        WindowButtons windowButtons = new WindowButtons(paneWidth);
         outerVBox.setAlignment(Pos.TOP_CENTER);
         outerVBox.getChildren().addAll(windowButtons.getRootNode(), menu);
-        this.getChildren().addAll(backgroundBlur, outerVBox);
+        this.getChildren().addAll(background, outerVBox);
+
+        resize();
 
     }
 
@@ -123,5 +112,20 @@ public class EncryptDecryptMenu extends StackPane {
         return passwordFieldText;
     }
 
+    public void resize() {
+
+        paneWidth = MainScreen.getStageWidth() * 0.18;
+        height = MainScreen.getStageHeight();
+
+        //background.setPrefWidth(paneWidth);
+        //background.setPrefHeight(height);
+
+        passwordField.setMaxWidth(paneWidth * 0.6);
+
+        menu.setSpacing(height / 15);
+        menu.setPrefWidth(paneWidth);
+        menu.setPrefHeight(height);
+
+    }
 
 }

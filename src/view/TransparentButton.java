@@ -40,7 +40,7 @@ public class TransparentButton extends StackPane {
         imageView = Resources.getImageView(imageURL, (dimension * 0.22));
 
         //Set background stroke
-        double dim = dimension - 85;
+        double dim = dimension * 0.59;
         background = new Rectangle(dim, dim, Color.TRANSPARENT);
         background.setArcWidth((double) dim / 4.0);
         background.setArcHeight((double) dim / 4.0);

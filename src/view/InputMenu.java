@@ -38,7 +38,7 @@ public abstract class InputMenu implements Resizable {
         inputField.setWrapText(true);
         outputField.setWrapText(true);
 
-        double iconSize = 32.5;
+        double iconSize = 35;
         UIButton trashButton = new UIButton("trash_icon.png", iconSize);
         trashButton.setOnMouseClicked(e -> {
                 inputField.clear();

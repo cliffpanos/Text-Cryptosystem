@@ -31,14 +31,15 @@ public class FilePane extends VBox implements Resizable {
 
     private ScrollPane scrollPane = new ScrollPane();
     private VBox centralDisplay = new VBox();
-    private static SingleFileDisplay singleFileDisplay = null;
-    private static MultiFileDisplay multiFileDisplay = null;
     private static double paneWidth = MainScreen.getStageWidth() * 0.57 - 40.0;
     private static String processType = "encrypt"; // "encrypt" or "decrypt"
 
     private static UIButton chooseFileButton;
     private static UIButton runButton =
         new UIButton("encrypt.png", paneWidth - 60.0, 30, "Encrypt", false);
+    private static SingleFileDisplay singleFileDisplay = null;
+    private static ArrayList<MultiFileDisplay> multiFileDisplays =
+        new ArrayList<>();
     private static ArrayList<UIFile> files = new ArrayList<>();
         //All of the files to be processed from fileChooser in UIFile
 
@@ -82,9 +83,9 @@ public class FilePane extends VBox implements Resizable {
                             this.getChildren().setAll(chooseFileButton,
                                 centralDisplay, runButton);
                         } else { //When there is more than one File
-                            multiFileDisplay = new MultiFileDisplay();
+                            MultiFileDisplay.createAllNewDisplays();
                             centralDisplay.getChildren()
-                                .setAll(multiFileDisplay);
+                                .setAll(MultiFileDisplay.getDisplaysVBox());
                             scrollPane.setContent(centralDisplay);
                             this.getChildren().setAll(chooseFileButton,
                                 scrollPane, runButton);
@@ -108,22 +109,22 @@ public class FilePane extends VBox implements Resizable {
 
         runButton.setBackgroundColor(Color.web("#D6DBDF"));
 
-        this.setAlignment(Pos.CENTER);
-
         scrollPane.setBackground(new Background(new BackgroundFill(Color
             .TRANSPARENT, new CornerRadii(5.0, 5.0, 5.0, 5.0, false),
-            new Insets(20))));
+            new Insets(0.0))));
         scrollPane.setPannable(false);
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
         centralDisplay.setBackground(new Background(new BackgroundFill(Color
             .WHITE, new CornerRadii(5.0, 5.0, 5.0, 5.0, false),
-            new Insets(20))));
+            new Insets(0.0))));
         centralDisplay.setPadding(new Insets(20));
         centralDisplay.setAlignment(Pos.CENTER);
         centralDisplay.getChildren().add(new Label("Choose one or more files"));
 
+        this.setAlignment(Pos.CENTER);
+        this.setPadding(new Insets(22));
         this.getChildren().addAll(chooseFileButton, centralDisplay,
             runButton);
 
@@ -154,7 +155,7 @@ public class FilePane extends VBox implements Resizable {
         if (singleFileDisplay != null) {
             singleFileDisplay.update();
         }
-        if (multiFileDisplay != null) {
+        for (MultiFileDisplay multiFileDisplay : multiFileDisplays) {
             multiFileDisplay.update();
         }
 
@@ -175,7 +176,7 @@ public class FilePane extends VBox implements Resizable {
 
     //Private inner class for the display that shows file statistics & the icon
 
-    private class SingleFileDisplay extends HBox {
+    private static class SingleFileDisplay extends HBox {
 
         private VBox infoVBox = new VBox(15);
         private Label encryptableLabel = new Label("");
@@ -185,7 +186,6 @@ public class FilePane extends VBox implements Resizable {
 
         public SingleFileDisplay() {
 
-            this.setSpacing(15);
             this.setAlignment(Pos.CENTER);
 
             titleLabel = new Text(file.getName().substring(0, file
@@ -198,81 +198,72 @@ public class FilePane extends VBox implements Resizable {
 
             encryptableLabel.setFont(new Font(15));
 
-            HBox infoHBox1 = new HBox(10);
-            HBox infoHBox2 = new HBox(10);
-            makeInfoBox(infoHBox1, file.isReadable(), true);
-            makeInfoBox(infoHBox2, file.isWritable(), false);
+            HBox infoHBox1 = makeInfoBox(file.isReadable(), true);
+            HBox infoHBox2 = makeInfoBox(file.isWritable(), false);
             update();
             resize();
 
             infoVBox.setAlignment(Pos.CENTER);
             infoVBox.getChildren().setAll(titleLabel, topLine, extLabel,
                 infoHBox1, infoHBox2, encryptableLabel);
-            this.getChildren().addAll(infoVBox, Resources.getImageView(
+            this.getChildren().setAll(infoVBox, Resources.getImageView(
                 file.getIconURL(), (paneWidth - 420.0)));
 
         }
 
         public void update() {
-            System.out.println("update called");
-            System.out.println(processType.equals("Encrypt"));
-            encryptableLabel.setText(processType.equals("Encrypt")
-                ? (file.isEncryptable() ? "Encryptable" : "Already Encrypted")
-                : "");
-            System.out.println(encryptableLabel.getText());
+            encryptableLabel.setText(file.isActionable(processType));
         }
 
-        public void makeInfoBox(HBox infoBox, boolean c, boolean readNotWrite) {
+        public HBox makeInfoBox(boolean c, boolean readNotWrite) {
             ImageView icon = Resources.getImageView(c //isReadable or Writable
                 ? "check_icon.png" : "cross_icon.png", 20);
             String ability = readNotWrite ? "Readable" : "Writable ";
             Label label = new Label(c ? ("File is " + ability)
                 : "File is Not " + ability + "!");
+            HBox infoBox = new HBox(8);
             infoBox.getChildren().setAll(icon, label);
             infoBox.setAlignment(Pos.CENTER);
+            return infoBox;
         }
 
         public void resize() {
+            System.out.println("SingleFileDisplay PaneWidth: " + paneWidth);
+            this.setSpacing(paneWidth / 15);
             this.setHeight(MainScreen.getStageHeight() - 200);
             this.setPrefWidth(paneWidth - 40);
-            infoVBox.setPrefWidth((paneWidth - 40) / 2.5);
 
             topLine = new Rectangle((paneWidth - 40) / 3.25,
                 1.18, Color.web("#D7DBDD"));
             titleLabel.setWrappingWidth((paneWidth - 40) / 3.5);
 
+            this.getChildren().setAll(infoVBox, Resources.getImageView(
+                file.getIconURL(), (paneWidth - 420.0)));
         }
 
     }
 
-    private class MultiFileDisplay extends VBox {
+    private static class MultiFileDisplay extends HBox {
 
+        private UIFile file;
         private VBox vBox = new VBox(15);
-        private HBox infoBox = new HBox(15);
         private ImageView imageView;
         private Label label;
 
-        public MultiFileDisplay() {
+        public MultiFileDisplay(UIFile file) {
 
-            this.setSpacing(15);
+            this.file = file;
+
+            this.setSpacing(10);
             this.setAlignment(Pos.CENTER);
 
-            for (UIFile file : files) {
-                System.out.println(file.getName() + "\n" + file.isReadable()
-                    + "\n" + file.isWritable());
+            UIButton icon = new UIButton(file.getIconURL(),
+                MainScreen.getStageHeight() / 10);
+            icon.setOnMousePressed(e -> {});
+            icon.setOnMouseReleased(e -> {});
+            icon.setBackgroundColor(Color.web("#EAEDED", 0.9));
 
-                // Message from Anthony: Cliff, the following two lines create a
-                // weird effect when multiple files are selected. I will let you
-                // decide how to handle that
-
-                /*UIButton icon = new UIButton(iconURL, (paneWidth / 3.5));
-                icon.setOnMousePressed(e -> {});
-                icon.setOnMouseReleased(e -> {});
-                icon.setBackgroundColor(Color.web("#EAEDED", 0.9));*/
-
-                this.getChildren().add(Resources.getImageView(
-                    file.getIconURL(), (paneWidth - 400.0)));
-            }
+            this.getChildren().add(icon);
 
             resize();
 
@@ -287,24 +278,45 @@ public class FilePane extends VBox implements Resizable {
             this.setPrefWidth(paneWidth - 40);
         }
 
+        public static void createAllNewDisplays() {
+            multiFileDisplays.clear();
+            for (UIFile uiFile : files) {
+                multiFileDisplays.add(new MultiFileDisplay(uiFile));
+            }
+        }
+
+        public static VBox getDisplaysVBox() {
+            VBox displays = new VBox(6);
+            displays.setAlignment(Pos.CENTER);
+            for (MultiFileDisplay multiFileDisplay : multiFileDisplays) {
+                displays.getChildren().addAll(multiFileDisplay, new Rectangle(
+                    (paneWidth - 100), 1.18, Color.web("#D7DBDD")));
+            }
+            return displays;
+        }
+
+
     }
+
 
     @Override
     public void resize() {
 
         paneWidth = MainScreen.getStageWidth() * 0.57 - 40.0;
+        System.out.println("class paneWidth: " + paneWidth);
         this.setPrefWidth(paneWidth);
         this.setPrefHeight(MainScreen.getStageHeight() - 40.0);
 
         centralDisplay.setPrefWidth(paneWidth - 40.0);
-        centralDisplay.setMinHeight(MainScreen.getStageHeight() - 200);
-        scrollPane.setMaxHeight(MainScreen.getStageHeight() - 200);
+        centralDisplay.setMinHeight(MainScreen.getStageHeight() - 190);
+        scrollPane.setPrefHeight(MainScreen.getStageHeight() - 190);
+        scrollPane.setPrefWidth(paneWidth - 40.0);
 
         if (singleFileDisplay != null) {
-            System.out.println("filePane resize");
-            singleFileDisplay = new SingleFileDisplay();
+            System.out.println("SingleFilePane resize");
+            singleFileDisplay.resize(); // = new SingleFileDisplay();
         }
-        if (multiFileDisplay != null) {
+        for (MultiFileDisplay multiFileDisplay : multiFileDisplays) {
             multiFileDisplay.resize();
         }
 
