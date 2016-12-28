@@ -76,7 +76,7 @@ public class MainScreen extends BorderPane {
             selectedMenu = MenuOptions.CHOOSEFILE;
             break;
         case CHOOSEFOLDER :
-            System.out.println("implement this to show folder choosing");
+            innerBorderPane.setCenter(folderPane);
             selectedMenu = MenuOptions.CHOOSEFOLDER;
             break;
         }

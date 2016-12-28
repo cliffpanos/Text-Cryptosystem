@@ -124,7 +124,7 @@ public class FilePane extends VBox implements Resizable {
         this.getChildren().addAll(chooseFileButton, centralDisplay,
             runButton);
 
-        setProcessType("Encrypt");
+        setProcessType("encrypt");
 
         resize();
 
