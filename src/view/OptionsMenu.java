@@ -135,6 +135,7 @@ public class OptionsMenu extends StackPane implements Resizable {
 
     public void resize() {
 
+        paneWidth = MainScreen.getStageWidth() * 0.27;
         this.setPrefWidth(paneWidth);
         this.setPrefHeight(MainScreen.getStageHeight());
 

@@ -299,7 +299,6 @@ public class FilePane extends VBox implements Resizable {
     public void resize() {
 
         paneWidth = MainScreen.getStageWidth() * 0.57 - 40.0;
-        System.out.println("class paneWidth: " + paneWidth);
         this.setPrefWidth(paneWidth);
         this.setPrefHeight(MainScreen.getStageHeight() - 40.0);
 
@@ -309,7 +308,6 @@ public class FilePane extends VBox implements Resizable {
         scrollPane.setPrefWidth(paneWidth - 40.0);
 
         if (singleFileDisplay != null) {
-            System.out.println("SingleFilePane resize");
             singleFileDisplay.resize(); // = new SingleFileDisplay();
         }
         for (MultiFileDisplay multiFileDisplay : multiFileDisplays) {

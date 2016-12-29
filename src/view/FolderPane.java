@@ -65,6 +65,7 @@ public class FolderPane extends StackPane implements Resizable {
         //runButton.updateIcon(encryptOrDecrypt + ".png");
         //updateButtonTexts();
     }
+
 /*
     public static void updateButtonTexts() {
 
