@@ -59,31 +59,22 @@ public class UIFile {
         return this.fileToProcess.canWrite();
     }
 
-    public boolean isActionable() {
-        boolean hasEncryptedTags = false;
+    public boolean hasEncryptedTags() {
+        boolean hasThem = false;
         if (fileExtension.equals("txt")) {
             fileText = readTXTFile(fileToProcess);
         }
         if (fileText != null && fileText.length() >= 6) {
             if (fileText.substring(0, 3).equals("%E%")
                 && fileText.substring(fileText.length() - 3).equals("$E$")) {
-                hasEncryptedTags = true;
+                hasThem = true;
             }
         }
-        return hasEncryptedTags;
+        return hasThem;
     }
 
     public String isActionable(String processType) {
-        boolean hasEncryptedTags = false;
-        if (fileExtension.equals("txt")) {
-            fileText = readTXTFile(fileToProcess);
-        }
-        if (fileText != null && fileText.length() >= 6) {
-            if (fileText.substring(0, 3).equals("%E%")
-                && fileText.substring(fileText.length() - 3).equals("$E$")) {
-                hasEncryptedTags = true;
-            }
-        }
+        boolean hasEncryptedTags = hasEncryptedTags();
         return processType.equals("Encrypt")
             ? (!hasEncryptedTags ? "Encryptable"
                 : "Already Encrypted")
