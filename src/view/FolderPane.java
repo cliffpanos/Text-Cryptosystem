@@ -5,6 +5,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.layout.StackPane;
 
@@ -30,6 +31,9 @@ public class FolderPane extends StackPane implements Resizable {
 
             });
 
+        this.setPadding(new Insets(22));
+        this.getChildren().addAll(chooseFolderButton);
+
         setProcessType("encrypt");
 
 
@@ -37,6 +41,9 @@ public class FolderPane extends StackPane implements Resizable {
     }
 
     public void processFolder() {
+        boolean fileIsNotActionable = false;
+        boolean encrypting = processType.equals("encrypt");
+
         if (folder.isDirectory()) {
             File tempFiles[] = folder.listFiles();
 
@@ -47,7 +54,30 @@ public class FolderPane extends StackPane implements Resizable {
             }
 
             for (UIFile file : files) {
-                file.processFile();
+                if ((file.hasEncryptedTags() && !encrypting)
+                    || (!file.hasEncryptedTags() && encrypting)) {
+                    file.processFile();
+                } else {
+                    fileIsNotActionable = true;
+                }
+            }
+        }
+
+        if (fileIsNotActionable) {
+            if (encrypting) {
+                UIAlert.show("Text Already Encrypted",
+                    "One or more of the files has already\n"
+                    + "been encrypted. To prevent the convolution\n"
+                    + "inherent in multiple encryptions,\n"
+                    + "these file(s) have not been encrypted again.",
+                    javafx.scene.control.Alert.AlertType.ERROR);
+            } else {
+                UIAlert.show("Text Not Encrypted",
+                    "The text that you are attempting to decrypt\n"
+                    + "has NOT been encrypted by this system.\n"
+                    + "To prevent a loss of data through false\n"
+                    + "decryption, you may not decrypt this text.",
+                    javafx.scene.control.Alert.AlertType.ERROR);
             }
         }
     }

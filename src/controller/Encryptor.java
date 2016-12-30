@@ -182,19 +182,6 @@ public class Encryptor {
         System.out.println(text.substring(0, 3));
         System.out.println(text.substring(3));
 
-        if (text.length() >= 6) {
-            if (text.substring(0, 3).equals("%E%")
-                && text.substring(text.length() - 3).equals("$E$")) {
-                UIAlert.show("Text Already Encrypted",
-                    "The text that you are attempting to encrypt\n"
-                    + "has already been encrypted. To prevent the\n"
-                    + "convolution inherent in multiple encryptions,\n"
-                    + "you may not encrypt this text again.",
-                    javafx.scene.control.Alert.AlertType.ERROR);
-                return null;
-            }
-        }
-
         String temporaryText = "";
         for (char c : text.toCharArray()) {
             if (!String.valueOf(c).matches(".")) {
