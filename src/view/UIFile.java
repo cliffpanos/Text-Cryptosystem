@@ -74,7 +74,7 @@ public class UIFile {
             ? (!hasEncryptedTags ? "Encryptable"
                 : "Already Encrypted")
             : (hasEncryptedTags ? "Decryptable"
-                : "Not Encrypted");
+                : "Unencrypted");
     }
 
     public String getName() {

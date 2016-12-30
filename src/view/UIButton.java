@@ -26,12 +26,14 @@ public class UIButton extends StackPane {
     private boolean isSelected = false;
     private double height;
 
-    public UIButton(double width, double height, String text) {
-        this(null, width, height, text);
-    }
+
+    //Circular Buttons below : --------------------------------------------- :
 
     public UIButton(String iconURL, double dimension) {
-        //This will create a CIRCULAR icon button rather than a rectangular one
+        this(iconURL, dimension, 0);
+    }
+
+    public UIButton(String iconURL, double dimension, double imageDecrement) {
         background = new Circle((dimension / 2.0), Color.WHITE);
         this.setOnMousePressed(e -> {
                 background.setFill(Color.web("#D7DBDD"));
@@ -39,9 +41,16 @@ public class UIButton extends StackPane {
         this.setOnMouseReleased(e -> {
                 background.setFill(Color.WHITE);
             });
-        ImageView icon = Resources.getImageView(iconURL, (dimension - 12.5));
+        ImageView icon = Resources.getImageView(iconURL,
+            (dimension - 12.5 - imageDecrement));
         this.setAlignment(Pos.CENTER);
         this.getChildren().addAll(background, icon);
+    }
+
+    //Rectangular Buttons below : ------------------------------------------ :
+
+    public UIButton(double width, double height, String text) {
+        this(null, width, height, text);
     }
 
     //This constructor is the most widely used of them all
@@ -57,8 +66,8 @@ public class UIButton extends StackPane {
         this.setPrefHeight(height);
 
         background = new Rectangle(width, height, Color.WHITE);
-        ((Rectangle) background).setArcWidth((double) height / 4.0);
-        ((Rectangle) background).setArcHeight((double) height / 4.0);
+        ((Rectangle) background).setArcWidth((double) height / 4.5);
+        ((Rectangle) background).setArcHeight((double) height / 4.5);
         background.setStroke(Color.web("#3498DB"));
 
         buttonText = new Label(text);

@@ -74,18 +74,18 @@ public abstract class InputMenu implements Resizable {
             pasteButton, copyButton, cutButton, undoButton, redoButton);
 
 
-        UIButton selectAllButton2 = new UIButton("selectAll_icon2.png",
+        UIButton selectAllButtonBlue = new UIButton("selectAll_icon2.png",
             iconSize);
-        selectAllButton2.setOnMouseClicked(e -> {
+        selectAllButtonBlue.setOnMouseClicked(e -> {
                 outputField.selectAll();
         });
-        UIButton copyButton2 = new UIButton("copy_icon2.png", iconSize);
-        copyButton2.setOnMouseClicked(e -> {
+        UIButton copyButtonBlue = new UIButton("copy_icon2.png", iconSize);
+        copyButtonBlue.setOnMouseClicked(e -> {
                 outputField.copy();
         });
         lowerMenuBar.setPrefHeight(iconSize);
         lowerMenuBar.setAlignment(Pos.CENTER_LEFT);
-        lowerMenuBar.getChildren().addAll(selectAllButton2, copyButton2);
+        lowerMenuBar.getChildren().addAll(selectAllButtonBlue, copyButtonBlue);
 
     }
 

@@ -27,8 +27,8 @@ public class OptionsMenu extends StackPane implements Resizable {
     public OptionsMenu() {
 
         this.setAlignment(Pos.TOP_CENTER);
-        this.setBackground(new Background(new BackgroundFill(Color
-            .web("#FDFEFE", 1.0), new CornerRadii(5.0, 5.0, 5.0, 5.0, false),
+        this.setBackground(new Background(new BackgroundFill(Color.WHITE,
+            new CornerRadii(5.0, 5.0, 5.0, 5.0, false),
             new Insets(10, 10, 10, 10))));
 
         Color c = Color.TRANSPARENT;

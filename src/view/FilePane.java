@@ -107,10 +107,10 @@ public class FilePane extends VBox implements Resizable {
 
         scrollPane.setBackground(new Background(new BackgroundFill(Color
             .TRANSPARENT, new CornerRadii(5.0, 5.0, 5.0, 5.0, false),
-            new Insets(0.0))));
-        scrollPane.setPannable(false);
+            new Insets(41.0))));
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPane.setFitToWidth(true);
 
         centralDisplay.setBackground(new Background(new BackgroundFill(Color
             .WHITE, new CornerRadii(5.0, 5.0, 5.0, 5.0, false),
@@ -186,7 +186,8 @@ public class FilePane extends VBox implements Resizable {
 
             titleLabel = new Text(file.getName().substring(0, file
                 .getName().length() - file.getFileExtension().length() - 1));
-            titleLabel.setFont(Font.font("", FontWeight.EXTRA_BOLD, 24));
+            titleLabel.setFont(Font.font("Helvetica",
+                FontWeight.EXTRA_BOLD, 24));
             titleLabel.setTextAlignment(TextAlignment.CENTER);
             Label extLabel = new Label("Text Type: " + file.getFileExtension()
                 + " file");
@@ -211,18 +212,6 @@ public class FilePane extends VBox implements Resizable {
             encryptableLabel.setText(file.isActionable(processType));
         }
 
-        public HBox makeInfoBox(boolean c, boolean readNotWrite) {
-            ImageView icon = Resources.getImageView(c //isReadable or Writable
-                ? "check_icon.png" : "cross_icon.png", 20);
-            String ability = readNotWrite ? "Readable" : "Writable ";
-            Label label = new Label(c ? ("File is " + ability)
-                : "File is Not " + ability + "!");
-            HBox infoBox = new HBox(8);
-            infoBox.getChildren().setAll(icon, label);
-            infoBox.setAlignment(Pos.CENTER);
-            return infoBox;
-        }
-
         public void resize() {
             System.out.println("SingleFileDisplay PaneWidth: " + paneWidth);
             this.setSpacing(paneWidth / 15);
@@ -239,10 +228,23 @@ public class FilePane extends VBox implements Resizable {
 
     }
 
+    //Used in SingleFileDisplay and MultiFileDisplay for the read/write boxes
+    public static HBox makeInfoBox(boolean p, boolean readNotWrite) {
+        ImageView icon = Resources.getImageView(p //isReadable or Writable
+            ? "check_icon.png" : "cross_icon.png", 20);
+        String ability = readNotWrite ? "Readable" : "Writable ";
+        Label label = new Label(p ? ("File is " + ability)
+            : "File is Not " + ability + "!");
+        HBox infoBox = new HBox(8);
+        infoBox.getChildren().setAll(icon, label);
+        infoBox.setAlignment(Pos.CENTER);
+        return infoBox;
+    }
+
     private static class MultiFileDisplay extends HBox {
 
         private UIFile file;
-        private VBox vBox = new VBox(15);
+        private VBox infoVBox = new VBox(MainScreen.getStageHeight() / 60);
         private ImageView imageView;
         private Label label;
 
@@ -250,16 +252,22 @@ public class FilePane extends VBox implements Resizable {
 
             this.file = file;
 
-            this.setSpacing(10);
+            this.setSpacing(18);
             this.setAlignment(Pos.CENTER);
 
             UIButton icon = new UIButton(file.getIconURL(),
-                MainScreen.getStageHeight() / 10);
+                MainScreen.getStageHeight() / 10,
+                MainScreen.getStageHeight() / 32.5); //imageDecrement
             icon.setOnMousePressed(e -> {});
             icon.setOnMouseReleased(e -> {});
             icon.setBackgroundColor(Color.web("#EAEDED", 0.9));
 
-            this.getChildren().add(icon);
+            HBox infoHBox1 = makeInfoBox(file.isReadable(), true);
+            HBox infoHBox2 = makeInfoBox(file.isWritable(), false);
+            infoVBox.getChildren().addAll(infoHBox1, infoHBox2);
+            infoVBox.setAlignment(Pos.CENTER);
+
+            this.getChildren().addAll(icon, infoVBox);
 
             resize();
 
@@ -278,11 +286,12 @@ public class FilePane extends VBox implements Resizable {
             multiFileDisplays.clear();
             for (UIFile uiFile : files) {
                 multiFileDisplays.add(new MultiFileDisplay(uiFile));
+                System.out.println("adding display");
             }
         }
 
         public static VBox getDisplaysVBox() {
-            VBox displays = new VBox(6);
+            VBox displays = new VBox(16);
             displays.setAlignment(Pos.CENTER);
             for (MultiFileDisplay multiFileDisplay : multiFileDisplays) {
                 displays.getChildren().addAll(multiFileDisplay, new Rectangle(
@@ -306,6 +315,8 @@ public class FilePane extends VBox implements Resizable {
         centralDisplay.setMinHeight(MainScreen.getStageHeight() - 190);
         scrollPane.setPrefHeight(MainScreen.getStageHeight() - 190);
         scrollPane.setPrefWidth(paneWidth - 40.0);
+        scrollPane.setPrefViewportHeight(paneWidth - 40);
+        scrollPane.setHmax(paneWidth - 40);
 
         if (singleFileDisplay != null) {
             singleFileDisplay.resize(); // = new SingleFileDisplay();
