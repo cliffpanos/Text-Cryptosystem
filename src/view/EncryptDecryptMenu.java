@@ -6,19 +6,17 @@ import controller.Encryptor;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
-import javafx.scene.text.Font;
-import javafx.scene.text.TextAlignment;
 
 
 public class EncryptDecryptMenu extends StackPane implements Resizable {
@@ -74,13 +72,13 @@ public class EncryptDecryptMenu extends StackPane implements Resizable {
             });
         passwordField.setPromptText("enter here");
         passwordField.setAlignment(Pos.CENTER);
+        passwordField.setFont(Font.font("Helvetica"));
 
         //Create the password trio: the icon, the TextField, and the Label below
         ImageView passwordIcon = Resources.getImageView("password.tiff",
             (paneWidth * 0.33));
-        Label pwInstructions = new Label("Enter Password");
+        UILabel pwInstructions = new UILabel("Enter Password");
         pwInstructions.setTextFill(Color.WHITE);
-        pwInstructions.setTextAlignment(TextAlignment.CENTER);
         VBox passwordVBox = new VBox(10);
         passwordVBox.getChildren().addAll(passwordIcon, passwordField,
             pwInstructions);

@@ -22,7 +22,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.paint.Color;
-import javafx.scene.control.Label;
 import javafx.scene.shape.Rectangle;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -117,7 +116,8 @@ public class FilePane extends VBox implements Resizable {
             new Insets(0.0))));
         centralDisplay.setPadding(new Insets(20));
         centralDisplay.setAlignment(Pos.CENTER);
-        centralDisplay.getChildren().add(new Label("Choose one or more files"));
+        centralDisplay.getChildren()
+            .add(new UILabel("Choose one or more files"));
 
         this.setAlignment(Pos.CENTER);
         this.setPadding(new Insets(22));
@@ -142,7 +142,7 @@ public class FilePane extends VBox implements Resizable {
     public static void updateButtonTexts() {
 
         String fileName = "";
-        Label buttonLabel = runButton.getLabel();
+        UILabel buttonLabel = runButton.getLabel();
 
         // Sets the initial text
         buttonLabel.setText(processType.substring(0, 1).toUpperCase()
@@ -175,7 +175,7 @@ public class FilePane extends VBox implements Resizable {
     private static class SingleFileDisplay extends HBox {
 
         private VBox infoVBox = new VBox(15);
-        private Label encryptableLabel = new Label("");
+        private UILabel encryptableLabel = new UILabel();
         private UIFile file = files.get(0);
         private Rectangle topLine;
         private Text titleLabel;
@@ -189,11 +189,11 @@ public class FilePane extends VBox implements Resizable {
             titleLabel.setFont(Font.font("Helvetica",
                 FontWeight.EXTRA_BOLD, 24));
             titleLabel.setTextAlignment(TextAlignment.CENTER);
-            Label extLabel = new Label("Text Type: " + file.getFileExtension()
-                + " file");
-            extLabel.setFont(new Font(16));
 
-            encryptableLabel.setFont(new Font(15));
+            UILabel extLabel = new UILabel("Text Type: "
+                + file.getFileExtension() + " file", 16);
+
+            encryptableLabel.setFont(15);
 
             HBox infoHBox1 = makeInfoBox(file.isReadable(), true);
             HBox infoHBox2 = makeInfoBox(file.isWritable(), false);
@@ -213,7 +213,6 @@ public class FilePane extends VBox implements Resizable {
         }
 
         public void resize() {
-            System.out.println("SingleFileDisplay PaneWidth: " + paneWidth);
             this.setSpacing(paneWidth / 15);
             this.setHeight(MainScreen.getStageHeight() - 200);
             this.setPrefWidth(paneWidth - 40);
@@ -233,7 +232,7 @@ public class FilePane extends VBox implements Resizable {
         ImageView icon = Resources.getImageView(p //isReadable or Writable
             ? "check_icon.png" : "cross_icon.png", 20);
         String ability = readNotWrite ? "Readable" : "Writable ";
-        Label label = new Label(p ? ("File is " + ability)
+        UILabel label = new UILabel(p ? ("File is " + ability)
             : "File is Not " + ability + "!");
         HBox infoBox = new HBox(8);
         infoBox.getChildren().setAll(icon, label);
@@ -244,9 +243,9 @@ public class FilePane extends VBox implements Resizable {
     private static class MultiFileDisplay extends HBox {
 
         private UIFile file;
-        private VBox infoVBox = new VBox(MainScreen.getStageHeight() / 60);
+        private VBox infoVBox = new VBox(MainScreen.getStageHeight() / 70);
         private ImageView imageView;
-        private Label label;
+        private UILabel label;
 
         public MultiFileDisplay(UIFile file) {
 

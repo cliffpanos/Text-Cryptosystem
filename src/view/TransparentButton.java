@@ -6,7 +6,6 @@ import controller.Encryptor;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.shape.Rectangle;
@@ -17,14 +16,12 @@ import javafx.geometry.Pos;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
-import javafx.scene.text.Font;
-import javafx.scene.text.TextAlignment;
 
 public class TransparentButton extends StackPane {
 
     private ImageView imageView;
     private Rectangle background;
-    private Label button;
+    private UILabel button;
 
     private static TransparentButton encryptPane = null;
     private static TransparentButton decryptPane = null;
@@ -76,8 +73,7 @@ public class TransparentButton extends StackPane {
         this.setMaxWidth(dim + 2);
         this.setMaxHeight(dim + 2);
 
-        button = new Label(text);
-        button.setTextAlignment(TextAlignment.CENTER);
+        button = new UILabel(text);
         button.setTextFill(Color.web("#F7F7F7"));
 
         VBox vBox = new VBox(12, imageView, button);

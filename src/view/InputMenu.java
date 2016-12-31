@@ -4,6 +4,7 @@ import controller.Encryptor;
 import resources.Resources;
 
 import javafx.scene.control.TextArea;
+import javafx.scene.text.Font;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
 import javafx.geometry.Insets;
@@ -37,6 +38,8 @@ public abstract class InputMenu implements Resizable {
 
         inputField.setWrapText(true);
         outputField.setWrapText(true);
+        inputField.setFont(Font.font("Helvetica"));
+        outputField.setFont(Font.font("Helvetica"));
 
         double iconSize = 35;
         UIButton trashButton = new UIButton("trash_icon.png", iconSize);

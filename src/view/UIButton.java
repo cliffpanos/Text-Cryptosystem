@@ -9,18 +9,15 @@ import javafx.scene.Node;
 import javafx.scene.shape.Shape;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Circle;
-import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import javafx.scene.text.Font;
-import javafx.scene.text.TextAlignment;
 import javafx.geometry.Pos;
 
 public class UIButton extends StackPane {
 
     private Shape background;
-    private Label buttonText;
+    private UILabel buttonText;
     private ImageView buttonIcon;
     private HBox buttonHolder;
     private boolean isSelected = false;
@@ -70,9 +67,7 @@ public class UIButton extends StackPane {
         ((Rectangle) background).setArcHeight((double) height / 4.5);
         background.setStroke(Color.web("#3498DB"));
 
-        buttonText = new Label(text);
-        buttonText.setFont(new Font(height / 2.25));
-        buttonText.setTextAlignment(TextAlignment.CENTER);
+        buttonText = new UILabel(text, height / 2.25);
 
         //This buttonHolder is the HBox to hold the icon (if present) and Label
         buttonHolder = new HBox(7);
@@ -90,6 +85,7 @@ public class UIButton extends StackPane {
         } else {
             buttonHolder.getChildren().add(buttonText);
         }
+        this.setAlignment(Pos.CENTER);
         this.getChildren().addAll(background, buttonHolder);
     }
 
@@ -130,7 +126,7 @@ public class UIButton extends StackPane {
         buttonText.setTextFill(color);
     }
 
-    public Label getLabel() {
+    public UILabel getLabel() {
         return this.buttonText;
     }
 

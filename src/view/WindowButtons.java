@@ -8,8 +8,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
-import javafx.scene.control.Label;
-import javafx.scene.text.TextAlignment;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 
@@ -19,7 +17,6 @@ import javafx.beans.property.*;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Insets;
 import javafx.scene.*;
-import javafx.scene.control.Label;
 import javafx.scene.effect.*;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
@@ -50,7 +47,7 @@ public class WindowButtons extends HBox {
     //isInControlBounds is whether or not the mouse is within this class' HBox;
     // it is NOT whether or not the mouse is within this class' outerHBox
     private ImageView buttonPressed = null;
-    private Label instructionsLabel;
+    private UILabel instructionsLabel;
 
     public WindowButtons(double givenWidth) {
 
@@ -153,10 +150,8 @@ public class WindowButtons extends HBox {
         translator.setAlignment(Pos.CENTER);
         translator.setMinWidth(leftPaneWidth - 60);
 
-        instructionsLabel = new Label();
-        instructionsLabel.setText("            ");
+        instructionsLabel = new UILabel("            ");
         instructionsLabel.setTextFill(Color.web("#F7F7F7", 0.88));
-        instructionsLabel.setTextAlignment(TextAlignment.CENTER);
         translator.getChildren().add(instructionsLabel);
 
         makeDraggable(stage, translator);
