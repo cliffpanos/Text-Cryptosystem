@@ -45,11 +45,19 @@ public class FolderPane extends StackPane implements Resizable {
         boolean encrypting = processType.equals("encrypt");
 
         if (folder.isDirectory()) {
+            // Clears files before adding new ones
+            files.clear();
+
             File tempFiles[] = folder.listFiles();
 
             for (File tempFile : tempFiles) {
+
                 if (tempFile != null) {
-                    files.add(new UIFile(tempFile));
+                    UIFile tempUIFile = new UIFile(tempFile);
+
+                    if (tempUIFile.hasProcessableExtension()) {
+                        files.add(new UIFile(tempFile));
+                    }
                 }
             }
 
@@ -59,6 +67,7 @@ public class FolderPane extends StackPane implements Resizable {
                     file.processFile();
                 } else {
                     fileIsNotActionable = true;
+                    System.out.println("File #" + files.indexOf(file));
                 }
             }
         }

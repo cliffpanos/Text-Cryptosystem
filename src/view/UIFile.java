@@ -73,6 +73,12 @@ public class UIFile {
         return hasThem;
     }
 
+    public boolean hasProcessableExtension() {
+        // Following statement should uncommented when processing Word Documents
+        // functionality has been added
+        return getFileExtension().equals("txt")/* || getFileExtension().equals(doc)*/;
+    }
+
     public String isActionable(String processType) {
         boolean hasEncryptedTags = hasEncryptedTags();
         return processType.equals("Encrypt")
