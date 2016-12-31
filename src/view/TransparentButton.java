@@ -74,6 +74,7 @@ public class TransparentButton extends StackPane {
         this.setMaxHeight(dim + 2);
 
         button = new UILabel(text);
+        button.setWeight("NORMAL");
         button.setTextFill(Color.web("#F7F7F7"));
 
         VBox vBox = new VBox(12, imageView, button);

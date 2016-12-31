@@ -54,6 +54,12 @@ public class UILabel extends Label {
         case "LIGHT" :
             fontWeight = FontWeight.LIGHT;
             break;
+        case "NORMAL" :
+            fontWeight = FontWeight.NORMAL;
+            break;
+        case "SEMI_BOLD" :
+            fontWeight = FontWeight.SEMI_BOLD;
+            break;
         case "BOLD" :
             fontWeight = FontWeight.BOLD;
             break;
