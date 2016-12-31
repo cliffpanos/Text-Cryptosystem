@@ -73,8 +73,8 @@ public class FolderPane extends StackPane implements Resizable {
                     javafx.scene.control.Alert.AlertType.ERROR);
             } else {
                 UIAlert.show("Text Not Encrypted",
-                    "The text that you are attempting to decrypt\n"
-                    + "has NOT been encrypted by this system.\n"
+                    "One or more files that you are attempting to \n"
+                    + "decrypt has NOT been encrypted by this system.\n"
                     + "To prevent a loss of data through false\n"
                     + "decryption, you may not decrypt this text.",
                     javafx.scene.control.Alert.AlertType.ERROR);

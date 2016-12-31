@@ -272,19 +272,6 @@ public class Encryptor {
             return null;
         }
 
-        if (text.length() >= 6) {
-            if (!(text.substring(0, 3).equals("%E%")
-                && text.substring(text.length() - 3).equals("$E$"))) {
-                UIAlert.show("Text Not Encrypted",
-                    "The text that you are attempting to decrypt\n"
-                    + "has NOT been encrypted by this system.\n"
-                    + "To prevent a loss of data through false\n"
-                    + "decryption, you may not decrypt this text.",
-                    javafx.scene.control.Alert.AlertType.ERROR);
-                return null;
-            }
-        }
-
         //Remove the %E% & $E$ tags that were added at the end of the encryption
         text = text.substring(3, text.length() - 3);
 

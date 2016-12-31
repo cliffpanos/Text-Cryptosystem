@@ -63,9 +63,11 @@ public class TransparentButton extends StackPane {
         boolean isEncrypt = text.equals("Encrypt");
         String keyword = (isEncrypt) ? "encrypt" : "decrypt";
         this.setOnMouseClicked(e -> {
+                String tempText = text.toLowerCase();
+
                 paneSelected = this;
-                FilePane.setProcessType(text);
-                FolderPane.setProcessType(text);
+                FilePane.setProcessType(tempText);
+                FolderPane.setProcessType(tempText);
                 Encryptor.setKeyword(keyword);
                 MainScreen.setIsEncryptingNotDecrypting(isEncrypt);
                 updateSelected();
