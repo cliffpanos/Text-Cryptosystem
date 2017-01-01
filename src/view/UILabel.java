@@ -22,22 +22,23 @@ public class UILabel extends Label {
     }
 
     public UILabel(String text, double fontSize) {
-        this(text, fontSize, FontWeight.NORMAL);
+        this(text, fontSize, "NORMAL");
     }
 
-    public UILabel(String text, double fontSize, FontWeight fontWeight) {
-        this(text, fontSize, fontWeight, "Helvetica");
+    public UILabel(String text, double fontSize, String fontWeightString) {
+        this(text, fontSize, fontWeightString, "Helvetica");
     }
 
-    public UILabel(String text, double fontSize, FontWeight fontWeight,
+    public UILabel(String text, double fontSize, String fontWeightString,
         String fontFamily) {
 
         super(text);
         this.fontFamily = fontFamily;
-        this.fontWeight = fontWeight;
+        setFont(fontSize);
+        setWeight(fontWeightString);
+
         this.setAlignment(Pos.CENTER);
         this.setTextAlignment(TextAlignment.CENTER);
-        setFont(fontSize);
 
     }
 
@@ -47,9 +48,9 @@ public class UILabel extends Label {
         super.setFont(Font.font(fontFamily, fontWeight, fontSize));
     }
 
-    public void setWeight(String weight) {
+    public void setWeight(String fontWeightString) {
 
-        switch (weight) {
+        switch (fontWeightString) {
 
         case "LIGHT" :
             fontWeight = FontWeight.LIGHT;

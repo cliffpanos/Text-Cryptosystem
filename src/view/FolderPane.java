@@ -21,7 +21,7 @@ public class FolderPane extends StackPane implements Resizable {
     public FolderPane() {
 
         chooseFolderButton = new UIButton(paneWidth - 60.0, 30,
-            "Choose a Folder to " + processType);
+            "Choose Folders to " + processType);
         chooseFolderButton.setAlignment(Pos.TOP_CENTER);
         chooseFolderButton.setOnMouseClicked(e -> {
 
@@ -100,7 +100,7 @@ public class FolderPane extends StackPane implements Resizable {
     public static void setProcessType(String encryptOrDecrypt) {
         processType = encryptOrDecrypt;
         chooseFolderButton.getLabel().setText(
-            "Choose a Folder to " + processType); //change to encrypt or decrypt
+            "Choose Folders to " + processType); //change to encrypt or decrypt
         //runButton.updateIcon(encryptOrDecrypt + ".png");
         //updateButtonTexts();
     }

@@ -150,7 +150,7 @@ public class WindowButtons extends HBox {
         translator.setAlignment(Pos.CENTER);
         translator.setMinWidth(leftPaneWidth - 60);
 
-        instructionsLabel = new UILabel("            ");
+        instructionsLabel = new UILabel("            ", 13.85);
         instructionsLabel.setTextFill(Color.web("#F7F7F7", 0.88));
         translator.getChildren().add(instructionsLabel);
 

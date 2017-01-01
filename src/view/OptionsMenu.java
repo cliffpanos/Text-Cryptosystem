@@ -46,9 +46,9 @@ public class OptionsMenu extends StackPane implements Resizable {
         UIButton inputText = new UIButton((paneWidth - 40), 30,
             "Input Text Directly");
         UIButton chooseFile = new UIButton((paneWidth - 40), 30,
-            "Choose a File");
+            "Choose Some Files");
         UIButton chooseFolder = new UIButton((paneWidth - 40), 30,
-            "Choose a Folder");
+            "Choose Folders of Files");
 
         IconBox iconBox1 = new IconBox("pencil.png", false);
         IconBox iconBox2 = new IconBox("file.png", true);
