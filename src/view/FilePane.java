@@ -43,6 +43,7 @@ public class FilePane extends VBox implements Resizable {
     private static TreeSet<UIFile> files =
         new TreeSet<>((a, b) -> (a.getName().compareTo(b.getName())));
         //All of the files to be processed from fileChooser in UIFile
+    private static boolean unactionableFiles;
 
 
     public FilePane() {
@@ -58,50 +59,67 @@ public class FilePane extends VBox implements Resizable {
                 if (tempFiles != null) {
 
                     files.clear(); //TODO make this an option to add more files or to clear all files and select totally new ones
-                    for (File f : tempFiles) {
+                    for (File tempFile : tempFiles) {
+                        if (tempFile != null) {
 
-                        if (f != null) {
-                            files.add(new UIFile(f));
+                            UIFile tempUIFile = new UIFile(tempFile);
+
+                            if (tempUIFile.hasProcessableExtension()) {
+                                files.add(new UIFile(tempFile));
+                            }
                         }
-
                     }
-                    if (!files.isEmpty()) {
-
-                        for (UIFile uifile : files) {
-                            System.out.println("Name: " + uifile.getName());
-                        }
-
-                        Resources.playSound("fileUpload.aiff");
-
-                        if (files.size() == 1) {
-                            singleFileDisplay = new SingleFileDisplay();
-                            centralDisplay.getChildren()
-                                .setAll(singleFileDisplay);
-                            this.getChildren().setAll(chooseFileButton,
-                                centralDisplay, runButton);
-                        } else { //When there is more than one File
-                            MultiFileDisplay.createAllNewDisplays();
-                            centralDisplay.getChildren()
-                                .setAll(MultiFileDisplay.getDisplaysVBox());
-                            scrollPane.setContent(centralDisplay);
-                            this.getChildren().setAll(chooseFileButton,
-                                scrollPane, runButton);
-                        }
-                        runButton.setMouseActions(runButton.getClickable());
-                        runButton.setBackgroundColor(Color.WHITE);
-                        runButton.setOnMouseClicked(e2 -> {
-                                for (UIFile f : files) {
-                                    System.out.println("Processing a file");
-                                    f.processFile();
-                                }
-                                runButton.setBackgroundColor(
-                                    Color.web("#D6EAF8"));
-                                updateButtonTexts();
-                            });
-                        updateButtonTexts();
-                    }
-
                 }
+
+                if (!files.isEmpty()) {
+
+                    for (UIFile uifile : files) {
+                        System.out.println("Name: " + uifile.getName());
+                    }
+
+                    Resources.playSound("fileUpload.aiff");
+
+                    if (files.size() == 1) {
+                        singleFileDisplay = new SingleFileDisplay();
+                        centralDisplay.getChildren()
+                            .setAll(singleFileDisplay);
+                        this.getChildren().setAll(chooseFileButton,
+                            centralDisplay, runButton);
+                    } else { //When there is more than one File
+                        MultiFileDisplay.createAllNewDisplays();
+                        centralDisplay.getChildren()
+                            .setAll(MultiFileDisplay.getDisplaysVBox());
+                        scrollPane.setContent(centralDisplay);
+                        this.getChildren().setAll(chooseFileButton,
+                            scrollPane, runButton);
+                    }
+                    runButton.setMouseActions(runButton.getClickable());
+                    runButton.setBackgroundColor(Color.WHITE);
+                    runButton.setOnMouseClicked(e2 -> {
+                            boolean encrypting = processType.equals("encrypt");
+                            for (UIFile f : files) {
+                                // Processes files if possible
+                                if ((file.hasEncryptedTags() && !encrypting)
+                                    || (!file.hasEncryptedTags() && encrypting)) {
+                                    file.processFile();
+                                } else {
+                                    unactionableFiles = true;
+                                    System.out.println("File " + file.getName()
+                                        + " is not actionable");
+                                }
+                            }
+
+                            // Will create an alert if any files were trying to be encrypted
+                            // twice or decrypted prior to being encrypted.
+                            checkForUnactionableFiles();
+
+                            runButton.setBackgroundColor(
+                                Color.web("#D6EAF8"));
+                            updateButtonTexts();
+                        });
+                    updateButtonTexts();
+                }
+
             });
 
         runButton.setBackgroundColor(Color.web("#D6DBDF"));
@@ -132,6 +150,27 @@ public class FilePane extends VBox implements Resizable {
 
     }
 
+    // Creates an alert if a file is trying to be decrypted without
+    // first being encrypted or encrypted twice.
+    public void checkForUnactionableFiles() {
+        if (unactionableFiles) {
+            if (processType.equals("encrypt");) {
+                UIAlert.show("Text Already Encrypted",
+                    "One or more of the files has already\n"
+                    + "been encrypted. To prevent the convolution\n"
+                    + "inherent in multiple encryptions,\n"
+                    + "these file(s) have not been encrypted again.",
+                    javafx.scene.control.Alert.AlertType.ERROR);
+            } else {
+                UIAlert.show("Text Not Encrypted",
+                    "One or more files that you are attempting to \n"
+                    + "decrypt has NOT been encrypted by this system.\n"
+                    + "To prevent a loss of data through false\n"
+                    + "decryption, you may not decrypt this text.",
+                    javafx.scene.control.Alert.AlertType.ERROR);
+            }
+        }
+    }
 
     public static void setProcessType(String encryptOrDecrypt) {
         processType = encryptOrDecrypt;

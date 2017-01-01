@@ -11,7 +11,6 @@ import javafx.scene.layout.StackPane;
 
 public class FolderPane extends StackPane implements Resizable {
 
-    private static boolean encrypting;
     private static ArrayList<UIFile> files = new ArrayList<>();
     private static String processType = "encrypt"; // "encrypt" or "decrypt"
     private static File selectedFolder = null;
@@ -50,7 +49,7 @@ public class FolderPane extends StackPane implements Resizable {
     // first being encrypted or encrypted twice.
     public void checkForUnactionableFiles() {
         if (unactionableFiles) {
-            if (encrypting) {
+            if (processType.equals("encrypt");) {
                 UIAlert.show("Text Already Encrypted",
                     "One or more of the files has already\n"
                     + "been encrypted. To prevent the convolution\n"
@@ -70,7 +69,6 @@ public class FolderPane extends StackPane implements Resizable {
 
     public void processFolder(File folder) {
         unactionableFiles = false;
-        encrypting = processType.equals("encrypt");
 
         // This is the main processing segment
         if (folder.isDirectory()) {
@@ -106,6 +104,7 @@ public class FolderPane extends StackPane implements Resizable {
             }
 
             // Processes files if possible
+            boolean encrypting = processType.equals("encrypt");
             for (UIFile file : files) {
                 if ((file.hasEncryptedTags() && !encrypting)
                     || (!file.hasEncryptedTags() && encrypting)) {
