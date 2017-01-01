@@ -97,7 +97,7 @@ public class FilePane extends VBox implements Resizable {
                     runButton.setBackgroundColor(Color.WHITE);
                     runButton.setOnMouseClicked(e2 -> {
                             boolean encrypting = processType.equals("encrypt");
-                            for (UIFile f : files) {
+                            for (UIFile file : files) {
                                 // Processes files if possible
                                 if ((file.hasEncryptedTags() && !encrypting)
                                     || (!file.hasEncryptedTags() && encrypting)) {
@@ -154,7 +154,7 @@ public class FilePane extends VBox implements Resizable {
     // first being encrypted or encrypted twice.
     public void checkForUnactionableFiles() {
         if (unactionableFiles) {
-            if (processType.equals("encrypt");) {
+            if (processType.equals("encrypt")) {
                 UIAlert.show("Text Already Encrypted",
                     "One or more of the files has already\n"
                     + "been encrypted. To prevent the convolution\n"

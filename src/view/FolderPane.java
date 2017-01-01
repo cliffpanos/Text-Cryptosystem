@@ -49,7 +49,7 @@ public class FolderPane extends StackPane implements Resizable {
     // first being encrypted or encrypted twice.
     public void checkForUnactionableFiles() {
         if (unactionableFiles) {
-            if (processType.equals("encrypt");) {
+            if (processType.equals("encrypt")) {
                 UIAlert.show("Text Already Encrypted",
                     "One or more of the files has already\n"
                     + "been encrypted. To prevent the convolution\n"
