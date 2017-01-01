@@ -11,9 +11,11 @@ import javafx.scene.layout.StackPane;
 
 public class FolderPane extends StackPane implements Resizable {
 
-    private static File folder = null;
+    private static boolean encrypting;
     private static ArrayList<UIFile> files = new ArrayList<>();
     private static String processType = "encrypt"; // "encrypt" or "decrypt"
+    private static File selectedFolder = null;
+    private static boolean unactionableFiles;
 
     private static UIButton chooseFolderButton;
     private static double paneWidth = MainScreen.getStageWidth() * 0.57 - 40.0;
@@ -26,8 +28,12 @@ public class FolderPane extends StackPane implements Resizable {
         chooseFolderButton.setOnMouseClicked(e -> {
 
                 // Gets a folder File and processes it
-                folder = UIFile.getFolderFromDirectory();
-                this.processFolder();
+                selectedFolder = UIFile.getFolderFromDirectory();
+                processFolder(selectedFolder);
+
+                // Will create an alert if any files were trying to be encrypted
+                // twice or decrypted prior to being encrypted.
+                checkForUnactionableFiles();
 
             });
 
@@ -40,39 +46,10 @@ public class FolderPane extends StackPane implements Resizable {
         resize();
     }
 
-    public void processFolder() {
-        boolean fileIsNotActionable = false;
-        boolean encrypting = processType.equals("encrypt");
-
-        if (folder.isDirectory()) {
-            // Clears files before adding new ones
-            files.clear();
-
-            File tempFiles[] = folder.listFiles();
-
-            for (File tempFile : tempFiles) {
-
-                if (tempFile != null) {
-                    UIFile tempUIFile = new UIFile(tempFile);
-
-                    if (tempUIFile.hasProcessableExtension()) {
-                        files.add(new UIFile(tempFile));
-                    }
-                }
-            }
-
-            for (UIFile file : files) {
-                if ((file.hasEncryptedTags() && !encrypting)
-                    || (!file.hasEncryptedTags() && encrypting)) {
-                    file.processFile();
-                } else {
-                    fileIsNotActionable = true;
-                    System.out.println("File #" + files.indexOf(file));
-                }
-            }
-        }
-
-        if (fileIsNotActionable) {
+    // Creates an alert if a file is trying to be decrypted without
+    // first being encrypted or encrypted twice.
+    public void checkForUnactionableFiles() {
+        if (unactionableFiles) {
             if (encrypting) {
                 UIAlert.show("Text Already Encrypted",
                     "One or more of the files has already\n"
@@ -87,6 +64,56 @@ public class FolderPane extends StackPane implements Resizable {
                     + "To prevent a loss of data through false\n"
                     + "decryption, you may not decrypt this text.",
                     javafx.scene.control.Alert.AlertType.ERROR);
+            }
+        }
+    }
+
+    public void processFolder(File folder) {
+        unactionableFiles = false;
+        encrypting = processType.equals("encrypt");
+
+        // This is the main processing segment
+        if (folder.isDirectory()) {
+
+            // Clears files before adding new ones
+            files.clear();
+
+            File tempFiles[] = folder.listFiles();
+
+            // Checks if any nested Files in folder are directories and
+            // recursively calls this function if so.
+            for (File tempFile : tempFiles) {
+
+                // Will recursively call this function if there are nested directories.
+                if (tempFile.isDirectory()) {
+
+                    // TODO: Ask user before doing the next two commands.
+                    processFolder(tempFile);
+                    files.clear();
+                }
+            }
+
+            // Creates an ArrayList of Files called "files" that will be processed
+            for (File tempFile : tempFiles) {
+                if (tempFile != null) {
+
+                    UIFile tempUIFile = new UIFile(tempFile);
+
+                    if (tempUIFile.hasProcessableExtension()) {
+                        files.add(new UIFile(tempFile));
+                    }
+                }
+            }
+
+            // Processes files if possible
+            for (UIFile file : files) {
+                if ((file.hasEncryptedTags() && !encrypting)
+                    || (!file.hasEncryptedTags() && encrypting)) {
+                    file.processFile();
+                } else {
+                    unactionableFiles = true;
+                    System.out.println("File " + file.getName() + " is not actionable");
+                }
             }
         }
     }
