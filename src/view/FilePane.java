@@ -97,10 +97,12 @@ public class FilePane extends VBox implements Resizable {
                     runButton.setBackgroundColor(Color.WHITE);
                     runButton.setOnMouseClicked(e2 -> {
                             boolean encrypting = processType.equals("encrypt");
+                            boolean unactionableFiles = false;
                             for (UIFile file : files) {
                                 // Processes files if possible
                                 if ((file.hasEncryptedTags() && !encrypting)
                                     || (!file.hasEncryptedTags() && encrypting)) {
+                                    System.out.println("PROCESSING");
                                     file.processFile();
                                 } else {
                                     unactionableFiles = true;
@@ -152,7 +154,7 @@ public class FilePane extends VBox implements Resizable {
 
     // Creates an alert if a file is trying to be decrypted without
     // first being encrypted or encrypted twice.
-    public void checkForUnactionableFiles() {
+    public static void checkForUnactionableFiles() {
         if (unactionableFiles) {
             if (processType.equals("encrypt")) {
                 UIAlert.show("Text Already Encrypted",
@@ -216,7 +218,7 @@ public class FilePane extends VBox implements Resizable {
     private static class SingleFileDisplay extends HBox {
 
         private VBox infoVBox = new VBox(15);
-        private UILabel encryptableLabel = new UILabel("", 15, "SEMI_BOLD");
+        private UILabel encryptableLabel = new UILabel("", 15, "BOLD");
         private UIFile file = files.first();
         private Rectangle topLine;
         private Text titleLabel;
@@ -234,8 +236,8 @@ public class FilePane extends VBox implements Resizable {
             UILabel extLabel = new UILabel("Text Type: "
                 + file.getFileExtension() + " file", 16);
 
-            HBox infoHBox1 = makeInfoBox(file.isReadable(), true);
-            HBox infoHBox2 = makeInfoBox(file.isWritable(), false);
+            HBox infoHBox1 = makeInfoBox(file.isReadable(), true, Pos.CENTER);
+            HBox infoHBox2 = makeInfoBox(file.isWritable(), false, Pos.CENTER);
             update();
             resize();
 
@@ -267,15 +269,15 @@ public class FilePane extends VBox implements Resizable {
     }
 
     //Used in SingleFileDisplay and MultiFileDisplay for the read/write boxes
-    public static HBox makeInfoBox(boolean p, boolean readNotWrite) {
-        ImageView icon = Resources.getImageView(p //isReadable or Writable
+    public static HBox makeInfoBox(boolean b, boolean readNotWrite, Pos pos) {
+        ImageView icon = Resources.getImageView(b //isReadable or Writable
             ? "check_icon.png" : "cross_icon.png", 20);
         String ability = readNotWrite ? "Readable" : "Writable ";
-        UILabel label = new UILabel(p ? ("File is " + ability)
+        UILabel label = new UILabel(b ? ("File is " + ability)
             : "File is Not " + ability + "!");
         HBox infoBox = new HBox(8);
         infoBox.getChildren().setAll(icon, label);
-        infoBox.setAlignment(Pos.CENTER_LEFT);
+        infoBox.setAlignment(pos);
         return infoBox;
     }
 
@@ -303,8 +305,10 @@ public class FilePane extends VBox implements Resizable {
             icon.setOnMouseReleased(e -> {});
             icon.setBackgroundColor(Color.web("#EAEDED", 0.9));
 
-            HBox infoHBox1 = makeInfoBox(file.isReadable(), true);
-            HBox infoHBox2 = makeInfoBox(file.isWritable(), false);
+            HBox infoHBox1 =
+                makeInfoBox(file.isReadable(), true, Pos.CENTER_LEFT);
+            HBox infoHBox2 =
+                makeInfoBox(file.isWritable(), false, Pos.CENTER_LEFT);
             infoVBox.getChildren().addAll(infoHBox1, infoHBox2);
             infoVBox.setAlignment(Pos.CENTER);
 

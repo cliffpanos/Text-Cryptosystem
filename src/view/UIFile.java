@@ -11,18 +11,30 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 
-/* //This will be used to process word documents
-import java.io.*;
+//This will be used to process word documents
 import org.apache.poi.hwpf.HWPFDocument;
-import org.apache.poi.hwpf.extractor.WordExtractor;*/
+import org.apache.poi.hwpf.extractor.WordExtractor;
+import org.apache.poi.hpsf.DocumentSummaryInformation;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
+
+//maybe delete these?
+import org.apache.poi.hwpf.usermodel.CharacterRun;
+import org.apache.poi.hwpf.usermodel.Range;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+
 
 public class UIFile {
 
-    private File fileToProcess;
+    private final File fileToProcess;
     private String fileExtension;
     private String fileText;
 
@@ -42,7 +54,17 @@ public class UIFile {
                 writeTXTFile(fileToProcess, processedText);
             }
         } else if (fileExtension.equals("doc")) {
-            readDocFile(fileToProcess);
+            Encryptor.setText(readDocFile(fileToProcess));
+            String processedText = Encryptor.run();
+            if (processedText != null) {
+                writeDocFile(fileToProcess, processedText);
+            }
+        } else if (fileExtension.equals("docx")) {
+            Encryptor.setText(readDocFile(fileToProcess));
+            String processedText = Encryptor.run();
+            if (processedText != null) {
+                writeDocFile(fileToProcess, processedText);
+            }
         }
 
     }
@@ -76,7 +98,7 @@ public class UIFile {
     public boolean hasProcessableExtension() {
         // Following statement should uncommented when processing Word Documents
         // functionality has been added
-        return getFileExtension().equals("txt")/* || getFileExtension().equals(doc)*/;
+        return fileExtension.matches("txt|doc|docx");
     }
 
     public String isActionable(String processType) {
@@ -107,6 +129,9 @@ public class UIFile {
             break;
         case "doc" :
             toReturn = "docFile.png";
+            break;
+        case "docx" :
+            toReturn = "docxFile.png";
             break;
         default :
             toReturn = "blankFile.png";
@@ -146,8 +171,6 @@ public class UIFile {
                 String currentLine;
 
                 while ((currentLine = br.readLine()) != null) {
-                    System.out.println("Adding | " + currentLine
-                        + " | to txt File");
                     textToProcess += currentLine + "\n";
                 }
                 textToProcess =
@@ -181,7 +204,7 @@ public class UIFile {
 
     }
 
-    public void writeTXTFile(File txtFile, String textToWrite) {
+    public static void writeTXTFile(File txtFile, String textToWrite) {
 
         // Writes textToWrite to txtFile
         BufferedWriter bw = null;
@@ -223,22 +246,90 @@ public class UIFile {
     }
 
 
+    public static String readDocFile(File doc) {
+
+        String textToProcess = "";
+
+        try {
+
+            FileInputStream fis = new FileInputStream(doc.getAbsolutePath());
+            HWPFDocument document = new HWPFDocument(fis);
+            WordExtractor  extractor = new WordExtractor(document);
+
+            String[] paragraphs = extractor.getParagraphText();
+            for (int i = 0; i < paragraphs.length; i++) {
+                if (paragraphs[i] != null)
+                    System.out.println(paragraphs[i]);
+                    textToProcess += paragraphs[i] + "\n";
+            }
+
+        } catch (Exception exep) {
+            exep.printStackTrace();
+        }
+
+        textToProcess =
+            textToProcess.substring(0, textToProcess.length() - 1);
+        //remove the extra "\n" that was added at the end
+        return textToProcess;
+
+    }
+
+    public static void writeDocFile(File docFile, String textToWrite) {
+
+        try {
+
+            POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream(docFile));
+            HWPFDocument doc = new HWPFDocument(fs);
+            Range range = doc.getRange();
+            CharacterRun run = range.insertAfter(textToWrite);
+            OutputStream out = new FileOutputStream(docFile);
+            doc.write(out);
+            out.flush();
+            out.close();
+
+            /*
+            FileInputStream fis = new FileInputStream(docFile.getAbsolutePath());
+            XWPFDocument document= new XWPFDocument(fis);
+            //Write the Document in file system
+            FileOutputStream out = new FileOutputStream(docFile);
+
+            //create Paragraph
+            XWPFParagraph paragraph = document.createParagraph();
+            XWPFRun run=paragraph.createRun();
+            run.setText(textToWrite);
+
+            document.write(out);
+            out.close();*/
+
+            System.out.println("docc/docx file written successfully");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+
+
     public static List<File> getFilesFromDirectory() {
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select a File");
 
         //Set extension filters: txt & doc
-        FileChooser.ExtensionFilter extFilter =
+        FileChooser.ExtensionFilter extFilter1 =
             new FileChooser.ExtensionFilter("TXT files (.txt)", "*.txt");
         FileChooser.ExtensionFilter extFilter2 =
             new FileChooser.ExtensionFilter("Doc files (.doc)", "*.doc");
+        FileChooser.ExtensionFilter extFilter3 =
+            new FileChooser.ExtensionFilter("Docx files (.docx)", "*.docx");
 
-        fileChooser.getExtensionFilters().addAll(extFilter, extFilter2);
+        fileChooser.getExtensionFilters()
+            .addAll(extFilter1, extFilter2, extFilter3);
         return fileChooser.showOpenMultipleDialog(Runner.getStage());
 
     }
-
 
     public static File getFolderFromDirectory() {
 
@@ -250,22 +341,9 @@ public class UIFile {
 
 
 
-    /* public static void readParagraphs(HWPFDocument doc) throws Exception{
-        WordExtractor we = new WordExtractor(doc);
 
-        //Get the total number of paragraphs
-        String[] paragraphs = we.getParagraphText();
-        System.out.println("Total Paragraphs: "+paragraphs.length);
 
-        for (int i = 0; i < paragraphs.length; i++) {
-
-            System.out.println("Length of paragraph "+(i +1)+": "+ paragraphs[i].length());
-            System.out.println(paragraphs[i].toString());
-
-        }
-
-    }
-
+/*
     public static void readHeader(HWPFDocument doc, int pageNumber){
         HeaderStories headerStore = new HeaderStories( doc);
         String header = headerStore.getHeader(pageNumber);
@@ -280,7 +358,7 @@ public class UIFile {
 
     }*/
 
-    /*public static void readDocumentSummary(HWPFDocument doc) {
+    public static void readDocumentSummary(HWPFDocument doc) {
         DocumentSummaryInformation summaryInfo=doc.getDocumentSummaryInformation();
         String category = summaryInfo.getCategory();
         String company = summaryInfo.getCompany();
@@ -295,26 +373,9 @@ public class UIFile {
         System.out.println("Section Count: "+sectionCount);
         System.out.println("Slide Count: "+slideCount);
 
-    }*/
-
-    public static void readDocFile(File docFile) {
-        /*WordExtractor extractor = null;
-        try {
-
-            FileInputStream fis = new FileInputStream(docFile.getAbsolutePath());
-            HWPFDocument document = new HWPFDocument(fis);
-            extractor = new WordExtractor(document);
-            String[] fileData = extractor.getParagraphText();
-            for (int i = 0; i < fileData.length; i++)
-            {
-                if (fileData[i] != null)
-                    System.out.println(fileData[i]);
-            }
-        } catch (Exception exep) {
-            exep.printStackTrace();
-        } */
-
     }
+
+
 
     /*
     //Create the file to which the encrypted text will be written.

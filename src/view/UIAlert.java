@@ -9,6 +9,10 @@ import javafx.scene.control.ButtonBar;
 
 public class UIAlert {
 
+    //This will be true unless filePane or folderPane sets it to be false so
+    //that it doesn't get shown five times times for five files
+    private static boolean alertable = true;
+
     public static void show(String title, String primaryText,
         Alert.AlertType alertType) {
 
@@ -46,4 +50,13 @@ public class UIAlert {
 
         return false;
     }
+
+    public static boolean isAlertable() {
+        return alertable;
+    }
+
+    public static void setAlertable(boolean showMoreAlerts) {
+        alertable = showMoreAlerts;
+    }
+
 }
