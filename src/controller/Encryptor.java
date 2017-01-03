@@ -161,9 +161,6 @@ public class Encryptor {
 
 // These print statements are for testing
         System.out.println("password: '" + password + "'");
-        System.out.println("numKeys: " + numKeys);
-        System.out.println("i Key: " + initialKey);
-        System.out.println("");
 
         if (keyword.equals("encrypt")) {
             return encrypt();
@@ -364,9 +361,8 @@ public class Encryptor {
                     + i + stringOfTheHash.substring(i + 1);
             }
         }
-        System.out.println("HASH IS: " + stringOfTheHash);
-
         return stringOfTheHash;
+
     }
 
     public static String getPasswordHashAlpha() {

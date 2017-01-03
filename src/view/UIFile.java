@@ -56,11 +56,12 @@ public class UIFile {
                 writeTXTFile(fileToProcess, processedText);
             }
         } else if (fileExtension.matches("doc|docx")) {
-            Encryptor.setText(readDocFile(fileToProcess));
+            writeDocFile(fileToProcess);
+            /*Encryptor.setText(readDocFile(fileToProcess));
             String processedText = Encryptor.run();
             if (processedText != null) {
                 writeDocFile(fileToProcess, processedText);
-            }
+            }*/
         }
 
     }
@@ -273,23 +274,48 @@ public class UIFile {
 
     }
 
-    public static void writeDocFile(File docFile, String textToWrite) {
+    public static void writeDocFile(File docFile) {
 
         try {
 
             POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream(docFile));
             HWPFDocument doc = new HWPFDocument(fs);
-            Range range = doc.getRange();
 
-            //CharacterRun run = p.getCharacterRun(k);
-            //        String text = run.text();
-            CharacterRun run = range.insertAfter(textToWrite);
-            OutputStream out = new FileOutputStream(docFile);
+            Range r = doc.getRange();
+            for (int i = 0; i < r.numSections(); ++i) {
+                Section s = r.getSection(i);
+                System.out.println("Section " + (i+1) + " of " + r.numSections());
+                for (int j = 0; j < s.numParagraphs(); j++) {
+                    Paragraph p = s.getParagraph(j);
+                    System.out.println("Paragraph " + (j+1) + " of " + r.numParagraphs());
+                    for (int k = 0; k < p.numCharacterRuns(); k++) {
+                        System.out.println("C Run " + (k+1) + " of " + r.numCharacterRuns());
+                        CharacterRun run = p.getCharacterRun(k);
+                        String text = run.text();
+                        System.out.println("CHARACTER RUN IS: '" + text + "'");
+
+                        Encryptor.setText(text);
+                        String processedText = Encryptor.run();
+                        if (processedText != null) {
+                            run.replaceText(processedText, false);
+                        }
+                    }
+                }
+            }
+
+            //Finish writing the document
+            FileOutputStream out = new FileOutputStream(docFile);
             doc.write(out);
             out.flush();
             out.close();
+            System.out.println("doc/docx file written successfully");
 
-            /*
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+
+
+            /* //don't delete yet
             FileInputStream fis = new FileInputStream(docFile.getAbsolutePath());
             XWPFDocument document= new XWPFDocument(fis);
             //Write the Document in file system
@@ -303,11 +329,6 @@ public class UIFile {
             document.write(out);
             out.close();*/
 
-            System.out.println("doc/docx file written successfully");
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
     }
 
