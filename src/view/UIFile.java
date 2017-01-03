@@ -18,7 +18,7 @@ import java.io.OutputStream;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 
-//This will be used to process word documents
+//This will be used to process word documents, maybe delete these
 import org.apache.poi.hwpf.HWPFDocument;
 import org.apache.poi.hwpf.extractor.WordExtractor;
 import org.apache.poi.hpsf.DocumentSummaryInformation;
@@ -28,7 +28,9 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 
 //maybe delete these?
 import org.apache.poi.hwpf.usermodel.CharacterRun;
+import org.apache.poi.hwpf.usermodel.Paragraph;
 import org.apache.poi.hwpf.usermodel.Range;
+import org.apache.poi.hwpf.usermodel.Section;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 
 
@@ -53,13 +55,7 @@ public class UIFile {
             if (processedText != null) {
                 writeTXTFile(fileToProcess, processedText);
             }
-        } else if (fileExtension.equals("doc")) {
-            Encryptor.setText(readDocFile(fileToProcess));
-            String processedText = Encryptor.run();
-            if (processedText != null) {
-                writeDocFile(fileToProcess, processedText);
-            }
-        } else if (fileExtension.equals("docx")) {
+        } else if (fileExtension.matches("doc|docx")) {
             Encryptor.setText(readDocFile(fileToProcess));
             String processedText = Encryptor.run();
             if (processedText != null) {
@@ -82,17 +78,12 @@ public class UIFile {
     }
 
     public boolean hasEncryptedTags() {
-        boolean hasThem = false;
         if (fileExtension.equals("txt")) {
             fileText = readTXTFile(fileToProcess);
+        } else if (fileExtension.matches("doc|docx")) {
+            fileText = readDocFile(fileToProcess);
         }
-        if (fileText != null && fileText.length() >= 6) {
-            if (fileText.substring(0, 3).equals("%E%")
-                && fileText.substring(fileText.length() - 3).equals("$E$")) {
-                hasThem = true;
-            }
-        }
-        return hasThem;
+        return Encryptor.hasEncryptedTags(fileText);
     }
 
     public boolean hasProcessableExtension() {
@@ -103,7 +94,7 @@ public class UIFile {
 
     public String isActionable(String processType) {
         boolean hasEncryptedTags = hasEncryptedTags();
-        return processType.equals("Encrypt")
+        return processType.equals("encrypt") //THIS MUST BE "encrypt"!!
             ? (!hasEncryptedTags ? "Encryptable"
                 : "Already Encrypted")
             : (hasEncryptedTags ? "Decryptable"
@@ -112,8 +103,8 @@ public class UIFile {
 
     public String getName() {
         String name = this.fileToProcess.getName();
-        if (name.length() > 55) {
-            name = name.substring(0, 55) + "..." + name.substring(name.length()
+        if (name.length() > 50) {
+            name = name.substring(0, 50) + "..." + name.substring(name.length()
                 - fileExtension.length() - 1);
         }
         return name;
@@ -173,8 +164,11 @@ public class UIFile {
                 while ((currentLine = br.readLine()) != null) {
                     textToProcess += currentLine + "\n";
                 }
-                textToProcess =
-                    textToProcess.substring(0, textToProcess.length() - 1);
+
+                if (textToProcess.length() > 1) {
+                    textToProcess =
+                        textToProcess.substring(0, textToProcess.length() - 1);
+                }
                 //remove the extra "\n" that was added at the end
 
             } catch (IOException e) {
@@ -263,12 +257,17 @@ public class UIFile {
                     textToProcess += paragraphs[i] + "\n";
             }
 
+            if (textToProcess.length() > 1) {
+                textToProcess =
+                    textToProcess.substring(0, textToProcess.length() - 1);
+            }
+            //remove the extra "\n" that was added at the end
+
         } catch (Exception exep) {
             exep.printStackTrace();
         }
 
-        textToProcess =
-            textToProcess.substring(0, textToProcess.length() - 1);
+
         //remove the extra "\n" that was added at the end
         return textToProcess;
 
@@ -281,6 +280,9 @@ public class UIFile {
             POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream(docFile));
             HWPFDocument doc = new HWPFDocument(fs);
             Range range = doc.getRange();
+
+            //CharacterRun run = p.getCharacterRun(k);
+            //        String text = run.text();
             CharacterRun run = range.insertAfter(textToWrite);
             OutputStream out = new FileOutputStream(docFile);
             doc.write(out);
@@ -301,7 +303,7 @@ public class UIFile {
             document.write(out);
             out.close();*/
 
-            System.out.println("docc/docx file written successfully");
+            System.out.println("doc/docx file written successfully");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -358,7 +360,7 @@ public class UIFile {
 
     }*/
 
-    public static void readDocumentSummary(HWPFDocument doc) {
+    /*public static void readDocumentSummary(HWPFDocument doc) {
         DocumentSummaryInformation summaryInfo=doc.getDocumentSummaryInformation();
         String category = summaryInfo.getCategory();
         String company = summaryInfo.getCompany();
@@ -373,7 +375,7 @@ public class UIFile {
         System.out.println("Section Count: "+sectionCount);
         System.out.println("Slide Count: "+slideCount);
 
-    }
+    }*/
 
 
 

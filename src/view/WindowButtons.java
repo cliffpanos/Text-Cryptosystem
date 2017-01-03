@@ -24,8 +24,6 @@ import javafx.scene.image.*;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import javafx.util.Duration;
 
 public class WindowButtons extends HBox {
 
@@ -162,7 +160,10 @@ public class WindowButtons extends HBox {
     // makes a stage draggable using a given node, in this case the translator
     //from stackoverflow.com
     public void makeDraggable(final Stage stage, final Node byNode) {
+
         final Delta dragDelta = new Delta();
+        double topBar = 22.0; //how much vertical room the top status bar uses
+
         byNode.setOnMousePressed(mouseEvent -> {
                 instructionsLabel.setTextFill(Color.web("#B3B3B3", 0.8));
                 // record a delta distance for the drag and drop operation.
@@ -181,14 +182,15 @@ public class WindowButtons extends HBox {
                 inDrag.set(false);
             });
         byNode.setOnMouseDragged(mouseEvent -> {
-                if (mouseEvent.getScreenY() + dragDelta.y >= 22.0) {
+                if (mouseEvent.getScreenY() + dragDelta.y >= topBar) {
                     stage.setY(mouseEvent.getScreenY() + dragDelta.y);
-                    inDrag.set(true);
+                    //Prevent stage from being dragged above the top bar
                 }
-                if (mouseEvent.getScreenX() + dragDelta.x >= 0) {
-                    stage.setX(mouseEvent.getScreenX() + dragDelta.x);
-                    inDrag.set(true);
+                if (dragDelta.y < 0 && mouseEvent.getScreenY() < topBar) {
+                    stage.setY(topBar);
                 }
+                stage.setX(mouseEvent.getScreenX() + dragDelta.x);
+                inDrag.set(true);
             });
         byNode.setOnMouseEntered(mouseEvent -> {
                 instructionsLabel.setText("Move Window");

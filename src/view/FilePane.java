@@ -87,6 +87,7 @@ public class FilePane extends VBox implements Resizable {
                             centralDisplay, runButton);
                     } else { //When there is more than one File
                         MultiFileDisplay.createAllNewDisplays();
+                        centralDisplay.getChildren().clear();
                         centralDisplay.getChildren()
                             .setAll(MultiFileDisplay.getDisplaysVBox());
                         scrollPane.setContent(centralDisplay);
@@ -99,21 +100,37 @@ public class FilePane extends VBox implements Resizable {
                             boolean encrypting = processType.equals("encrypt");
                             boolean unactionableFiles = false;
                             for (UIFile file : files) {
-                                // Processes files if possible
-                                if ((file.hasEncryptedTags() && !encrypting)
-                                    || (!file.hasEncryptedTags() && encrypting)) {
-                                    System.out.println("PROCESSING");
-                                    file.processFile();
-                                } else {
-                                    unactionableFiles = true;
+                                // Check to see if all files are processable
+                                if ((file.hasEncryptedTags() && encrypting)
+                                    || (!file.hasEncryptedTags() && !encrypting)) {
+                                    if (encrypting) {
+                                        UIAlert.show("File(s) Already Encrypted",
+                                            "One or more of the files has already\n"
+                                            + "been encrypted. To prevent the convolution\n"
+                                            + "inherent in multiple encryptions,\n"
+                                            + "these file(s) have not been encrypted again.",
+                                            javafx.scene.control.Alert.AlertType.ERROR);
+                                    } else {
+                                        UIAlert.show("File(s) Not Decryptable",
+                                            "One or more files that you are attempting to \n"
+                                            + "decrypt has NOT been encrypted by this system.\n"
+                                            + "To prevent a loss of data through false\n"
+                                            + "decryption, you may not decrypt this text.",
+                                            javafx.scene.control.Alert.AlertType.ERROR);
+                                    }
                                     System.out.println("File " + file.getName()
                                         + " is not actionable");
+                                    unactionableFiles = true;
                                 }
                             }
-
-                            // Will create an alert if any files were trying to be encrypted
-                            // twice or decrypted prior to being encrypted.
-                            checkForUnactionableFiles();
+                            //if all files are procesable (actionable):
+                            if (!unactionableFiles) {
+                                for (UIFile file : files) {
+                                    System.out.println("PROCESSING");
+                                    file.processFile();
+                                }
+                            }
+                            UIAlert.setAlertable(true);
 
                             runButton.setBackgroundColor(
                                 Color.web("#D6EAF8"));
@@ -128,7 +145,7 @@ public class FilePane extends VBox implements Resizable {
 
         scrollPane.setBackground(new Background(new BackgroundFill(Color
             .TRANSPARENT, new CornerRadii(5.0, 5.0, 5.0, 5.0, false),
-            new Insets(41.0))));
+            new Insets(40))));
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPane.setFitToWidth(true);
@@ -142,7 +159,7 @@ public class FilePane extends VBox implements Resizable {
             .add(new UILabel("Choose one or more files"));
 
         this.setAlignment(Pos.CENTER);
-        this.setPadding(new Insets(22));
+        this.setPadding(new Insets(20));
         this.getChildren().addAll(chooseFileButton, centralDisplay,
             runButton);
 
@@ -152,27 +169,6 @@ public class FilePane extends VBox implements Resizable {
 
     }
 
-    // Creates an alert if a file is trying to be decrypted without
-    // first being encrypted or encrypted twice.
-    public static void checkForUnactionableFiles() {
-        if (unactionableFiles) {
-            if (processType.equals("encrypt")) {
-                UIAlert.show("Text Already Encrypted",
-                    "One or more of the files has already\n"
-                    + "been encrypted. To prevent the convolution\n"
-                    + "inherent in multiple encryptions,\n"
-                    + "these file(s) have not been encrypted again.",
-                    javafx.scene.control.Alert.AlertType.ERROR);
-            } else {
-                UIAlert.show("Text Not Encrypted",
-                    "One or more files that you are attempting to \n"
-                    + "decrypt has NOT been encrypted by this system.\n"
-                    + "To prevent a loss of data through false\n"
-                    + "decryption, you may not decrypt this text.",
-                    javafx.scene.control.Alert.AlertType.ERROR);
-            }
-        }
-    }
 
     public static void setProcessType(String encryptOrDecrypt) {
         processType = encryptOrDecrypt;
@@ -312,7 +308,7 @@ public class FilePane extends VBox implements Resizable {
             infoVBox.getChildren().addAll(infoHBox1, infoHBox2);
             infoVBox.setAlignment(Pos.CENTER);
 
-            nameLabel = new UILabel(file.getName(), 17.5, "BOLD");
+            nameLabel = new UILabel("set in update", 17.5, "BOLD");
 
             displays.setAlignment(Pos.CENTER);
 
@@ -323,7 +319,8 @@ public class FilePane extends VBox implements Resizable {
         }
 
         public void update() {
-            //TODO
+            nameLabel.setText(file.getName() + " — "
+                + file.isActionable(processType));
         }
 
         public void resize() {
@@ -371,6 +368,11 @@ public class FilePane extends VBox implements Resizable {
         }
         for (MultiFileDisplay multiFileDisplay : multiFileDisplays) {
             multiFileDisplay.resize();
+        }
+
+        if (files.size() > 0) {
+            centralDisplay.getChildren()
+                .setAll(MultiFileDisplay.getDisplaysVBox());
         }
 
     }

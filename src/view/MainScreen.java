@@ -10,6 +10,11 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 import javafx.geometry.Insets;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+
 
 public class MainScreen extends BorderPane {
 
@@ -41,6 +46,13 @@ public class MainScreen extends BorderPane {
         innerBorderPane.setBackground(new Background(new BackgroundFill(Color
             .web("#F2F3F4", 1.0), new CornerRadii(0.0, 5.0, 5.0, 0.0, false),
             new Insets(0))));
+        innerBorderPane.setBorder(new Border(new BorderStroke(Color
+            .web("#B3B3B3"), Color.web("#B3B3B3"), Color.web("#B3B3B3"), Color
+            .TRANSPARENT, BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID,
+            BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID,
+            new CornerRadii(0.0, 5.0, 5.0, 0.0, false), new BorderWidths(0.4),
+            new Insets(0))));
+
         this.setCenter(innerBorderPane);
 
     }

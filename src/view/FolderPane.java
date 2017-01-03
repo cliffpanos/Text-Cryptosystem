@@ -36,7 +36,7 @@ public class FolderPane extends StackPane implements Resizable {
 
             });
 
-        this.setPadding(new Insets(22));
+        this.setPadding(new Insets(20));
         this.getChildren().addAll(chooseFolderButton);
 
         setProcessType("encrypt");
@@ -76,7 +76,7 @@ public class FolderPane extends StackPane implements Resizable {
             // Clears files before adding new ones
             files.clear();
 
-            File tempFiles[] = folder.listFiles();
+            File[] tempFiles = folder.listFiles();
 
             // Checks if any nested Files in folder are directories and
             // recursively calls this function if so.

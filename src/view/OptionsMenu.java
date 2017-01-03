@@ -21,8 +21,9 @@ import javafx.scene.layout.BorderWidths;
 
 public class OptionsMenu extends StackPane implements Resizable {
 
-    private VBox menu;
+    private VBox menu = new VBox();
     private double paneWidth = MainScreen.getStageWidth() * 0.27;
+    private IconBox[] iconBoxes;
 
     public OptionsMenu() {
 
@@ -32,16 +33,14 @@ public class OptionsMenu extends StackPane implements Resizable {
             new Insets(10, 10, 10, 10))));
 
         Color c = Color.TRANSPARENT;
-        this.setBorder(new Border(new BorderStroke(Color.TRANSPARENT,
-            Color.web("#B3B3B3"), Color.TRANSPARENT, Color.TRANSPARENT,
+        this.setBorder(new Border(new BorderStroke(c, Color.web("#B3B3B3"),
+            c, c, BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID,
             BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID,
-            BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID,
-            new CornerRadii(0.0), new BorderWidths(1.33), new Insets(0.0))));
+            new CornerRadii(0.0), new BorderWidths(1.0), new Insets(0.0))));
 
 
-        menu = new VBox(20);
         menu.setMinHeight(MainScreen.getStageHeight() - 20);
-        menu.setPadding(new Insets(20));
+        menu.setPadding(new Insets(30, 20, 30, 20));
 
         UIButton inputText = new UIButton((paneWidth - 40), 30,
             "Input Text Directly");
@@ -53,7 +52,8 @@ public class OptionsMenu extends StackPane implements Resizable {
         IconBox iconBox1 = new IconBox("pencil.png", false);
         IconBox iconBox2 = new IconBox("file.png", true);
         IconBox iconBox3 = new IconBox("folder.png", true);
-
+        IconBox[] localIconBoxes = {iconBox1, iconBox2, iconBox3};
+        iconBoxes = localIconBoxes;
 
         menu.getChildren().addAll(iconBox1, inputText, iconBox2, chooseFile,
             iconBox3, chooseFolder);
@@ -108,9 +108,7 @@ public class OptionsMenu extends StackPane implements Resizable {
 
         public IconBox(String iconURL, boolean topLineYes) {
 
-            this.setPrefWidth(paneWidth - 100.0);
             this.setAlignment(Pos.CENTER);
-            this.setSpacing(20);
 
             UIButton icon = new UIButton(iconURL,
                 MainScreen.getStageHeight() / 9);
@@ -131,6 +129,11 @@ public class OptionsMenu extends StackPane implements Resizable {
             }
 
         }
+
+        public void resize() {
+            this.setPrefWidth(paneWidth - 100.0);
+            this.setSpacing(MainScreen.getStageHeight() / 25);
+        }
     }
 
     public void resize() {
@@ -138,6 +141,10 @@ public class OptionsMenu extends StackPane implements Resizable {
         paneWidth = MainScreen.getStageWidth() * 0.27;
         this.setPrefWidth(paneWidth);
         this.setPrefHeight(MainScreen.getStageHeight());
+        menu.setSpacing(MainScreen.getStageHeight() / 25);
+        for (IconBox iconBox : iconBoxes) {
+            iconBox.resize();
+        }
 
     }
 

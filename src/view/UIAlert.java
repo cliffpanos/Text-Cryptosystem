@@ -23,6 +23,11 @@ public class UIAlert {
     public static boolean show(String title, String primaryText,
         Alert.AlertType alertType, boolean specialAlert) {
 
+        if (!alertable) {
+            return false;
+            //This will prevent multiple alerts from being shown in a row
+        }
+
         Alert newAlert = new Alert(alertType);
         newAlert.setTitle(title);
         newAlert.setHeaderText(primaryText);
@@ -48,11 +53,9 @@ public class UIAlert {
             newAlert.showAndWait();
         }
 
-        return false;
-    }
+        alertable = false;
 
-    public static boolean isAlertable() {
-        return alertable;
+        return false;
     }
 
     public static void setAlertable(boolean showMoreAlerts) {

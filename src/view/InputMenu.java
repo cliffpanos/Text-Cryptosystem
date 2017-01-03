@@ -102,6 +102,7 @@ public abstract class InputMenu implements Resizable {
                     outputField.setText(output);
                     Resources.playSound("encryptionComplete.aiff");
                 }
+                UIAlert.setAlertable(true);
             });
 
         runButtonHBox = new HBox(runButton);

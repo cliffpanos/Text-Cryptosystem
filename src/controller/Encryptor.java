@@ -179,8 +179,15 @@ public class Encryptor {
 
     private static String encrypt() {
 
-        System.out.println(text.substring(0, 3));
-        System.out.println(text.substring(3));
+        if (hasEncryptedTags(text)) {
+            UIAlert.show("Text Already Encrypted",
+                "The text that you entered has already\n"
+                + "been encrypted. To prevent the convolution\n"
+                + "inherent in multiple encryptions, this \n"
+                + "text will not been encrypted again.",
+                javafx.scene.control.Alert.AlertType.ERROR);
+            return null;
+        }
 
         String temporaryText = "";
         for (char c : text.toCharArray()) {
@@ -272,6 +279,16 @@ public class Encryptor {
             return null;
         }
 
+        if (!hasEncryptedTags(text)) {
+            UIAlert.show("Text Not Decryptable",
+                "The text that you are attempting to \n"
+                + "decrypt has NOT been encrypted by this system.\n"
+                + "To prevent a loss of data through false\n"
+                + "decryption, this text will not be decrypted.",
+                javafx.scene.control.Alert.AlertType.ERROR);
+            return null;
+        }
+
         //Remove the %E% & $E$ tags that were added at the end of the encryption
         text = text.substring(3, text.length() - 3);
 
@@ -325,9 +342,17 @@ public class Encryptor {
 
     public static String hashThePassword(String pwToHash) {
 
-        long longHash = pwToHash.hashCode();
+        //Custom hashCode function to provide cross-platform / language support
+        long longHash = 0;
+        int off = 0;
+        char[] values = pwToHash.toCharArray();
+        int len = pwToHash.length();
+        for (int i = 0; i < pwToHash.length(); i++) {
+            longHash = 31 * longHash + Character.getNumericValue(values[off++]);
+        }
+
         if (longHash < 0) {
-            longHash = longHash * -1;
+            longHash = longHash * -1; //Ensure that longHash is positive
         }
 
         String stringOfTheHash = "" + longHash;
@@ -339,6 +364,7 @@ public class Encryptor {
                     + i + stringOfTheHash.substring(i + 1);
             }
         }
+        System.out.println("HASH IS: " + stringOfTheHash);
 
         return stringOfTheHash;
     }
@@ -353,6 +379,18 @@ public class Encryptor {
 
     public static int getNumKeys() {
         return numKeys;
+    }
+
+    public static boolean hasEncryptedTags(String textToCheck) {
+        boolean hasTheTags = false;
+        if (textToCheck != null && textToCheck.length() >= 6) {
+            if (textToCheck.substring(0, 3).equals("%E%")
+                && textToCheck.substring(textToCheck.length() - 3)
+                    .equals("$E$")) {
+                hasTheTags = true;
+            }
+        }
+        return hasTheTags;
     }
 
 }
