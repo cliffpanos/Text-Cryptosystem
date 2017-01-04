@@ -289,10 +289,10 @@ public class UIFile {
                     Paragraph p = s.getParagraph(j);
                     System.out.println("Paragraph " + (j+1) + " of " + r.numParagraphs());
                     for (int k = 0; k < p.numCharacterRuns(); k++) {
-                        System.out.println("C Run " + (k+1) + " of " + r.numCharacterRuns());
                         CharacterRun run = p.getCharacterRun(k);
                         String text = run.text();
-                        System.out.println("CHARACTER RUN IS: '" + text + "'");
+                        System.out.println("C Run " + (k+1) + " of " + r.numCharacterRuns());
+                        System.out.println("   CHARACTER RUN IS: '" + text + "'");
 
                         Encryptor.setText(text);
                         String processedText = Encryptor.run();

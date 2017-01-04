@@ -380,6 +380,9 @@ public class Encryptor {
     public static boolean hasEncryptedTags(String textToCheck) {
         boolean hasTheTags = false;
         if (textToCheck != null && textToCheck.length() >= 6) {
+            System.out.println("TTT: '" + textToCheck + "'");
+            System.out.println(textToCheck.substring(0, 3));
+            System.out.println(textToCheck.substring(textToCheck.length() - 3));
             if (textToCheck.substring(0, 3).equals("%E%")
                 && textToCheck.substring(textToCheck.length() - 3)
                     .equals("$E$")) {
