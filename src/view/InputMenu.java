@@ -3,6 +3,9 @@ package view;
 import controller.Encryptor;
 import resources.Resources;
 
+import java.io.File;
+import java.io.IOException;
+
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Font;
@@ -29,6 +32,8 @@ public abstract class InputMenu implements Resizable {
     private HBox lowerMenuBar = new HBox(8.0);
     private HBox runButtonHBox;
     private HBox lowerHBox;
+
+    private String output = "";
 
 
     public InputMenu() {
@@ -112,7 +117,7 @@ public abstract class InputMenu implements Resizable {
         runButton.setAlignment(Pos.CENTER_RIGHT);
         runButton.getClickable().setOnMouseClicked(e -> {
                 Encryptor.setText(inputField.getText());
-                String output = Encryptor.run();
+                output = Encryptor.run();
                 if (output != null) {
                     outputField.setText(output);
                     Resources.playSound("encryptionComplete.aiff");
@@ -131,20 +136,51 @@ public abstract class InputMenu implements Resizable {
 
     private void downloadText() {
 
-        //Check to see if user has implemented file name
-        //if not, show a UIAlert
+        // Gets the fileName from the downloadField and makes sure it isn't empty
+        String fileName = downloadField.getText();
+        if (fileName == null || fileName.equals("")) {
+            UIAlert.show("File Name Invalid",
+                    "Please enter a name for the file to download.",
+                    javafx.scene.control.Alert.AlertType.ERROR);
+            return;
+        }
 
-        //Have the user choose a directory
-        //if no directory chosen, do nothing
+        // Gets a chosen foldder for file
+        File folder = UIFile.getFolderFromDirectory();
+        if (folder == null || !folder.isDirectory()) {
+            return;
+        }
 
-        //if directory chosen, try to create a file in that directory with the
-        //file name from downloadField, and catch IOException if the file
-        //already exists; prompt the user using UIAlert to enter a diff. name
+        // Attempts to create file in chosen folder and writes to it if successful
+        // If there is an IOException, prompt user for different name
+        try {
 
-        //if all is successful, use UIFile's
-        //writeTXTFile(File file, String textToWrite) with outputField's text
+            // Checks to make sure that no other files contain the same name
+            File downloadFile = new File(folder, (fileName + ".txt"));
+            if (!downloadFile.createNewFile()) {
+                UIAlert.show("File Name Invalid",
+                    "Another file in the selected folder has\n"
+                    + "the same name as the one you entered.\n"
+                    + "Please try a different name.",
+                    javafx.scene.control.Alert.AlertType.ERROR);
 
-        UIAlert.setAlertable(true); //This must be at the end of this function
+                return;
+            }
+
+            UIFile.writeTXTFile(downloadFile, getOutput());
+
+        } catch (IOException e) {
+            UIAlert.show("File Creation Failed",
+                "The file failed to be created. Check to see if"
+                + "the file name you entered contains characters\n"
+                + "that are not permitted by your operating\n"
+                + "system.",
+                javafx.scene.control.Alert.AlertType.ERROR);
+            e.printStackTrace();
+            return;
+        }
+
+        UIAlert.setAlertable(true);
     }
 
     public VBox getRootNode() {
@@ -153,6 +189,10 @@ public abstract class InputMenu implements Resizable {
 
     public String getInputFieldText() {
         return inputField.getText();
+    }
+
+    public String getOutput() {
+        return output;
     }
 
     public void resize() {
