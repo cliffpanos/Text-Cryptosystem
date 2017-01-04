@@ -59,6 +59,7 @@ public class Runner extends Application {
     }
 
     public static void toggleFullScreen() {
+
         if (isFullScreen) { //revert the stage to the previous size & location
             stage.setX(lastX);
             stage.setY(lastY);
@@ -72,8 +73,7 @@ public class Runner extends Application {
         } else { //make it fullScreen since it is not already fullScreen
             lastStageWidth = stageWidth;
             lastStageHeight = stageHeight;
-            lastX = stage.getX();
-            lastY = stage.getY();
+            setLastXandY(stage.getX(), stage.getY());
             stage.setX(screenBounds.getMinX());
             stage.setY(screenBounds.getMinY());
             stage.setWidth(screenBounds.getWidth());
@@ -83,12 +83,12 @@ public class Runner extends Application {
             isFullScreen = true;
             resizeWindow();
         }
+
     }
 
     public static void resizeWindow() {
 
         Resizable[] resizables = MainScreen.getResizables();
-
         for (Resizable resizablePane : resizables) {
             resizablePane.resize();
         }
@@ -107,7 +107,7 @@ public class Runner extends Application {
         return stageHeight;
     }
 
-    public static void setXandY(double x, double y) {
+    public static void setLastXandY(double x, double y) {
         lastX = y;
         lastY = y;
     }

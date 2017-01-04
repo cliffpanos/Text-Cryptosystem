@@ -29,8 +29,9 @@ import javafx.geometry.Pos;
 
 public class FilePane extends VBox implements Resizable {
 
-    private ScrollPane scrollPane = null;
-    private VBox centralDisplay = new VBox();
+    private static FilePane instance;
+    private static ScrollPane scrollPane = null;
+    private static VBox centralDisplay = new VBox();
     private static double paneWidth = MainScreen.getStageWidth() * 0.57 - 40.0;
     private static String processType = "encrypt"; // "encrypt" or "decrypt"
 
@@ -48,6 +49,7 @@ public class FilePane extends VBox implements Resizable {
 
     public FilePane() {
 
+        instance = this;
         this.setSpacing(20); //This entire class is a VBox
 
         chooseFileButton = new UIButton(paneWidth - 60.0, 30,
@@ -87,7 +89,6 @@ public class FilePane extends VBox implements Resizable {
                             centralDisplay, runButton);
                     } else { //When there is more than one File
                         MultiFileDisplay.createAllNewDisplays();
-                        centralDisplay.getChildren().clear();
                         centralDisplay.getChildren()
                             .setAll(MultiFileDisplay.getDisplaysVBox());
 
@@ -99,6 +100,12 @@ public class FilePane extends VBox implements Resizable {
                     runButton.setMouseActions(runButton.getClickable());
                     runButton.setBackgroundColor(Color.WHITE);
                     runButton.setOnMouseClicked(e2 -> {
+                            if (files.size() == 0) {
+                                UIAlert.show("No Files Selected",
+                                    "Choose one or more\n"
+                                    + "files to be " + processType + "ed.",
+                                    javafx.scene.control.Alert.AlertType.ERROR);
+                            }
                             boolean encrypting = processType.equals("encrypt");
                             boolean unactionableFiles = false;
                             for (UIFile file : files) {
@@ -136,9 +143,9 @@ public class FilePane extends VBox implements Resizable {
 
                             runButton.setBackgroundColor(
                                 Color.web("#D6EAF8"));
-                            updateButtonTexts();
+                            update();
                         });
-                    updateButtonTexts();
+                    update();
                 }
 
             });
@@ -186,12 +193,23 @@ public class FilePane extends VBox implements Resizable {
     public static void setProcessType(String encryptOrDecrypt) {
         processType = encryptOrDecrypt;
         chooseFileButton.getLabel().setText(
-            "Choose Files to " + processType); //change to encrypt or decrypt
+            "Choose Files to " + processType.substring(0, 1).toUpperCase()
+                + processType.substring(1)); //change to Encrypt or Decrypt
         runButton.updateIcon(encryptOrDecrypt + ".png");
-        updateButtonTexts();
+        update();
     }
 
-    public static void updateButtonTexts() {
+    public static void update() {
+        if (singleFileDisplay != null) {
+            singleFileDisplay.update();
+        }
+        for (MultiFileDisplay multiFileDisplay : multiFileDisplays) {
+            multiFileDisplay.update();
+        }
+        updateButtonText();
+    }
+
+    public static void updateButtonText() {
 
         String fileName = "";
         UILabel buttonLabel = runButton.getLabel();
@@ -199,13 +217,6 @@ public class FilePane extends VBox implements Resizable {
         // Sets the initial text
         buttonLabel.setText(processType.substring(0, 1).toUpperCase()
             + processType.substring(1));
-
-        if (singleFileDisplay != null) {
-            singleFileDisplay.update();
-        }
-        for (MultiFileDisplay multiFileDisplay : multiFileDisplays) {
-            multiFileDisplay.update();
-        }
 
         // Adds additional text for additional files
         if (!files.isEmpty()) {
@@ -282,8 +293,7 @@ public class FilePane extends VBox implements Resizable {
         ImageView icon = Resources.getImageView(b //isReadable or Writable
             ? "check_icon.png" : "cross_icon.png", 20);
         String ability = readNotWrite ? "Readable" : "Writable ";
-        UILabel label = new UILabel(b ? ("File is " + ability)
-            : "File is Not " + ability + "!");
+        UILabel label = new UILabel(b ? ability : "Not " + ability + "!");
         HBox infoBox = new HBox(8);
         infoBox.getChildren().setAll(icon, label);
         infoBox.setAlignment(pos);
@@ -296,6 +306,7 @@ public class FilePane extends VBox implements Resizable {
         private VBox infoVBox = new VBox(MainScreen.getStageHeight() / 70);
         private ImageView imageView;
         private UILabel nameLabel;
+        private UIButton removeButton;
 
         private static VBox displays = new VBox(16);
 
@@ -323,10 +334,37 @@ public class FilePane extends VBox implements Resizable {
 
             nameLabel = new UILabel("set in update", 17.5, "BOLD");
 
-            displays.setAlignment(Pos.CENTER);
+            removeButton = new UIButton("remove_icon.png",
+                MainScreen.getStageHeight() / 10,
+                MainScreen.getStageHeight() / 40); //imageDecrement
+            removeButton.setOnMouseClicked(e -> {
+                        files.remove(this.file);
+                    createAllNewDisplays();
+                    centralDisplay.getChildren()
+                        .setAll(MultiFileDisplay.getDisplaysVBox());
 
-            this.getChildren().addAll(icon, infoVBox, nameLabel);
+                    scrollPane = createScrollPane();
+                    scrollPane.setContent(centralDisplay);
+                    FilePane.instance.getChildren().setAll(chooseFileButton,
+                        scrollPane, runButton);
+                    updateButtonText();
+                });
+            removeButton.setVisible(false);
 
+            HBox removeHBox = new HBox(removeButton);
+            removeHBox.setAlignment(Pos.CENTER);
+            this.setOnMouseEntered(e -> {
+                    removeButton.setVisible(true);
+                });
+            this.setOnMouseExited(e -> {
+                    removeButton.setVisible(false);
+                });
+
+            displays.setAlignment(Pos.CENTER_RIGHT);
+
+            this.getChildren().addAll(icon, infoVBox, nameLabel, removeHBox);
+
+            update();
             resize();
 
         }
@@ -337,15 +375,16 @@ public class FilePane extends VBox implements Resizable {
         }
 
         public void resize() {
-            this.setHeight(MainScreen.getStageHeight() - 200);
+            this.setPrefHeight(120);
             this.setPrefWidth(paneWidth - 40);
         }
+
+        //Static methods for MultiFileDisplay assembly into scrollPane:
 
         public static void createAllNewDisplays() {
             multiFileDisplays.clear();
             for (UIFile uiFile : files) {
                 multiFileDisplays.add(new MultiFileDisplay(uiFile));
-                System.out.println("adding display");
             }
         }
 
@@ -355,7 +394,6 @@ public class FilePane extends VBox implements Resizable {
                 displays.getChildren().addAll(multiFileDisplay, new Rectangle(
                     (paneWidth - 100), 1.18, Color.web("#D7DBDD")));
             }
-            System.out.println("returning");
             return displays;
         }
 

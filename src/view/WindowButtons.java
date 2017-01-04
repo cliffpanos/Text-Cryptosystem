@@ -125,13 +125,11 @@ public class WindowButtons extends HBox {
     }
 
     public void setWindowButtons() {
-        this.getChildren().clear();
-        this.getChildren().addAll(exit, minimize, fullScreen);
+        this.getChildren().setAll(exit, minimize, fullScreen);
     }
 
     public void setWindowButtonsOnHover() {
-        this.getChildren().clear();
-        this.getChildren().addAll(exitOnHover, minimizeOnHover,
+        this.getChildren().setAll(exitOnHover, minimizeOnHover,
             fullScreenOnHover);
     }
 
@@ -176,7 +174,7 @@ public class WindowButtons extends HBox {
         byNode.setOnMouseReleased(mouseEvent -> {
                 instructionsLabel.setTextFill(Color.web("#F7F7F7", 0.88));
                 byNode.setCursor(Cursor.HAND);
-                Runner.setXandY(stage.getX(), stage.getY());
+                Runner.setLastXandY(stage.getX(), stage.getY());
                 //Update where Runner thinks the stage is on the screen
                 //since we just moved the stage
                 inDrag.set(false);
