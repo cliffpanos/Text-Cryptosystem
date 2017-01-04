@@ -29,7 +29,7 @@ import javafx.geometry.Pos;
 
 public class FilePane extends VBox implements Resizable {
 
-    private ScrollPane scrollPane = new ScrollPane();
+    private ScrollPane scrollPane = null;
     private VBox centralDisplay = new VBox();
     private static double paneWidth = MainScreen.getStageWidth() * 0.57 - 40.0;
     private static String processType = "encrypt"; // "encrypt" or "decrypt"
@@ -90,6 +90,8 @@ public class FilePane extends VBox implements Resizable {
                         centralDisplay.getChildren().clear();
                         centralDisplay.getChildren()
                             .setAll(MultiFileDisplay.getDisplaysVBox());
+
+                        scrollPane = createScrollPane();
                         scrollPane.setContent(centralDisplay);
                         this.getChildren().setAll(chooseFileButton,
                             scrollPane, runButton);
@@ -143,13 +145,6 @@ public class FilePane extends VBox implements Resizable {
 
         runButton.setBackgroundColor(Color.web("#D6DBDF"));
 
-        scrollPane.setBackground(new Background(new BackgroundFill(Color
-            .TRANSPARENT, new CornerRadii(5.0, 5.0, 5.0, 5.0, false),
-            new Insets(40))));
-        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        scrollPane.setFitToWidth(true);
-
         centralDisplay.setBackground(new Background(new BackgroundFill(Color
             .WHITE, new CornerRadii(5.0, 5.0, 5.0, 5.0, false),
             new Insets(0.0))));
@@ -169,6 +164,24 @@ public class FilePane extends VBox implements Resizable {
 
     }
 
+    public static ScrollPane createScrollPane() {
+        ScrollPane scrollPane = new ScrollPane();
+
+        scrollPane.setBackground(new Background(new BackgroundFill(Color
+            .TRANSPARENT, new CornerRadii(5.0, 5.0, 5.0, 5.0, false),
+            new Insets(40))));
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPane.setFitToWidth(true);
+
+        scrollPane.setPrefHeight(MainScreen.getStageHeight() - 190);
+        scrollPane.setPrefWidth(paneWidth - 40.0);
+        scrollPane.setPrefViewportHeight(paneWidth - 40);
+        scrollPane.setHmax(paneWidth - 40);
+
+        return scrollPane;
+
+    }
 
     public static void setProcessType(String encryptOrDecrypt) {
         processType = encryptOrDecrypt;
@@ -358,10 +371,6 @@ public class FilePane extends VBox implements Resizable {
 
         centralDisplay.setPrefWidth(paneWidth - 40.0);
         centralDisplay.setMinHeight(MainScreen.getStageHeight() - 190);
-        scrollPane.setPrefHeight(MainScreen.getStageHeight() - 190);
-        scrollPane.setPrefWidth(paneWidth - 40.0);
-        scrollPane.setPrefViewportHeight(paneWidth - 40);
-        scrollPane.setHmax(paneWidth - 40);
 
         if (singleFileDisplay != null) {
             singleFileDisplay.resize(); // = new SingleFileDisplay();
