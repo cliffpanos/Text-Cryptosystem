@@ -143,6 +143,7 @@ public abstract class InputMenu implements Resizable {
             UIAlert.show("File Name Invalid",
                     "Please enter a name for the file to download.",
                     javafx.scene.control.Alert.AlertType.ERROR);
+            UIAlert.setAlertable(true);
             return;
         }
 
@@ -152,30 +153,35 @@ public abstract class InputMenu implements Resizable {
             return;
         }
 
+        output = outputField.getText();
+
         // Attempts to create file in chosen folder and writes to it if successful
         // If there is an IOException, prompt user for different name
         try {
 
-            // Checks to make sure that no other files contain the same name
-            File downloadFile = new File(folder, (fileName + ".txt"));
-            if (!downloadFile.createNewFile()) {
-                UIAlert.show("File Name Invalid",
-                    "Another file in the selected folder has\n"
-                    + "the same name as the one you entered.\n"
-                    + "Please try a different name.",
-                    javafx.scene.control.Alert.AlertType.ERROR);
+            if (output != null && !output.equals("")) {
 
-                return;
-            }
+                // Checks to make sure that no other files contain the same name
+                File downloadFile = new File(folder, (fileName + ".txt"));
+                if (!downloadFile.createNewFile()) {
+                    UIAlert.show("File Name Invalid",
+                        "Another file in the selected folder has\n"
+                        + "the same name as the one you entered.\n"
+                        + "Please try a different name.",
+                        javafx.scene.control.Alert.AlertType.ERROR);
+                    UIAlert.setAlertable(true);
+                    return;
+                }
 
-            if (getOutput() != null && !getOutput().equals("")) {
-                UIFile.writeTXTFile(downloadFile, getOutput());
+                UIFile.writeTXTFile(downloadFile, output);
+
             } else {
                 UIAlert.show("No Text to Write to File",
                     "This download button will write the\n"
-                    + processType + "ed text to a txt file,\n"
-                    + "but no text has been " + processType + "ed yet.",
+                    + processType + "ed text to a txt file, but\n"
+                    + "no text has been " + processType + "ed yet.",
                     javafx.scene.control.Alert.AlertType.ERROR);
+                UIAlert.setAlertable(true);
             }
 
         } catch (IOException e) {
@@ -186,10 +192,10 @@ public abstract class InputMenu implements Resizable {
                 + "system.",
                 javafx.scene.control.Alert.AlertType.ERROR);
             e.printStackTrace();
+            UIAlert.setAlertable(true);
             return;
         }
 
-        UIAlert.setAlertable(true);
     }
 
 
@@ -199,10 +205,6 @@ public abstract class InputMenu implements Resizable {
 
     public String getInputFieldText() {
         return inputField.getText();
-    }
-
-    public String getOutput() {
-        return output;
     }
 
     public void resize() {
