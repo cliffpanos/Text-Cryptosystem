@@ -58,20 +58,11 @@ public class FilePane extends VBox implements Resizable {
         chooseFileButton.setOnMouseClicked(e -> {
 
                 List<File> tempFiles = UIFile.getFilesFromDirectory();
-                boolean userChoseFiles = tempFiles != null;
+                boolean userChoseFiles = (tempFiles != null);
                 if (userChoseFiles) {
 
                     files.clear(); //TODO make this an option to add more files or to clear all files and select totally new ones
-                    for (File tempFile : tempFiles) {
-                        if (tempFile != null) {
-
-                            UIFile tempUIFile = new UIFile(tempFile);
-
-                            if (tempUIFile.hasProcessableExtension()) {
-                                files.add(new UIFile(tempFile));
-                            }
-                        }
-                    }
+                    addFiles(tempFiles);
                 }
 
                 if (!files.isEmpty() && userChoseFiles) {
@@ -170,6 +161,20 @@ public class FilePane extends VBox implements Resizable {
 
         resize();
 
+    }
+
+    // This function was created to assist the addFiles button
+    public static addFiles(List<File> filesToAdd) {
+        for (File file : filesToAdd) {
+            if (file != null) {
+
+                UIFile uIFile = new UIFile(file);
+
+                if (uIile.hasProcessableExtension()) {
+                    files.add(uIfile);
+                }
+            }
+        }
     }
 
     public static ScrollPane createScrollPane() {
