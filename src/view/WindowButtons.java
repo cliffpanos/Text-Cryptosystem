@@ -24,6 +24,7 @@ import javafx.scene.image.*;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class WindowButtons extends HBox {
 
@@ -177,6 +178,21 @@ public class WindowButtons extends HBox {
                 Runner.setLastXandY(stage.getX(), stage.getY());
                 //Update where Runner thinks the stage is on the screen
                 //since we just moved the stage
+//TODO move this to setOnMouseDragged()
+                if (inDrag.get()) {
+                    stage.hide();
+
+                    Timeline pause = new Timeline(new KeyFrame(Duration.millis(50), event -> {
+                        EncryptDecryptMenu.updateBlurBackground();
+                        /*layout.getChildren().set(
+                                0,
+                                background
+                        );*/
+                        stage.show();
+                    }));
+                    pause.play();
+                }
+
                 inDrag.set(false);
             });
         byNode.setOnMouseDragged(mouseEvent -> {

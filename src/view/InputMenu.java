@@ -24,6 +24,7 @@ public abstract class InputMenu implements Resizable {
     protected UIButton runButton;
     protected UIButton downloadDirectory;
     protected double heightDecrement = 60.0; //Used in subclass TextArea sizing
+    protected String processType;
 
     protected double stageHeight = MainScreen.getStageHeight();
     private double paneWidth = MainScreen.getStageWidth() * 0.57;
@@ -167,7 +168,15 @@ public abstract class InputMenu implements Resizable {
                 return;
             }
 
-            UIFile.writeTXTFile(downloadFile, getOutput());
+            if (getOutput() != null && !getOutput().equals("")) {
+                UIFile.writeTXTFile(downloadFile, getOutput());
+            } else {
+                UIAlert.show("No Text to Write to File",
+                    "This download button will write the\n"
+                    + processType + "ed text to a txt file,\n"
+                    + "but no text has been " + processType + "ed yet.",
+                    javafx.scene.control.Alert.AlertType.ERROR);
+            }
 
         } catch (IOException e) {
             UIAlert.show("File Creation Failed",
@@ -182,6 +191,7 @@ public abstract class InputMenu implements Resizable {
 
         UIAlert.setAlertable(true);
     }
+
 
     public VBox getRootNode() {
         return this.menu;

@@ -58,7 +58,8 @@ public class FilePane extends VBox implements Resizable {
         chooseFileButton.setOnMouseClicked(e -> {
 
                 List<File> tempFiles = UIFile.getFilesFromDirectory();
-                if (tempFiles != null) {
+                boolean userChoseFiles = tempFiles != null;
+                if (userChoseFiles) {
 
                     files.clear(); //TODO make this an option to add more files or to clear all files and select totally new ones
                     for (File tempFile : tempFiles) {
@@ -73,7 +74,7 @@ public class FilePane extends VBox implements Resizable {
                     }
                 }
 
-                if (!files.isEmpty()) {
+                if (!files.isEmpty() && userChoseFiles) {
 
                     for (UIFile uifile : files) {
                         System.out.println("Name: " + uifile.getName());

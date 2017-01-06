@@ -10,6 +10,8 @@ public class InputOnEncryptMenu extends InputMenu {
 
         runButton = new UIButton("encrypt.png", 100, 30, "Encrypt");
 
+        processType = "encrypt";
+
         completeSetUp(); //Finish runButton and add all to the VBox
 
         resize();

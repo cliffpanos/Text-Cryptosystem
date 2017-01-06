@@ -1,5 +1,6 @@
 package view;
 
+import runner.Runner;
 import resources.Resources;
 import controller.Encryptor;
 
@@ -18,10 +19,17 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 
+import javafx.scene.effect.*;
+import javafx.stage.Stage;
+import javafx.beans.property.*;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.geometry.Insets;
+
 
 public class EncryptDecryptMenu extends StackPane implements Resizable {
 
     private VBox menu = new VBox(); //holds the two buttons & passwordField
+    private static ImageView blur = new ImageView();
     private static double paneWidth = MainScreen.getStageWidth() * 0.18;
     private static double height = MainScreen.getStageHeight();
     private static TextField passwordField = new TextField();
@@ -36,9 +44,9 @@ public class EncryptDecryptMenu extends StackPane implements Resizable {
 
         VBox background = new VBox();
         background.setBackground(new Background(new BackgroundFill(Color
-            .web("#212F3C", 0.968), new CornerRadii(5.0, 0.0, 0.0, 5.0, false),
+            .web("#212F3C", 0.868), new CornerRadii(5.0, 0.0, 0.0, 5.0, false),
             new Insets(0))));
-        //backgroundBlur.setEffect(new BoxBlur(width, (height - 20), 3));
+        blur.setEffect(new BoxBlur(10, 10, 3));
 
         menu.setAlignment(Pos.CENTER);
         menu.setBackground(null);
@@ -97,7 +105,7 @@ public class EncryptDecryptMenu extends StackPane implements Resizable {
         WindowButtons windowButtons = new WindowButtons(paneWidth);
         outerVBox.setAlignment(Pos.TOP_CENTER);
         outerVBox.getChildren().addAll(windowButtons.getRootNode(), menu);
-        this.getChildren().addAll(background, outerVBox);
+        this.getChildren().addAll(blur, background, outerVBox);
 
         resize();
 
@@ -108,6 +116,29 @@ public class EncryptDecryptMenu extends StackPane implements Resizable {
             return passwordField.getText();
         }
         return passwordFieldText;
+    }
+
+    public static void updateBlurBackground() {
+        Stage stage = Runner.getStage();
+        final int X = (int) stage.getX() + 5;
+        final int Y = (int) stage.getY() + 5;
+        final int W = (int) (Runner.getStageWidth() * 0.18);
+        System.out.println(W);
+        final int H = (int) Runner.getStageHeight();
+        System.out.println(H);
+
+        Image blurredImage;
+        try {
+            java.awt.Robot robot = new java.awt.Robot();
+            java.awt.image.BufferedImage image = robot.createScreenCapture(new java.awt.Rectangle(X, Y, W, H));
+
+            blurredImage = SwingFXUtils.toFXImage(image, null);
+        } catch (java.awt.AWTException awte) {
+            System.out.println("The robot of doom strikes!");
+            awte.printStackTrace();
+            blurredImage = null;
+        }
+        blur.setImage(blurredImage);
     }
 
     public void resize() {
@@ -123,6 +154,8 @@ public class EncryptDecryptMenu extends StackPane implements Resizable {
         menu.setSpacing(height / 15);
         menu.setPrefWidth(paneWidth);
         menu.setPrefHeight(height);
+
+        updateBlurBackground();
 
     }
 

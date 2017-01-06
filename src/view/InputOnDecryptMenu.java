@@ -10,6 +10,8 @@ public class InputOnDecryptMenu extends InputMenu {
 
         runButton = new UIButton("decrypt.png", 100, 30, "Decrypt");
 
+        processType = "decrypt";
+
         completeSetUp(); //Finish runButton and add all to the VBox
 
         resize();
