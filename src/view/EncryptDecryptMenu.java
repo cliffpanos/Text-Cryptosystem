@@ -24,29 +24,44 @@ import javafx.stage.Stage;
 import javafx.beans.property.*;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Insets;
+import javafx.animation.*;
+import javafx.util.Duration;
+import javafx.stage.Screen;
+import javafx.scene.image.WritableImage;
+import javafx.scene.image.PixelFormat;
+import javafx.geometry.Rectangle2D;
+
 
 
 public class EncryptDecryptMenu extends StackPane implements Resizable {
 
     private VBox menu = new VBox(); //holds the two buttons & passwordField
+    private static Image blurredImage = null;
+    private static VBox background = new VBox();
+    private static VBox outerVBox = new VBox();
+    //Used to hold the window buttons and Encrypt / Decrypt menu
+
     private static ImageView blur = new ImageView();
+
     private static double paneWidth = MainScreen.getStageWidth() * 0.18;
     private static double height = MainScreen.getStageHeight();
-    private static TextField passwordField = new TextField();
 
+    private static TextField passwordField = new TextField();
     private static String passwordFieldText = "";
     private static boolean passwordFieldEnteredYet = false;
     private static int lastCaretPosition = 0;
+    private static EncryptDecryptMenu instance;
+
 
     public EncryptDecryptMenu() {
 
+        instance = this; //Used in updateBlurBackground()
         this.setBackground(null);
 
-        VBox background = new VBox();
         background.setBackground(new Background(new BackgroundFill(Color
-            .web("#212F3C", 0.868), new CornerRadii(5.0, 0.0, 0.0, 5.0, false),
+            .web("#212F3C", 0.968), new CornerRadii(5.0, 0.0, 0.0, 5.0, false),
             new Insets(0))));
-        blur.setEffect(new BoxBlur(10, 10, 3));
+        blur.setEffect(new BoxBlur(15, 15, 3));
 
         menu.setAlignment(Pos.CENTER);
         menu.setBackground(null);
@@ -100,8 +115,6 @@ public class EncryptDecryptMenu extends StackPane implements Resizable {
             dimension);
         menu.getChildren().addAll(eStackPane, dStackPane, passwordVBox);
 
-        //Used to hold the window buttons and Encrypt / Decrypt menu
-        VBox outerVBox = new VBox();
         WindowButtons windowButtons = new WindowButtons(paneWidth);
         outerVBox.setAlignment(Pos.TOP_CENTER);
         outerVBox.getChildren().addAll(windowButtons.getRootNode(), menu);
@@ -118,28 +131,69 @@ public class EncryptDecryptMenu extends StackPane implements Resizable {
         return passwordFieldText;
     }
 
+
     public static void updateBlurBackground() {
+        System.out.println("UPDATING BLUR");
         Stage stage = Runner.getStage();
-        final int X = (int) stage.getX() + 5;
-        final int Y = (int) stage.getY() + 5;
+        final int X = (int) stage.getX();
+        System.out.println("X: " + X);
+        final int Y = (int) stage.getY();
+        System.out.println("Y: " + X);
         final int W = (int) (Runner.getStageWidth() * 0.18);
-        System.out.println(W);
+        System.out.println("W: " + W);
         final int H = (int) Runner.getStageHeight();
-        System.out.println(H);
+        System.out.println("H: " + H);
 
-        Image blurredImage;
+        //stage.hide(); //Capture what's behind the stage, not the stage
+        Rectangle2D screen = Screen.getPrimary().getVisualBounds();
         try {
-            java.awt.Robot robot = new java.awt.Robot();
-            java.awt.image.BufferedImage image = robot.createScreenCapture(new java.awt.Rectangle(X, Y, W, H));
 
-            blurredImage = SwingFXUtils.toFXImage(image, null);
-        } catch (java.awt.AWTException awte) {
+            com.sun.glass.ui.Robot rbt = com.sun.glass.ui.Application.GetApplication().createRobot();
+            com.sun.glass.ui.Pixels p = rbt.getScreenCapture(
+                (int) screen.getMinX(),
+                (int) screen.getMinY(),
+                (int) screen.getWidth(),
+                (int) screen.getHeight(),
+                true
+            );
+
+            WritableImage dskTop = new WritableImage((int)screen.getWidth(), (int)screen.getHeight());
+            try {
+                dskTop.getPixelWriter().setPixels(
+                (int)screen.getMinX(),
+                (int)screen.getMinY(),
+                (int)screen.getWidth(),
+                (int)screen.getHeight(),
+                PixelFormat.getByteBgraPreInstance(),
+                p.asByteBuffer(),
+                (int)(screen.getWidth() * 4)
+                );
+            } catch (Exception e) {
+                System.out.println("Exception caught");
+            }
+
+            WritableImage image = new WritableImage(W,H);
+            try {
+                image.getPixelWriter().setPixels(0, 0, W, H, dskTop.getPixelReader(), X, Y);
+            } catch (Exception ee) {
+                System.out.println("Second exception caught :(");
+            }
+            blurredImage = image;
+        } catch (Exception e) {
             System.out.println("The robot of doom strikes!");
-            awte.printStackTrace();
+            e.printStackTrace();
+
             blurredImage = null;
         }
-        blur.setImage(blurredImage);
+        //stage.show();
+        //}));
+        //pause.play();
+        if (blurredImage != null) {
+            blur.setImage(blurredImage);
+        }
+        instance.getChildren().setAll(blur, background, outerVBox);
     }
+
 
     public void resize() {
 

@@ -78,6 +78,7 @@ public class WindowButtons extends HBox {
                             stage.setIconified(true);
                         } else if (buttonPressed == fullScreenOnHover) {
                             Runner.toggleFullScreen();
+                            EncryptDecryptMenu.updateBlurBackground();
                         }
                         setWindowButtonsOnHover();
                     } else {
@@ -87,20 +88,17 @@ public class WindowButtons extends HBox {
         }
         exitOnHover.setOnMousePressed(e -> {
                 buttonPressed = exitOnHover;
-                this.getChildren().clear();
-                this.getChildren().addAll(exitOnPressed, minimizeOnHover,
+                this.getChildren().setAll(exitOnPressed, minimizeOnHover,
                     fullScreenOnHover);
             });
         minimizeOnHover.setOnMousePressed(e -> {
                 buttonPressed = minimizeOnHover;
-                this.getChildren().clear();
-                this.getChildren().addAll(exitOnHover, minimizeOnPressed,
+                this.getChildren().setAll(exitOnHover, minimizeOnPressed,
                     fullScreenOnHover);
             });
         fullScreenOnHover.setOnMousePressed(e -> {
                 buttonPressed = fullScreenOnHover;
-                this.getChildren().clear();
-                this.getChildren().addAll(exitOnHover, minimizeOnHover,
+                this.getChildren().setAll(exitOnHover, minimizeOnHover,
                     fullScreenOnPressed);
             });
 
@@ -178,21 +176,6 @@ public class WindowButtons extends HBox {
                 Runner.setLastXandY(stage.getX(), stage.getY());
                 //Update where Runner thinks the stage is on the screen
                 //since we just moved the stage
-//TODO move this to setOnMouseDragged()
-                if (inDrag.get()) {
-                    stage.hide();
-
-                    Timeline pause = new Timeline(new KeyFrame(Duration.millis(50), event -> {
-                        EncryptDecryptMenu.updateBlurBackground();
-                        /*layout.getChildren().set(
-                                0,
-                                background
-                        );*/
-                        stage.show();
-                    }));
-                    pause.play();
-                }
-
                 inDrag.set(false);
             });
         byNode.setOnMouseDragged(mouseEvent -> {
@@ -204,6 +187,11 @@ public class WindowButtons extends HBox {
                     stage.setY(topBar);
                 }
                 stage.setX(mouseEvent.getScreenX() + dragDelta.x);
+
+                if (inDrag.get()) {
+                    EncryptDecryptMenu.updateBlurBackground();
+                }
+
                 inDrag.set(true);
             });
         byNode.setOnMouseEntered(mouseEvent -> {

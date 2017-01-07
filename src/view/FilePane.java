@@ -164,14 +164,14 @@ public class FilePane extends VBox implements Resizable {
     }
 
     // This function was created to assist the addFiles button
-    public static addFiles(List<File> filesToAdd) {
+    public static void addFiles(List<File> filesToAdd) {
         for (File file : filesToAdd) {
             if (file != null) {
 
                 UIFile uIFile = new UIFile(file);
 
-                if (uIile.hasProcessableExtension()) {
-                    files.add(uIfile);
+                if (uIFile.hasProcessableExtension()) {
+                    files.add(uIFile);
                 }
             }
         }
