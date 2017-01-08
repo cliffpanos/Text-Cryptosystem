@@ -249,7 +249,7 @@ public class UIFile {
 
             FileInputStream fis = new FileInputStream(doc.getAbsolutePath());
             HWPFDocument document = new HWPFDocument(fis);
-            WordExtractor  extractor = new WordExtractor(document);
+            WordExtractor extractor = new WordExtractor(document);
 
             String[] paragraphs = extractor.getParagraphText();
             for (int i = 0; i < paragraphs.length; i++) {
@@ -282,6 +282,10 @@ public class UIFile {
             HWPFDocument doc = new HWPFDocument(fs);
 
             Range r = doc.getRange();
+            String finalText = "";
+
+            // Old method
+            /*
             for (int i = 0; i < r.numSections(); ++i) {
                 Section s = r.getSection(i);
                 System.out.println("Section " + (i+1) + " of " + r.numSections());
@@ -299,14 +303,37 @@ public class UIFile {
                         if (processedText != null) {
                             run.replaceText(processedText, false);
                         }
+
                     }
                 }
+            }
+            */
+
+            //New Method
+            System.out.println("\nNum Sections: " + r.numSections());
+            for (int i = 0; i < r.numSections(); ++i) {
+                Section s = r.getSection(i);
+                System.out.println("\n\n\n adding text:\n" + s.text() + "\n\n\n");
+                finalText += s.text();
+            }
+
+            System.out.print("\n\n\n Text to process:\n" + finalText + "\n\n\n");
+            Encryptor.setText(finalText);
+            String processedText = Encryptor.run();
+            System.out.println("Test1");
+            if (processedText != null) {
+                System.out.println("Test2");
+                r.replaceText(processedText, true);
+                System.out.println("Test3");
             }
 
             //Finish writing the document
             FileOutputStream out = new FileOutputStream(docFile);
+            System.out.println("Test4");
             doc.write(out);
+            System.out.println("Test5");
             out.flush();
+            System.out.println("Test6");
             out.close();
             System.out.println("doc/docx file written successfully");
 
