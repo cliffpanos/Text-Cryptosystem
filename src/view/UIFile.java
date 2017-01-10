@@ -66,6 +66,10 @@ public class UIFile {
 
     }
 
+    public File getFile() {
+        return this.fileToProcess;
+    }
+
     public String getFileExtension() {
         return this.fileExtension;
     }

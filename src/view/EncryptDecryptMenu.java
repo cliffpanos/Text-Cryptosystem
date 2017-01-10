@@ -59,7 +59,7 @@ public class EncryptDecryptMenu extends StackPane implements Resizable {
         this.setBackground(null);
 
         background.setBackground(new Background(new BackgroundFill(Color
-            .web("#212F3C", 0.968), new CornerRadii(5.0, 0.0, 0.0, 5.0, false),
+            .web("#212F3C", 0.868), new CornerRadii(5.0, 0.0, 0.0, 5.0, false),
             new Insets(0))));
         blur.setEffect(new BoxBlur(15, 15, 3));
 
@@ -115,13 +115,16 @@ public class EncryptDecryptMenu extends StackPane implements Resizable {
             dimension);
         menu.getChildren().addAll(eStackPane, dStackPane, passwordVBox);
 
+    }
+
+    //Called by MainScreen after this EncryptDecryptMenu has been constructed
+    public void completeSetup() {
         WindowButtons windowButtons = new WindowButtons(paneWidth);
         outerVBox.setAlignment(Pos.TOP_CENTER);
         outerVBox.getChildren().addAll(windowButtons.getRootNode(), menu);
         this.getChildren().addAll(blur, background, outerVBox);
 
         resize();
-
     }
 
     public static String getPasswordFieldText() {
@@ -144,8 +147,28 @@ public class EncryptDecryptMenu extends StackPane implements Resizable {
         final int H = (int) Runner.getStageHeight();
         System.out.println("H: " + H);
 
+        stage.hide();
+
+        Timeline pause = new Timeline(new KeyFrame(Duration.millis(50), event -> {
+                try {
+                    java.awt.Robot robot = new java.awt.Robot();
+                    java.awt.image.BufferedImage image = robot.createScreenCapture(new java.awt.Rectangle(X, Y, W, H));
+
+                    blurredImage = SwingFXUtils.toFXImage(image, null);
+                    System.out.println("Not null");
+                } catch (java.awt.AWTException e) {
+                    System.out.println("The robot of doom strikes!");
+                    e.printStackTrace();
+
+                    blurredImage = null;
+                }
+                stage.show();
+            }));
+        pause.play();
+
+
         //stage.hide(); //Capture what's behind the stage, not the stage
-        Rectangle2D screen = Screen.getPrimary().getVisualBounds();
+        /*Rectangle2D screen = Screen.getPrimary().getVisualBounds();
         try {
 
             com.sun.glass.ui.Robot rbt = com.sun.glass.ui.Application.GetApplication().createRobot();
@@ -184,7 +207,7 @@ public class EncryptDecryptMenu extends StackPane implements Resizable {
             e.printStackTrace();
 
             blurredImage = null;
-        }
+        }*/
         //stage.show();
         //}));
         //pause.play();

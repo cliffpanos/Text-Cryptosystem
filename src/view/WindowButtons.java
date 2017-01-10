@@ -118,8 +118,14 @@ public class WindowButtons extends HBox {
             });
 
         setWindowButtons(); //The screen defaults to showing the plain buttons
+        makeDraggable(stage, MainScreen.getEDMenu());
+        makeDraggable(stage, MainScreen.getFilePane());
+        makeDraggable(stage, MainScreen.getFolderPane());
+        makeDraggable(stage, MainScreen.getOptionsMenu());
+        makeDraggable(stage, MainScreen.getInputOEMenu().getRootNode());
+        makeDraggable(stage, MainScreen.getInputODMenu().getRootNode());
 
-        outerHBox.getChildren().addAll(this, getTranslatorHBox());
+        outerHBox.getChildren().addAll(this);
         outerHBox.setMinWidth(leftPaneWidth);
     }
 
@@ -136,24 +142,6 @@ public class WindowButtons extends HBox {
         return this.outerHBox;
     }
 
-
-    public HBox getTranslatorHBox() {
-
-        HBox translator = new HBox();
-        //this HBox will be used to allow the user to click and drag it to
-        //move the entire window of the Cryptosystem program
-        translator.setAlignment(Pos.CENTER);
-        translator.setMinWidth(leftPaneWidth - 60);
-
-        instructionsLabel = new UILabel("            ", 13.85);
-        instructionsLabel.setTextFill(Color.web("#F7F7F7", 0.88));
-        translator.getChildren().add(instructionsLabel);
-
-        makeDraggable(stage, translator);
-
-        return translator;
-    }
-
     // makes a stage draggable using a given node, in this case the translator
     //from stackoverflow.com
     public void makeDraggable(final Stage stage, final Node byNode) {
@@ -162,7 +150,9 @@ public class WindowButtons extends HBox {
         double topBar = 22.0; //how much vertical room the top status bar uses
 
         byNode.setOnMousePressed(mouseEvent -> {
-                instructionsLabel.setTextFill(Color.web("#B3B3B3", 0.8));
+                if (!mouseEvent.isPrimaryButtonDown()) {
+                    byNode.setCursor(Cursor.HAND);
+                }
                 // record a delta distance for the drag and drop operation.
                 dragDelta.x = stage.getX() - mouseEvent.getScreenX();
                 dragDelta.y = stage.getY() - mouseEvent.getScreenY();
@@ -171,8 +161,7 @@ public class WindowButtons extends HBox {
         final BooleanProperty inDrag = new SimpleBooleanProperty(false);
 
         byNode.setOnMouseReleased(mouseEvent -> {
-                instructionsLabel.setTextFill(Color.web("#F7F7F7", 0.88));
-                byNode.setCursor(Cursor.HAND);
+                byNode.setCursor(Cursor.DEFAULT);
                 Runner.setLastXandY(stage.getX(), stage.getY());
                 //Update where Runner thinks the stage is on the screen
                 //since we just moved the stage
@@ -189,22 +178,11 @@ public class WindowButtons extends HBox {
                 stage.setX(mouseEvent.getScreenX() + dragDelta.x);
 
                 if (inDrag.get()) {
-                    EncryptDecryptMenu.updateBlurBackground();
+                    //EncryptDecryptMenu.updateBlurBackground();
+                    //TODO
                 }
 
                 inDrag.set(true);
-            });
-        byNode.setOnMouseEntered(mouseEvent -> {
-                instructionsLabel.setText("Move Window");
-                if (!mouseEvent.isPrimaryButtonDown()) {
-                    byNode.setCursor(Cursor.HAND);
-                }
-            });
-        byNode.setOnMouseExited(mouseEvent -> {
-                instructionsLabel.setText("            ");
-                if (!mouseEvent.isPrimaryButtonDown()) {
-                    byNode.setCursor(Cursor.DEFAULT);
-                }
             });
 
     }

@@ -5,9 +5,12 @@ import resources.Resources;
 import runner.Runner;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.TreeSet;
+
+import java.awt.Desktop;
 
 import javafx.scene.layout.StackPane;
 import javafx.scene.control.ScrollPane;
@@ -34,6 +37,7 @@ public class FilePane extends VBox implements Resizable {
     private static VBox centralDisplay = new VBox();
     private static double paneWidth = MainScreen.getStageWidth() * 0.57 - 40.0;
     private static String processType = "encrypt"; // "encrypt" or "decrypt"
+    private static Desktop desktop = Desktop.getDesktop();
 
     private static UIButton chooseFileButton;
     private static UIButton runButton =
@@ -267,9 +271,25 @@ public class FilePane extends VBox implements Resizable {
             update();
             resize();
 
+            UIButton openButton = new UIButton(85, 30, "Open");
+            openButton.setOnMousePressed(e -> {
+                    openButton.setBackgroundColor(Color.web("#D6EAF8"));
+                });
+            openButton.setOnMouseClicked(e -> {
+                    try {
+                        desktop.open(file.getFile());
+                    } catch (IOException ioe) {
+                        UIAlert.show("Unable to Open File",
+                            "Locksmith encountered an error\n"
+                            + "while attempting to open this File.",
+                            javafx.scene.control.Alert.AlertType.ERROR);
+                    }
+                    openButton.setBackgroundColor(Color.WHITE);
+                });
+
             infoVBox.setAlignment(Pos.CENTER);
             infoVBox.getChildren().setAll(titleLabel, topLine, extLabel,
-                infoHBox1, infoHBox2, encryptableLabel);
+                infoHBox1, infoHBox2, encryptableLabel, openButton);
             this.getChildren().setAll(infoVBox, Resources.getImageView(
                 file.getIconURL(), (paneWidth - 420.0)));
 
@@ -293,6 +313,12 @@ public class FilePane extends VBox implements Resizable {
         }
 
     }
+
+
+//TODO fix an issue where SingleFileDisplay is not resizing correctly
+
+
+
 
     //Used in SingleFileDisplay and MultiFileDisplay for the read/write boxes
     public static HBox makeInfoBox(boolean b, boolean readNotWrite, Pos pos) {

@@ -29,6 +29,9 @@ public class MainScreen extends BorderPane {
     private static boolean isEncryptingNotDecrypting = true;
     private static MenuOptions selectedMenu = MenuOptions.INPUTTEXT;
 
+    static {
+        edMenu.completeSetup();
+    }
 
     public MainScreen() {
 
@@ -95,12 +98,28 @@ public class MainScreen extends BorderPane {
 
     }
 
+    public static EncryptDecryptMenu getEDMenu() {
+        return edMenu;
+    }
+
     public static InputOnEncryptMenu getInputOEMenu() {
         return (InputOnEncryptMenu) inputOEMenu;
     }
 
     public static InputOnDecryptMenu getInputODMenu() {
         return (InputOnDecryptMenu) inputODMenu;
+    }
+
+    public static OptionsMenu getOptionsMenu() {
+        return optionsMenu;
+    }
+
+    public static FilePane getFilePane() {
+        return filePane;
+    }
+
+    public static FolderPane getFolderPane() {
+        return folderPane;
     }
 
     public static boolean getIsEncryptingNotDecrypting() {

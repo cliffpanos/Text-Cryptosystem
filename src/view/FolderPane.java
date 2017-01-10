@@ -28,11 +28,14 @@ public class FolderPane extends StackPane implements Resizable {
 
                 // Gets a folder File and processes it
                 selectedFolder = UIFile.getFolderFromDirectory();
-                processFolder(selectedFolder);
 
-                // Will create an alert if any files were trying to be encrypted
-                // twice or decrypted prior to being encrypted.
-                checkForUnactionableFiles();
+                if (selectedFolder != null) {
+                    processFolder(selectedFolder);
+
+                    // Will create an alert if any files were trying to be encrypted
+                    // twice or decrypted prior to being encrypted.
+                    checkForUnactionableFiles();
+                }
 
             });
 
