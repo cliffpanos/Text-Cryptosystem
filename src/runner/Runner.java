@@ -100,11 +100,11 @@ public class Runner extends Application {
     }
 
     public static double getStageWidth() {
-        return stageWidth;
+        return stageWidth - 50;
     }
 
     public static double getStageHeight() {
-        return stageHeight;
+        return stageHeight - 50;
     }
 
     public static void setLastXandY(double x, double y) {

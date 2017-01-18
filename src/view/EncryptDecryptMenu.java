@@ -59,7 +59,7 @@ public class EncryptDecryptMenu extends StackPane implements Resizable {
         this.setBackground(null);
 
         background.setBackground(new Background(new BackgroundFill(Color
-            .web("#212F3C", 0.868), new CornerRadii(5.0, 0.0, 0.0, 5.0, false),
+            .web("#212F3C", 0.968), new CornerRadii(5.0, 0.0, 0.0, 5.0, false),
             new Insets(0))));
         blur.setEffect(new BoxBlur(15, 15, 3));
 

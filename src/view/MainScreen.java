@@ -14,6 +14,8 @@ import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.layout.BorderWidths;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.BlurType;
 
 
 public class MainScreen extends BorderPane {
@@ -37,11 +39,16 @@ public class MainScreen extends BorderPane {
 
         this.setBackground(null);
         this.setLeft(edMenu);
+        this.setPadding(new Insets(25));
 
-        /*this.setStyle(
-                "-fx-effect: dropshadow(gaussian, black, " + 70 + ", 0, 0, 0);"
-        );*/
-        //This shadow adding is not working
+        DropShadow shdw = new DropShadow();
+        shdw.setBlurType(BlurType.GAUSSIAN);
+        shdw.setColor(Color.DARKSLATEGREY);
+        shdw.setRadius(25);
+        shdw.setSpread(0.075); //this makes the DropShadow light
+        shdw.setHeight(25);
+        shdw.setWidth(25);
+        this.setEffect(shdw);
 
         innerBorderPane.setLeft(optionsMenu);
         innerBorderPane.setCenter(inputOEMenu.getRootNode());
