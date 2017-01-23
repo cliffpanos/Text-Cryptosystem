@@ -148,7 +148,7 @@ public class EncryptDecryptMenu extends StackPane implements Resizable {
         final int H = (int) Runner.getStageHeight();
         System.out.println("H: " + H);
 
-        //stage.hide();
+        stage.hide();
 
         Timeline pause = new Timeline(new KeyFrame(Duration.millis(50), event -> {
                 try {
