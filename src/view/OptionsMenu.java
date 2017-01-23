@@ -1,8 +1,5 @@
 package view;
 
-import java.util.List;
-import java.util.ArrayList;
-
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;

@@ -9,7 +9,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.geometry.Insets;
@@ -21,16 +20,9 @@ import javafx.scene.layout.CornerRadii;
 
 import javafx.scene.effect.*;
 import javafx.stage.Stage;
-import javafx.beans.property.*;
 import javafx.embed.swing.SwingFXUtils;
-import javafx.geometry.Insets;
 import javafx.animation.*;
 import javafx.util.Duration;
-import javafx.stage.Screen;
-import javafx.scene.image.WritableImage;
-import javafx.scene.image.PixelFormat;
-import javafx.geometry.Rectangle2D;
-
 
 
 public class EncryptDecryptMenu extends StackPane implements Resizable {

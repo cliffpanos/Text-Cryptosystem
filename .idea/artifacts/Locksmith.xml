@@ -1,12 +1,13 @@
 <component name="ArtifactManager">
   <artifact type="javafx" name="Locksmith">
-    <output-path>$PROJECT_DIR$/out/artifacts/Text_Cryptosystem</output-path>
+    <output-path>$PROJECT_DIR$/out</output-path>
     <properties id="javafx-properties">
       <options>
         <option name="alias" value="" />
-        <option name="appClass" value="src.runner.Runner" />
+        <option name="appClass" value="runner.Runner" />
         <option name="description" value="This java code will encrypt text using a password using multiple one-character-to-one-character substitution keys, which greatly reduces the possibility of letter-frequency analysis. Because the text is re-encrypted recursively a variable number of times, if a third party attempts to decrypt the cipher text using a passwords similar to the password with which the text was encrypted, the third party will fail." />
         <option name="enabledSigning" value="true" />
+        <option name="height" value="" />
         <option name="htmlPlaceholderId" value="" />
         <option name="icons">
           <JavaFxApplicationIcons>
@@ -19,6 +20,7 @@
         <option name="title" value="Locksmith" />
         <option name="vendor" value="Clifford Panos" />
         <option name="version" value="1.0" />
+        <option name="width" value="" />
       </options>
     </properties>
     <root id="root">

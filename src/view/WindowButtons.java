@@ -5,26 +5,14 @@ import resources.Resources;
 
 import javafx.stage.Stage;
 import javafx.scene.layout.HBox;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.paint.Color;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 
-import javafx.animation.*;
 import javafx.application.*;
 import javafx.beans.property.*;
-import javafx.embed.swing.SwingFXUtils;
-import javafx.geometry.Insets;
-import javafx.scene.*;
-import javafx.scene.effect.*;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
-import javafx.scene.image.*;
-import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.stage.Stage;
-import javafx.util.Duration;
 
 public class WindowButtons extends HBox {
 

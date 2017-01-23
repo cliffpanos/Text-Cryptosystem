@@ -22,10 +22,7 @@ package controller;
 
 import view.UIAlert;
 import view.EncryptDecryptMenu;
-import view.InputOnEncryptMenu;
 import view.MainScreen;
-
-import java.io.File;
 
 
 public class Encryptor {
