@@ -59,7 +59,7 @@ public class EncryptDecryptMenu extends StackPane implements Resizable {
         this.setBackground(null);
 
         background.setBackground(new Background(new BackgroundFill(Color
-            .web("#212F3C", 0.968), new CornerRadii(5.0, 0.0, 0.0, 5.0, false),
+            .web("#212F3C", 0.868), new CornerRadii(5.0, 0.0, 0.0, 5.0, false),
             new Insets(0))));
         blur.setEffect(new BoxBlur(15, 15, 3));
 
@@ -136,6 +136,7 @@ public class EncryptDecryptMenu extends StackPane implements Resizable {
 
 
     public static void updateBlurBackground() {
+
         System.out.println("UPDATING BLUR");
         Stage stage = Runner.getStage();
         final int X = (int) stage.getX();
@@ -147,7 +148,7 @@ public class EncryptDecryptMenu extends StackPane implements Resizable {
         final int H = (int) Runner.getStageHeight();
         System.out.println("H: " + H);
 
-        stage.hide();
+        //stage.hide();
 
         Timeline pause = new Timeline(new KeyFrame(Duration.millis(50), event -> {
                 try {
