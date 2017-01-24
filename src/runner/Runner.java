@@ -19,11 +19,10 @@ public class Runner extends Application {
 
     private static Stage stage;
     private static boolean isFullScreen;
-    private static Rectangle2D screenBounds =
-        Screen.getPrimary().getVisualBounds();
+    private static Rectangle2D screenBounds; // = Screen.getPrimary().getVisualBounds();
 
-    private static double stageWidth = screenBounds.getWidth() * 7.5 / 9.0;
-    private static double stageHeight = screenBounds.getHeight() * 7.5 / 9.0;
+    private static double stageWidth = 1000; //screenBounds.getWidth() * 7.5 / 9.0;
+    private static double stageHeight = 800; //screenBounds.getHeight() * 7.5 / 9.0;
     private static double lastStageWidth = stageWidth;
     private static double lastStageHeight = stageHeight;
     private static double lastX = 0;
@@ -35,26 +34,31 @@ public class Runner extends Application {
 
     public void start(Stage primaryStage) {
 
-        stage = primaryStage;
-        stage.initStyle(StageStyle.TRANSPARENT);
-        stage.setTitle("Encryptor");
+        try {
+            stage = primaryStage;
+            stage.initStyle(StageStyle.TRANSPARENT);
+            stage.setTitle("Encryptor");
 
-        Scene mainScene = new Scene(new MainScreen());
-        mainScene.setFill(Color.TRANSPARENT);
-        stage.setScene(mainScene);
+            Scene mainScene = new Scene(new MainScreen());
+            mainScene.setFill(Color.TRANSPARENT);
+            stage.setScene(mainScene);
 
-        //set Stage boundaries to visible bounds of the main screen
-        stage.setWidth(stageWidth);
-        stage.setHeight(stageHeight);
-        stage.centerOnScreen();
-        lastX = stage.getX();
-        lastY = stage.getY();
-        isFullScreen = false;
+            //set Stage boundaries to visible bounds of the main screen
+            stage.setWidth(stageWidth);
+            stage.setHeight(stageHeight);
+            stage.centerOnScreen();
+            lastX = stage.getX();
+            lastY = stage.getY();
+            isFullScreen = false;
 
-        stage.toFront();
-        stage.setResizable(true);
+            stage.toFront();
+            stage.setResizable(true);
 
-        stage.show();
+            stage.show();
+
+        } catch (Exception e) {
+            System.out.println("Caught exception");
+        }
 
     }
 

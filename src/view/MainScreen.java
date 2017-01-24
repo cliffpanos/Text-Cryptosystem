@@ -41,7 +41,7 @@ public class MainScreen extends BorderPane {
 
         DropShadow shdw = new DropShadow();
         shdw.setBlurType(BlurType.GAUSSIAN);
-        shdw.setColor(Color.DARKSLATEGREY);
+        shdw.setColor(Color.BLACK);
         shdw.setRadius(25);
         shdw.setSpread(0.075); //this makes the DropShadow light
         shdw.setHeight(25);
