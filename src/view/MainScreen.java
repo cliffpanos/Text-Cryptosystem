@@ -28,6 +28,7 @@ public class MainScreen extends BorderPane {
 
     private static boolean isEncryptingNotDecrypting = true;
     private static MenuOptions selectedMenu = MenuOptions.INPUTTEXT;
+    private static MainScreen instance = null;
 
     static {
         edMenu.completeSetup();
@@ -35,17 +36,18 @@ public class MainScreen extends BorderPane {
 
     public MainScreen() {
 
+        instance = this;
         this.setBackground(null);
         this.setLeft(edMenu);
-        this.setPadding(new Insets(25));
+        this.setThePadding(20);
 
         DropShadow shdw = new DropShadow();
         shdw.setBlurType(BlurType.GAUSSIAN);
         shdw.setColor(Color.BLACK);
-        shdw.setRadius(25);
-        shdw.setSpread(0.075); //this makes the DropShadow light
-        shdw.setHeight(25);
-        shdw.setWidth(25);
+        shdw.setRadius(20);
+        shdw.setSpread(0.05); //this makes the DropShadow light
+        shdw.setHeight(20);
+        shdw.setWidth(20);
         this.setEffect(shdw);
 
         innerBorderPane.setLeft(optionsMenu);
@@ -74,6 +76,10 @@ public class MainScreen extends BorderPane {
         if (selectedMenu == MenuOptions.INPUTTEXT) {
             switchMenu(MenuOptions.INPUTTEXT);
         }
+    }
+
+    public static void setThePadding(double padding) {
+        MainScreen.instance.setPadding(new Insets(padding));
     }
 
     public static void switchMenu(MenuOptions option) {

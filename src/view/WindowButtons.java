@@ -135,7 +135,7 @@ public class WindowButtons extends HBox {
     public void makeDraggable(final Stage stage, final Node byNode) {
 
         final Delta dragDelta = new Delta();
-        double topBar = 22.0; //how much vertical room the top status bar uses
+        double topBar = 2.0; //how much vertical room the top status bar uses
 
         byNode.setOnMousePressed(mouseEvent -> {
                 if (!mouseEvent.isPrimaryButtonDown()) {

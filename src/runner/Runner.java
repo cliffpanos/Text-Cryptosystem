@@ -3,26 +3,27 @@ package runner;
 import view.MainScreen;
 import view.Resizable;
 
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.stage.Screen;
 import javafx.geometry.Rectangle2D;
+
+import java.awt.*;
 
 
 public class Runner extends Application {
 
     private static Stage stage;
     private static boolean isFullScreen;
-    private static Rectangle2D screenBounds; // = Screen.getPrimary().getVisualBounds();
+    //private static Rectangle2D screenBounds
+    //        = javafx.stage.Screen.getPrimary().getVisualBounds();
 
-    private static double stageWidth = 1000; //screenBounds.getWidth() * 7.5 / 9.0;
-    private static double stageHeight = 800; //screenBounds.getHeight() * 7.5 / 9.0;
+    private static java.awt.Rectangle screenBounds = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
+    private static double stageWidth = screenBounds.getWidth() * 7.5 / 9.0;
+    private static double stageHeight = screenBounds.getHeight() * 7.5 / 9.0;
     private static double lastStageWidth = stageWidth;
     private static double lastStageHeight = stageHeight;
     private static double lastX = 0;
@@ -34,37 +35,33 @@ public class Runner extends Application {
 
     public void start(Stage primaryStage) {
 
-        try {
-            stage = primaryStage;
-            stage.initStyle(StageStyle.TRANSPARENT);
-            stage.setTitle("Encryptor");
+        stage = primaryStage;
+        stage.initStyle(StageStyle.TRANSPARENT);
+        stage.setTitle("Encryptor");
 
-            Scene mainScene = new Scene(new MainScreen());
-            mainScene.setFill(Color.TRANSPARENT);
-            stage.setScene(mainScene);
+        Scene mainScene = new Scene(new MainScreen());
+        mainScene.setFill(Color.TRANSPARENT);
+        stage.setScene(mainScene);
 
-            //set Stage boundaries to visible bounds of the main screen
-            stage.setWidth(stageWidth);
-            stage.setHeight(stageHeight);
-            stage.centerOnScreen();
-            lastX = stage.getX();
-            lastY = stage.getY();
-            isFullScreen = false;
+        //set Stage boundaries to visible bounds of the main screen
+        stage.setWidth(stageWidth);
+        stage.setHeight(stageHeight);
+        stage.centerOnScreen();
+        lastX = stage.getX();
+        lastY = stage.getY();
+        isFullScreen = false;
 
-            stage.toFront();
-            stage.setResizable(true);
+        stage.toFront();
+        stage.setResizable(true);
 
-            stage.show();
-
-        } catch (Exception e) {
-            System.out.println("Caught exception");
-        }
+        stage.show();
 
     }
 
     public static void toggleFullScreen() {
 
         if (isFullScreen) { //revert the stage to the previous size & location
+            MainScreen.setThePadding(20);
             stage.setX(lastX);
             stage.setY(lastY);
             stage.setWidth(lastStageWidth);
@@ -75,6 +72,7 @@ public class Runner extends Application {
             resizeWindow();
 
         } else { //make it fullScreen since it is not already fullScreen
+            MainScreen.setThePadding(0);
             lastStageWidth = stageWidth;
             lastStageHeight = stageHeight;
             setLastXandY(stage.getX(), stage.getY());
@@ -104,11 +102,11 @@ public class Runner extends Application {
     }
 
     public static double getStageWidth() {
-        return stageWidth - 50;
+        return stageWidth - 40;
     }
 
     public static double getStageHeight() {
-        return stageHeight - 50;
+        return stageHeight - 40;
     }
 
     public static void setLastXandY(double x, double y) {

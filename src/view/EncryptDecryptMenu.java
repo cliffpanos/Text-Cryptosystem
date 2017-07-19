@@ -140,10 +140,11 @@ public class EncryptDecryptMenu extends StackPane implements Resizable {
         final int H = (int) Runner.getStageHeight();
         System.out.println("H: " + H);
 
-        stage.hide();
 
         Timeline pause = new Timeline(new KeyFrame(Duration.millis(50), event -> {
-                try {
+            stage.hide();
+
+            try {
                     java.awt.Robot robot = new java.awt.Robot();
                     java.awt.image.BufferedImage image = robot.createScreenCapture(new java.awt.Rectangle(X, Y, W, H));
 
